@@ -1,0 +1,52 @@
+Sentence,Label
+What is Python?,Q
+What is the Python Software Foundation?,Q
+Are there copyright restrictions on the use of Python?,Q
+Why was Python created in the first place?,Q
+What is Python good for?,Q
+How does the Python version numbering scheme work?,Q
+How do I obtain a copy of the Python source?,Q
+How do I get documentation on Python?,Q
+I've never programmed before. Is there a Python tutorial?,Q
+Is there a newsgroup or mailing list devoted to Python?,Q
+How do I get a beta test version of Python?,Q
+How do I submit bug reports and patches for Python?,Q
+Are there any published articles about Python that I can reference?,Q
+Are there any books on Python?,Q
+Where in the world is www.python.org located?,Q
+Why is it called Python?,Q
+Do I have to like Monty Python's Flying Circus??,C
+Python is an interpreted interactive object-oriented programming language.,S
+The Python Software Foundation is an independent non-profit organization that holds the copyright on Python versions 2.1 and newer.,S
+You can do anything you want with the source as long as you leave the copyrights in and display those copyrights in any documentation about Python that you produce.,S
+I had a number of gripes about the ABC language but also liked many of its features. It was impossible to extend the ABC language (or its implementation) to remedy my complaints - in fact its lack of extensibility was one of its biggest problems.,S
+Python is a high-level general-purpose programming language that can be applied to many different classes of problems.,S
+Python versions are numbered A.B.C or A.B. A is the major version number - it is only incremented for really major changes in the language.,S
+The latest Python source distribution is always available from python.org at https://www.python.org/downloads/. ,S
+The standard documentation for the current stable version of Python is available at https://docs.python.org/3/. ,S
+Consult the Beginner's Guide to find information for beginning Python programmers including lists of tutorials.,S
+There is a newsgroup comp.lang.python and a mailing list: python-list.,S
+Alpha and beta releases are available from https://www.python.org/downloads/.,S
+To report a bug or submit a patch please use the Roundup installation at https://bugs.python.org/.,S
+ It's probably best to cite your favorite book about Python.,S
+See the python.org wiki at https://wiki.python.org/moin/PythonBooks for a list of books.,S
+The Python project's infrastructure is located all over the world.,S
+When he began implementing Python Guido van Rossum was also reading the published scripts from Monty Python's Flying Circus which is a BBC comedy series from the 1970s.,S
+No but it helps. :),C
+Hey Man how's it going,C
+Do you fancy hanging out for a bit?,C
+What do you reckon?,C
+Yeah - not bad thanks,C
+Sure lets hang out.,C
+Yes - cool!,C
+That is rubbish,C
+I don't like that answer,C
+Not what I'm looking for,C
+So what?,C
+That means nothing to me,C
+Eh?,C
+That's no help at all,C
+"yeah, whatever",C
+What are your plans this weekend?,C
+"Great, thanks for that",C
+"OK, that's good",C
