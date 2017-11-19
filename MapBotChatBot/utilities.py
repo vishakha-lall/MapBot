@@ -37,7 +37,6 @@ def classify_model():
 def classify_sentence(clf,user_input):
     import features
     import pandas as pd
-    textout = {'Q': "QUESTION", 'C': "CHAT", 'S':"STATEMENT"}
     keys = ["id",
     "wordCount",
     "stemmedCount",
@@ -68,4 +67,4 @@ def classify_sentence(clf,user_input):
     width = len(s)
     myFeatures = s[1:width-1]  #All but the last item (this is the class for supervised learning mode)
     predict = clf.predict([myFeatures])
-    print("\n\nPrediction is: ", textout[predict[0].strip()])
+    return predict[0].strip()
