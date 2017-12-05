@@ -1,8 +1,11 @@
 from utilities import parse_sentence
 from utilities import classify_model
 from utilities import classify_sentence
+from utilities import setup_database
+from utilities import add_to_database
 
 clf = classify_model()
+setup_database()
 
 B = "Hi! I'm Mapbot!"
 while True:
@@ -23,13 +26,15 @@ while True:
             subj.append(t[2][0])
         if relation[-3:] == 'obj':
             obj.append(t[2][0])
-    #print("\t"+"Subject: "+str(subj)+"\n"+"\t"+"Object: "+str(obj)+"\n"+"\t"+"Topic: "+str(root))
+    print("\t"+"Subject: "+str(subj)+"\n"+"\t"+"Object: "+str(obj)+"\n"+"\t"+"Topic: "+str(root))
     proper_nouns = set()
     for t in triples:
         if t[0][1] == 'NNP':
             proper_nouns.add(t[0][0])
         if t[2][1] == 'NNP':
             proper_nouns.add(t[2][0])
-    #print("\t"+"Proper Nouns: "+str(proper_nouns))
+    print("\t"+"Proper Nouns: "+str(proper_nouns))
     #classification
     classification = classify_sentence(clf,H)
+    print(classification)
+    add_to_database(classification,root,H)
