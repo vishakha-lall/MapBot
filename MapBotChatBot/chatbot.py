@@ -4,6 +4,7 @@ from utilities import classify_sentence
 from utilities import setup_database
 from utilities import add_to_database
 from utilities import get_chat_response
+from utilities import get_question_response
 
 clf = classify_model()
 setup_database()
@@ -34,10 +35,12 @@ while True:
             proper_nouns.add(t[0][0])
         if t[2][1] == 'NNP':
             proper_nouns.add(t[2][0])
-    #print("\t"+"Proper Nouns: "+str(proper_nouns))
+    print("\t"+"Proper Nouns: "+str(proper_nouns))
     #classification
     classification = classify_sentence(clf,H)
     #print(classification)
     add_to_database(classification,subj,root,H)
     if classification == 'C':
-        B = get_chat_response();
+        B = get_chat_response()
+    elif classification == 'Q':
+        B = get_question_response(subj,root)

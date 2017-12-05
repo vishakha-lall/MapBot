@@ -107,3 +107,34 @@ def get_chat_response():
     res = cur.fetchone()
     response_sentence = res[0]
     return response_sentence
+
+#get a random chat response
+def get_question_response(subject,root):
+    import mysql.connector
+    db = mysql.connector.connect(user='root',password='viks1995',host='127.0.0.1',database='mapbot')
+    cur = db.cursor()
+    cur.execute("SELECT COUNT(*) FROM statement_table")
+    res = cur.fetchone()
+    if res[0] == 0:
+        print("Mapbot: I don't know the response to this. Please train me.")
+        H = input("You: ")
+        cur.execute("INSERT INTO statement_table(subject,root_word,sentence) VALUES (%s,%s,%s)",(str(subject),str(root),H))
+        db.commit()
+        return H
+    else:
+        cur.execute('SELECT subject FROM statement_table')
+        res = cur.fetchall()
+        found = 0
+        for r in res:
+            if r[-1] == str(subject):
+                found = 1
+        if found == 1:
+            cur.execute('SELECT sentence FROM statement_table WHERE subject="%s"' % (str(subject)))
+            res = cur.fetchone()
+            return res[0]
+        else:
+            print("Mapbot: I don't know the response to this. Please train me.")
+            H = input("You: ")
+            cur.execute("INSERT INTO statement_table(subject,root_word,sentence) VALUES (%s,%s,%s)",(str(subject),str(root),H))
+            db.commit()
+            return H
