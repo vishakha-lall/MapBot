@@ -328,7 +328,6 @@ def get_string(id,sentence,c="X"):
     return output,header
 
 # End of Get String wrapper
-#########################################################################
 
 # Build a dictionary of features
 def features_dict(id,sentence,c="X"):

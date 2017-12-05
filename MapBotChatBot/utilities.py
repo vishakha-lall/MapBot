@@ -74,15 +74,36 @@ def setup_database():
     import mysql.connector
     db = mysql.connector.connect(user='root',password='viks1995',host='127.0.0.1',database='mapbot')
     cur = db.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS chat_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), sentence VARCHAR(200))")
-    cur.execute("CREATE TABLE IF NOT EXISTS statement_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), sentence VARCHAR(200))")
-    cur.execute("CREATE TABLE IF NOT EXISTS question_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), sentence VARCHAR(200))")
+    cur.execute("CREATE TABLE IF NOT EXISTS chat_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), sentence VARCHAR(200))")
+    cur.execute("CREATE TABLE IF NOT EXISTS statement_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), sentence VARCHAR(200))")
+    cur.execute("CREATE TABLE IF NOT EXISTS question_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), sentence VARCHAR(200))")
 
 #add classified sentences to database
-def add_to_database(classification,root,H):
+def add_to_database(classification,subject,root,H):
     import mysql.connector
     db = mysql.connector.connect(user='root',password='viks1995',host='127.0.0.1',database='mapbot')
     cur = db.cursor()
     if classification == 'C':
-        cur.execute("INSERT INTO chat_table(root_word,sentence) VALUES (%s,%s)",(str(root),H))
+        cur.execute("INSERT INTO chat_table(subject,root_word,sentence) VALUES (%s,%s,%s)",(str(subject),str(root),H))
         db.commit()
+    elif classification == 'Q':
+        cur.execute("INSERT INTO question_table(subject,root_word,sentence) VALUES (%s,%s,%s)",(str(subject),str(root),H))
+        db.commit()
+    else:
+        cur.execute("INSERT INTO statement_table(subject,root_word,sentence) VALUES (%s,%s,%s)",(str(subject),str(root),H))
+        db.commit()
+
+#get a random chat response
+def get_chat_response():
+    import mysql.connector
+    db = mysql.connector.connect(user='root',password='viks1995',host='127.0.0.1',database='mapbot')
+    cur = db.cursor()
+    cur.execute("SELECT COUNT(*) FROM chat_table")
+    res = cur.fetchone()
+    total_chat_records = res[0]
+    import random
+    chat_id = random.randint(1,total_chat_records+1)
+    cur.execute("SELECT sentence FROM chat_table WHERE id = %s" % (int(chat_id)))
+    res = cur.fetchone()
+    response_sentence = res[0]
+    return response_sentence
