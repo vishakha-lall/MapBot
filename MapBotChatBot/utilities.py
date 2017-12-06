@@ -128,10 +128,29 @@ def get_question_response(subject,root):
         for r in res:
             if r[-1] == str(subject):
                 found = 1
+                break
         if found == 1:
-            cur.execute('SELECT sentence FROM statement_table WHERE subject="%s"' % (str(subject)))
-            res = cur.fetchone()
-            return res[0]
+            if r[-1] == '[]':
+                cur.execute('SELECT root_word FROM statement_table')
+                res_root = cur.fetchall()
+                found_root = 0
+                for r_root in res_root:
+                    if r_root[-1] == str(root):
+                        found_root = 1
+                if found_root == 1:
+                    cur.execute('SELECT sentence FROM statement_table WHERE root_word="%s"' % (str(root)))
+                    res = cur.fetchone()
+                    return res[0]
+                else:
+                    print("Mapbot: I don't know the response to this. Please train me.")
+                    H = input("You: ")
+                    cur.execute("INSERT INTO statement_table(subject,root_word,sentence) VALUES (%s,%s,%s)",(str(subject),str(root),H))
+                    db.commit()
+                    return H
+            else:
+                cur.execute('SELECT sentence FROM statement_table WHERE subject="%s"' % (str(subject)))
+                res = cur.fetchone()
+                return res[0]
         else:
             print("Mapbot: I don't know the response to this. Please train me.")
             H = input("You: ")

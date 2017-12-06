@@ -35,7 +35,7 @@ while True:
             proper_nouns.add(t[0][0])
         if t[2][1] == 'NNP':
             proper_nouns.add(t[2][0])
-    print("\t"+"Proper Nouns: "+str(proper_nouns))
+    #print("\t"+"Proper Nouns: "+str(proper_nouns))
     #classification
     classification = classify_sentence(clf,H)
     #print(classification)
