@@ -74,23 +74,23 @@ def setup_database():
     import mysql.connector
     db = mysql.connector.connect(user='root',password='viks1995',host='127.0.0.1',database='mapbot')
     cur = db.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS chat_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), sentence VARCHAR(200))")
-    cur.execute("CREATE TABLE IF NOT EXISTS statement_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), sentence VARCHAR(200))")
-    cur.execute("CREATE TABLE IF NOT EXISTS question_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), sentence VARCHAR(200))")
+    cur.execute("CREATE TABLE IF NOT EXISTS chat_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))")
+    cur.execute("CREATE TABLE IF NOT EXISTS statement_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))")
+    cur.execute("CREATE TABLE IF NOT EXISTS question_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))")
 
 #add classified sentences to database
-def add_to_database(classification,subject,root,H):
+def add_to_database(classification,subject,root,verb,H):
     import mysql.connector
     db = mysql.connector.connect(user='root',password='viks1995',host='127.0.0.1',database='mapbot')
     cur = db.cursor()
     if classification == 'C':
-        cur.execute("INSERT INTO chat_table(subject,root_word,sentence) VALUES (%s,%s,%s)",(str(subject),str(root),H))
+        cur.execute("INSERT INTO chat_table(subject,root_word,verb,sentence) VALUES (%s,%s,%s,%s)",(str(subject),str(root),str(verb),H))
         db.commit()
     elif classification == 'Q':
-        cur.execute("INSERT INTO question_table(subject,root_word,sentence) VALUES (%s,%s,%s)",(str(subject),str(root),H))
+        cur.execute("INSERT INTO question_table(subject,root_word,verb,sentence) VALUES (%s,%s,%s,%s)",(str(subject),str(root),str(verb),H))
         db.commit()
     else:
-        cur.execute("INSERT INTO statement_table(subject,root_word,sentence) VALUES (%s,%s,%s)",(str(subject),str(root),H))
+        cur.execute("INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES (%s,%s,%s,%s)",(str(subject),str(root),str(verb),H))
         db.commit()
 
 #get a random chat response
@@ -109,7 +109,7 @@ def get_chat_response():
     return response_sentence
 
 #get a random chat response
-def get_question_response(subject,root):
+def get_question_response(subject,root,verb):
     import mysql.connector
     db = mysql.connector.connect(user='root',password='viks1995',host='127.0.0.1',database='mapbot')
     cur = db.cursor()
@@ -118,7 +118,7 @@ def get_question_response(subject,root):
     if res[0] == 0:
         print("Mapbot: I don't know the response to this. Please train me.")
         H = input("You: ")
-        cur.execute("INSERT INTO statement_table(subject,root_word,sentence) VALUES (%s,%s,%s)",(str(subject),str(root),H))
+        cur.execute("INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES (%s,%s,%s,%s)",(str(subject),str(root),str(verb),H))
         db.commit()
         return H
     else:
@@ -148,9 +148,18 @@ def get_question_response(subject,root):
                     db.commit()
                     return H
             else:
-                cur.execute('SELECT sentence FROM statement_table WHERE subject="%s"' % (str(subject)))
+                cur.execute('SELECT verb FROM statement_table WHERE subject="%s"' % (str(subject)))
                 res = cur.fetchone()
-                return res[0]
+                if res[0] == str(verb):
+                    cur.execute('SELECT sentence FROM statement_table WHERE subject="%s"' % (str(subject)))
+                    res = cur.fetchone()
+                    return res[0]
+                else:
+                    print("Mapbot: I don't know the response to this. Please train me.")
+                    H = input("You: ")
+                    cur.execute("INSERT INTO statement_table(subject,root_word,sentence) VALUES (%s,%s,%s)",(str(subject),str(root),H))
+                    db.commit()
+                    return H
         else:
             print("Mapbot: I don't know the response to this. Please train me.")
             H = input("You: ")
