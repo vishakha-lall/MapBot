@@ -40,7 +40,7 @@ An improvement over SimpleBot to enhance conversation between the user and Mapbo
   * Extract subject word and subject list(for compound entities)
   * Extract object word and object list(for compound entities)
   * Extract all proper nouns(location details)
-  * Extraxt verb
+  * Extract verb
 * Classification of sentence into Statement, Question and Chat entity using feature extractor ML model
 * Store in database depending on the sentence type
 * Respond question with corresponding statement query
