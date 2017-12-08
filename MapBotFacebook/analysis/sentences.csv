@@ -1,0 +1,101 @@
+SENTENCE,CLASS
+"Sorry, I don't know about the weather.",S
+That is a tricky question to answer.,C
+What does OCM stand for,Q
+MAX is a Mobile Application Accelerator,S
+Can a dog see in colour?,Q
+how are you,C
+"If you deploy a MySQL database in the Oracle cloud, how do you access it?",Q
+who is dominic Fakename,Q
+what's the weather like today?,C
+Can the OCM host non Oracle software stacks?,Q
+When will the Oracle 12.2 database be released,Q
+When will 12.3 be released?,Q
+Will that be on premise?,Q
+Who is Ed Bullen?,Q
+MAX is Mobile Application Accelerator,S
+The Product Manager for MAX is Grant Henry,S
+ChatbotCS is the Oracle Chatbot Cloud Service,S
+MAX is a codeless tool for business analysts,S
+What is JSON?,Q
+What is the OCM?,Q
+ABCS is Application Builder Cloud Service,S
+"The OCM is the Oracle Cloud Machine, an on-premisis cloud device",Q
+What is OCCS,Q
+OCCS is the Oracle Container Cloud Service based off Docker,S
+What's an OCM?,Q
+"OCM is Oracle Cloud Machine, an on-premise cloud device",S
+Who is Dom Fakename,Q
+Where can I find more information about the OCM?,Q
+What is an OCM?,Q
+Should I use a QR code,Q
+I do not recommened using a QR code,S
+NodeJS is good for web applications,S
+JSON is JavaScript Object Notification,S
+Hey Siri,C
+Siri is my friend,C
+hi,C
+hi there,C
+Please can you tell me what MAX is,Q
+I am fine,C
+how are you?,C
+Very good thank you.,C
+great,C
+How are you?,C
+What is a database?,Q
+That's good to hear,C
+I am very well thank you,C
+A database is used for storing and retreiving data.,S
+OK,C
+Who is the product manager for the Oracle database,Q
+Dominic Fakename is one of the senior product managers for the Oracle database.,S
+When will Oracle 12.2 be released on-premises?,Q
+Oracle 12.2 will be released for on-premises users on 15 March 2017,S
+You need an SSH key to access remote resources in the Oracle cloud,S
+When will Oracle 12.2 be released?,Q
+who is Dominic Fakename?,Q
+when will Oracle 12.2 be released?,Q
+what is a database?,Q
+please can you tell me who Dom Fakename is?,Q
+please can you tell me who Dominic Fakename is?,Q
+hello,C
+who am i?,Q
+That is not what I asked,C
+I am fine thank you,C
+what's ABCS?,Q
+"Application Builder Cloud Service, designed for citizen developers",S
+no idea,C
+are you a chatbot?,Q
+what is a chatbot?,Q
+what is MCS?,Q
+Mobile Cloud Service,S
+What is MAX?,Q
+Mobile Application Accelerator,S
+Who's the PM for ABCS?,Q
+Shay MadeUpName is the PM for ABCS,S
+Is Azure any good?,Q
+Martin Dummyname can help with MCS,S
+Shay MadeUpName,S
+What's ACCS?,Q
+ACCS is the Application Container Cloud Service,S
+Bob Smith is the PM for ACCS,S
+A product manager for Oracle database,S
+Where do you live?,Q
+Hello,C
+What's new?,C
+Thanks for telling me that,C
+Dom Fakename is one of the product managers for the Oracle database.,S
+Stop asking me questions!,C
+Oracle 12.2 will be released on the 15th of March.,S
+The cat is sleeping,S
+is the dog happy,Q
+The cow is in the field,S
+What is MCS?,Q
+Where is the cow,Q
+When will Oracle 12 be released,Q
+How's it going?,C
+"Hey!, How's it going?",C
+Oracle 12c database will be released in March 2017,S
+When will Arsenal ever win a match?,Q
+Arsenal are a football team in North London,S
+Python is an interpreted programming language with a very clean and distinctive syntAx,S

@@ -4,7 +4,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http.response import HttpResponse
 import json, requests, random, re
+from chatbot import setup
+from chatbot import message_to_bot
 # Create your views here.
+clf = setup()
+learning_response = 0
+
 class mapbotView(generic.View):
 
     def get(self, request, **kwargs):
@@ -32,8 +37,9 @@ class mapbotView(generic.View):
                     post_facebook_message(message['sender']['id'], message['message']['text'])
         return HttpResponse()
 
-def post_facebook_message(fbid, recevied_message):
-    post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=EAAdAgdyXAyIBAF9zqVj2nrqZACpcJ3wzZBDWzHolwIl2phCCkPJFLefPLyXhSg4rqtgKf0UU4qbDxZBAdxmefy0ziAiWje2Apx1oxZAZC4gNnnV2nEogSVFmqGr2QK0A7JskRgpSjEZAkLmCcqDkqKBwZAfVAhSzhyZCtPDpVTD2BtZASoT4KMQ3J'
-    response_msg = json.dumps({"recipient":{"id":fbid}, "message":{"text":recevied_message}})
+def post_facebook_message(fbid, received_message):
+    post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=EAAdAgdyXAyIBANZAZAwkS15IdM4lUyuUiQV351OLKd4t1ePkdG6IShx1dGbZC83rYkQAfyKtjIgoCWoFNWuqt9WM3fWGe1G7ejTyFdPsCJyQFjYwUZBTogwwZBZBclk7yi0tMMpQUtNnRlhRRk32WBAv5yuxfbWvyLBvrS8YAZAIGQW2Voxh48q'
+    send_message = message_to_bot(received_message,clf)
+    response_msg = json.dumps({"recipient":{"id":fbid}, "message":{"text":send_message}})
     status = requests.post(post_message_url, headers={"Content-Type": "application/json"},data=response_msg)
     print(status.json())
