@@ -5,19 +5,19 @@ from utilities import setup_database
 from utilities import add_to_database
 from utilities import get_chat_response
 from utilities import get_question_response
-from utilities import if_exists
-from utilities import learn_response
-from facebook_mapbot import views
+from utilities import learn_question_response
+from utilities import add_learnt_statement_to_database
 
 def setup():
     clf = classify_model()
     setup_database()
-    return clf
+    learn_response = 0
+    return clf, learn_response
 
-def message_to_bot(H,clf):
-    if H.lower() == "bye":                                                                 #empty input
+def message_to_bot(H,clf,learn_response):
+    if H.lower() == "bye" or H.lower() == "bye." or H.lower() == "bye!":                                                                 #empty input
         B = "Bye! I'll miss you!"
-        return B                                                                   #exit loop
+        return B                                                                #exit loop
     #grammar parsing
     subj = set()
     obj = set()
@@ -47,14 +47,16 @@ def message_to_bot(H,clf):
     #classification
     classification = classify_sentence(clf,H)
     #print(classification)
-    add_to_database(classification,subj,root,verb,H)
-    if (classification == 'C' and views.learning_response == 0):
-        B = get_chat_response()
-    elif (classification == 'Q' and views.learning_response == 0):
-        if(if_exists(subj,root,verb)):
-            B = get_question_response(subj,root,verb)
+    if learn_response == 0:
+        add_to_database(classification,subj,root,verb,H)
+        if (classification == 'C'):
+            B = get_chat_response()
+        elif (classification == 'Q'):
+            B,learn_response = get_question_response(subj,root,verb)
+            if learn_response == 1:
+                add_learnt_statement_to_database(subj,root,verb)
         else:
-            B = "I don't know the response to this. Please train me."
+            B = "Oops! I'm not trained for this yet."
     else:
-        B = learn_response(subj,root,verb,H)
-    return(B)
+        B,learn_response = learn_question_response(H)
+    return B,learn_response

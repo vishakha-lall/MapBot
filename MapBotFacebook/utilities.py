@@ -71,8 +71,9 @@ def classify_sentence(clf,user_input):
 
 #setup database
 def setup_database():
+    import config
     import mysql.connector
-    db = mysql.connector.connect(user='root',password='viks1995',host='127.0.0.1',database='mapbot')
+    db = mysql.connector.connect(user=config.user,password=config.password,host=config.host,database=config.database)
     cur = db.cursor()
     cur.execute("CREATE TABLE IF NOT EXISTS chat_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))")
     cur.execute("CREATE TABLE IF NOT EXISTS statement_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))")
@@ -80,23 +81,41 @@ def setup_database():
 
 #add classified sentences to database
 def add_to_database(classification,subject,root,verb,H):
+    import config
     import mysql.connector
-    db = mysql.connector.connect(user='root',password='viks1995',host='127.0.0.1',database='mapbot')
+    db = mysql.connector.connect(user=config.user,password=config.password,host=config.host,database=config.database)
     cur = db.cursor()
     if classification == 'C':
-        cur.execute("INSERT INTO chat_table(subject,root_word,verb,sentence) VALUES (%s,%s,%s,%s)",(str(subject),str(root),str(verb),H))
+        cur.execute("INSERT INTO chat_table(root_word,verb,sentence) VALUES (%s,%s,%s)",(str(root),str(verb),H))
         db.commit()
     elif classification == 'Q':
-        cur.execute("INSERT INTO question_table(subject,root_word,verb,sentence) VALUES (%s,%s,%s,%s)",(str(subject),str(root),str(verb),H))
-        db.commit()
+        cur.execute("SELECT sentence FROM question_table")
+        res = cur.fetchall()
+        exist = 0
+        for r in res:
+            if r[-1] == H:
+                exist = 1
+                break
+        if exist == 0:                                                          #do not add if question already exists
+            cur.execute("INSERT INTO question_table(subject,root_word,verb,sentence) VALUES (%s,%s,%s,%s)",(str(subject),str(root),str(verb),H))
+            db.commit()
     else:
-        cur.execute("INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES (%s,%s,%s,%s)",(str(subject),str(root),str(verb),H))
-        db.commit()
+        cur.execute("SELECT sentence FROM statement_table")
+        res = cur.fetchall()
+        exist = 0
+        for r in res:
+            if r[-1] == H:
+                exist = 1
+                break
+        if exist == 0:                                                          #do not add if question already exists
+            cur.execute("INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES (%s,%s,%s,%s)",(str(subject),str(root),str(verb),H))
+            db.commit()
 
 #get a random chat response
 def get_chat_response():
+    import config
     import mysql.connector
-    db = mysql.connector.connect(user='root',password='viks1995',host='127.0.0.1',database='mapbot')
+    db = mysql.connector.connect(user=config.user,password=config.password,host=config.host,database=config.database)
     cur = db.cursor()
     cur.execute("SELECT COUNT(*) FROM chat_table")
     res = cur.fetchone()
@@ -105,70 +124,65 @@ def get_chat_response():
     chat_id = random.randint(1,total_chat_records+1)
     cur.execute("SELECT sentence FROM chat_table WHERE id = %s" % (int(chat_id)))
     res = cur.fetchone()
-    response_sentence = res[0]
-    return response_sentence
-
-def if_exists(subject,root,verb):
-    import mysql.connector
-    db = mysql.connector.connect(user='root',password='viks1995',host='127.0.0.1',database='mapbot')
-    cur = db.cursor()
-    cur.execute("SELECT COUNT(*) FROM statement_table")
-    res = cur.fetchone()
-    if res[0] == 0:
-        return 0
-    else:
-        return 1
+    B = res[0]
+    return B
 
 def get_question_response(subject,root,verb):
-    from facebook_mapbot import views
+    import config
     import mysql.connector
-    db = mysql.connector.connect(user='root',password='viks1995',host='127.0.0.1',database='mapbot')
+    db = mysql.connector.connect(user=config.user,password=config.password,host=config.host,database=config.database)
     cur = db.cursor()
-    cur.execute('SELECT subject FROM statement_table')
-    res = cur.fetchall()
-    found = 0
-    for r in res:
-        if r[-1] == str(subject):
-            found = 1
-            break
-    if found == 1:
-        if r[-1] == '[]':
-            cur.execute('SELECT root_word FROM statement_table')
-            res_root = cur.fetchall()
-            found_root = 0
-            for r_root in res_root:
-                if r_root[-1] == str(root):
-                    found_root = 1
-            if found_root == 1:
-                cur.execute('SELECT sentence FROM statement_table WHERE root_word="%s"' % (str(root)))
-                res = cur.fetchone()
-                return res[0]
-            else:
-                views.learning_response = 1
-                return "I don't know the response to this. Please train me."
-                #cur.execute("INSERT INTO statement_table(subject,root_word,sentence) VALUES (%s,%s,%s)",(str(subject),str(root),H))
-                #db.commit()
-                #return H
-        else:
-            cur.execute('SELECT verb FROM statement_table WHERE subject="%s"' % (str(subject)))
+    if str(subject) == '[]':
+        cur.execute('SELECT verb FROM statement table')
+        res = cur.fetchall()
+        found = 0
+        for r in res:
+            if r[-1] == str(verb):
+                found = 1
+                break
+        if found == 1:
+            cur.execute('SELECT sentence FROM statement_table WHERE verb="%s"'% (str(verb)))
             res = cur.fetchone()
-            if res[0] == str(verb):
-                cur.execute('SELECT sentence FROM statement_table WHERE subject="%s"' % (str(subject)))
-                res = cur.fetchone()
-                return res[0]
-            else:
-                views.learning_response = 1
-                return "I don't know the response to this. Please train me."
+            B = res[0]
+            return B,0
+        else:
+            B = "Sorry I don't know the response to this. Please train me."
+            return B,1
     else:
-        views.learning_response = 1
-        return "I don't know the response to this. Please train me."
+        cur.execute('SELECT subject FROM statement_table')
+        res = cur.fetchall()
+        found = 0
+        for r in res:
+            if r[-1] == str(subject):
+                found = 1
+                break
+        if found == 1:
+            cur.execute('SELECT sentence FROM statement_table WHERE subject="%s"' % (str(subject)))
+            res = cur.fetchone()
+            B = res[0]
+            return B,0
+        else:
+            B = "Sorry I don't know the response to this. Please train me."
+            return B,1
 
-def learn_response(subject,root,verb,H):
-    from facebook_mapbot import views
+def add_learnt_statement_to_database(subject,root,verb):
+    import config
     import mysql.connector
-    db = mysql.connector.connect(user='root',password='viks1995',host='127.0.0.1',database='mapbot')
+    db = mysql.connector.connect(user=config.user,password=config.password,host=config.host,database=config.database)
     cur = db.cursor()
-    cur.execute("INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES (%s,%s,%s,%s)",(str(subject),str(root),str(verb),H))
+    cur.execute("INSERT INTO statement_table(subject,root_word,verb) VALUES (%s,%s,%s)",(str(subject),str(root),str(verb)))
     db.commit()
-    views.learning_response = 0
-    return H
+
+def learn_question_response(H):
+    import config
+    import mysql.connector
+    db = mysql.connector.connect(user=config.user,password=config.password,host=config.host,database=config.database)
+    cur = db.cursor(buffered=True)
+    cur.execute("SELECT id FROM statement_table ORDER BY id DESC")
+    res = cur.fetchone()
+    last_id = res[0]
+    print(last_id)
+    cur.execute('UPDATE statement_table SET sentence=%s WHERE id=%s',(H,last_id))
+    db.commit()
+    B = "Thank you! I have learnt this."
+    return B,0
