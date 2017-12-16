@@ -41,7 +41,6 @@ class mapbotView(generic.View):
 def post_facebook_message(fbid, received_message):
     post_message_url = config.url
     global learn_response
-    print(learn_response)
     send_message, learn_response = message_to_bot(received_message,clf,learn_response)                         #send received message to bot and retrieve appropriate response
     response_msg = json.dumps({"recipient":{"id":fbid}, "message":{"text":send_message}})
     status = requests.post(post_message_url, headers={"Content-Type": "application/json"},data=response_msg)

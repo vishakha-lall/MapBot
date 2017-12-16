@@ -157,10 +157,23 @@ def get_question_response(subject,root,verb):
                 found = 1
                 break
         if found == 1:
-            cur.execute('SELECT sentence FROM statement_table WHERE subject="%s"' % (str(subject)))
+            cur.execute('SELECT verb FROM statement_table WHERE subject="%s"' % (str(subject)))
             res = cur.fetchone()
-            B = res[0]
-            return B,0
+            checkVerb = res[0]                                                  #checkVerb is a string while verb is a list. checkVerb ['verb']
+            if checkVerb == '[]':
+                cur.execute('SELECT sentence FROM statement_table WHERE subject="%s"' % (str(subject)))
+                res = cur.fetchone()
+                B = res[0]
+                return B,0
+            else:
+                if checkVerb[2:-2] == verb[0]:
+                    cur.execute('SELECT sentence FROM statement_table WHERE subject="%s"' % (str(subject)))
+                    res = cur.fetchone()
+                    B = res[0]
+                    return B,0
+                else:
+                    B = "Sorry I don't know the response to this. Please train me."
+                    return B,1
         else:
             B = "Sorry I don't know the response to this. Please train me."
             return B,1
