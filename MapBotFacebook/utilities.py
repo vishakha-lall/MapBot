@@ -78,6 +78,7 @@ def setup_database():
     cur.execute("CREATE TABLE IF NOT EXISTS chat_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))")
     cur.execute("CREATE TABLE IF NOT EXISTS statement_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))")
     cur.execute("CREATE TABLE IF NOT EXISTS question_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))")
+    cur.execute("CREATE TABLE IF NOT EXISTS directions_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, origin_location VARCHAR(100), destination_location VARCHAR(100))")
 
 #add classified sentences to database
 def add_to_database(classification,subject,root,verb,H):
@@ -194,7 +195,6 @@ def learn_question_response(H):
     cur.execute("SELECT id FROM statement_table ORDER BY id DESC")
     res = cur.fetchone()
     last_id = res[0]
-    print(last_id)
     cur.execute('UPDATE statement_table SET sentence=%s WHERE id=%s',(H,last_id))
     db.commit()
     B = "Thank you! I have learnt this."
