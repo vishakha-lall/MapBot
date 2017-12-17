@@ -7,6 +7,7 @@ from utilities import get_chat_response
 from utilities import get_question_response
 from utilities import learn_question_response
 from utilities import add_learnt_statement_to_database
+from googleMapsApiModule import direction
 
 def setup():
     clf = classify_model()
@@ -53,10 +54,17 @@ def message_to_bot(H,clf,learn_response):
             B = get_chat_response()
         elif (classification == 'Q'):
             B,learn_response = get_question_response(subj,root,verb)
-            if learn_response == 1:
+            if learn_response == 1 and len(proper_nouns) < 2:
                 add_learnt_statement_to_database(subj,root,verb)
+            else:
+                learn_response = 0
+                B = "I will certainly help you with that."
         else:
             B = "Oops! I'm not trained for this yet."
     else:
         B,learn_response = learn_question_response(H)
+    if len(proper_nouns) >= 2:
+        if subj[0] == "distance":
+            if len(proper_nouns) == 2:
+                direction(proper_nouns.pop(),proper_nouns.pop())
     return B,learn_response
