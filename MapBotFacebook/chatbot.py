@@ -71,7 +71,7 @@ def message_to_bot(H,clf,learn_response):
             B,learn_response = get_question_response(subj,root,verb)
             if learn_response == 1 and (len(proper_nouns) == 0 or (len(proper_nouns) == 1 and H.split(" ",1)[0] != "Where")):
                 add_learnt_statement_to_database(subj,root,verb)
-            else:
+            if learn_response == 1 and (len(proper_nouns) >= 2 or (len(proper_nouns) == 1 and H.split(" ",1)[0] == "Where")):
                 learn_response = 0
                 B = "I will certainly help you with that."
         else:

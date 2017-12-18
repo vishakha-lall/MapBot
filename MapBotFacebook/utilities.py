@@ -86,6 +86,7 @@ def add_to_database(classification,subject,root,verb,H):
     import mysql.connector
     db = mysql.connector.connect(user=config.user,password=config.password,host=config.host,database=config.database)
     cur = db.cursor()
+    cur = db.cursor(buffered=True)
     if classification == 'C':
         cur.execute("INSERT INTO chat_table(root_word,verb,sentence) VALUES (%s,%s,%s)",(str(root),str(verb),H))
         db.commit()
@@ -118,6 +119,7 @@ def get_chat_response():
     import mysql.connector
     db = mysql.connector.connect(user=config.user,password=config.password,host=config.host,database=config.database)
     cur = db.cursor()
+    cur = db.cursor(buffered=True)
     cur.execute("SELECT COUNT(*) FROM chat_table")
     res = cur.fetchone()
     total_chat_records = res[0]
