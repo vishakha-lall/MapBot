@@ -10,6 +10,7 @@ from utilities import add_learnt_statement_to_database
 from googleMapsApiModule import direction
 from googleMapsApiModule import add_to_maps_database
 from googleMapsApiModule import get_from_maps_database
+from googleMapsApiModule import geocoding
 
 def setup():
     clf = classify_model()
@@ -68,7 +69,7 @@ def message_to_bot(H,clf,learn_response):
             B = get_chat_response()
         elif (classification == 'Q'):
             B,learn_response = get_question_response(subj,root,verb)
-            if learn_response == 1 and len(proper_nouns) < 2:
+            if learn_response == 1 and (len(proper_nouns) == 0 or (len(proper_nouns) == 1 and H.split(" ",1)[0] != "Where")):
                 add_learnt_statement_to_database(subj,root,verb)
             else:
                 learn_response = 0
@@ -77,7 +78,7 @@ def message_to_bot(H,clf,learn_response):
             B = "Oops! I'm not trained for this yet."
     else:
         B,learn_response = learn_question_response(H)
-    if len(proper_nouns) >= 2 and len(subj) != 0:
+    if (len(proper_nouns) >= 2 or (len(proper_nouns) >= 1 and H.split(" ",1)[0] == "Where")) and len(subj) != 0:
         if subj[0] == "distance":
             if len(proper_nouns) == 2:
                 add_to_maps_database(proper_nouns.pop(),proper_nouns.pop())
@@ -86,4 +87,8 @@ def message_to_bot(H,clf,learn_response):
             else:
                 B = "I didn't get that. Can you please give me the origin location?"
                 learn_response = 2
+        if len(proper_nouns) == 1:
+            location = proper_nouns.pop()
+            if subj[0] == "geocoding" or subj[0] == location:
+                geocoding(location)
     return B,learn_response
