@@ -2,7 +2,7 @@
 def parse_sentence(user_input):                               #returns root word, triples of StanfordDependencyParser
     import os
     from nltk.parse.stanford import StanfordDependencyParser
-    path = 'C:\\Users\\Vishakha Lall\\Projects\\Python\\MapBotChatBot\\stanford-corenlp-full-2017-06-09\\'
+    path = 'stanford-corenlp-full-2017-06-09\\'
     path_to_jar = path + 'stanford-corenlp-3.8.0.jar'
     path_to_models_jar = path + 'stanford-corenlp-3.8.0-models.jar'
     dependency_parser = StanfordDependencyParser(path_to_jar=path_to_jar, path_to_models_jar=path_to_models_jar)
@@ -16,7 +16,7 @@ def classify_model():
     import numpy as np
     import pandas as pd
     from sklearn.ensemble import RandomForestClassifier
-    FNAME = 'C:\\Users\\Vishakha Lall\\Projects\\Python\\MapBotChatBot\\analysis\\featuresDump.csv'
+    FNAME = 'analysis\\featuresDump.csv'
     df = pd.read_csv(filepath_or_buffer = FNAME, )
     df.columns = df.columns[:].str.strip()                                      # Strip any leading spaces from col names
     df['class'] = df['class'].map(lambda x: x.strip())
