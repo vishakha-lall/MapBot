@@ -79,11 +79,11 @@ An improvement over SimpleBot to enhance conversation between the user and Mapbo
 * Setup Django server
 * Setup secure tunnels to localhost using ngrok
 * Create a file config.py in the root directory with the following parameter values
-  * user="<database username>"
-  * password="<database password>"
-  * host="<mySQL host address>"
+  * user="database username"
+  * password="database password"
+  * host="mySQL host address"
   * database="database name"
   * verification_token="verification token for facebook webhook"
-  * url="https://graph.facebook.com/v2.11/me/messages?access_token=<access token generated>"
+  * url="https://graph.facebook.com/v2.11/me/messages?access_token=access token generated"
 * Send and receive messages
 
