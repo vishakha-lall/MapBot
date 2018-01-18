@@ -71,3 +71,11 @@ An improvement over SimpleBot to enhance conversation between the user and Mapbo
 * **requirements.txt**
 * **utilities.py** Multiple functions to perform diverse tasks.
 * **chatbot.py** Main chatbot module.
+
+## Install and Setup
+* Install Python 3.6
+* Install requirements.txt
+* Create a new Facebook app on the Facebook Developer site
+* Setup Django server
+* Setup secure tunnels to localhost using ngrok
+* Send and receive messages
