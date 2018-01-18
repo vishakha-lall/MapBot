@@ -8,6 +8,7 @@ The blog provides functionality of viewing blog posts, adding new blog posts and
 
 ## SimpleBot
 **Week 3 LITG**  
+SimpleBot is a toy chatbot developed in Python with a mySQL database backend. The bot stores a table of word associations for responses to a previous sentence and uses this to match future responses.
 A basic bot example which learns from the previous conversation with the user. It maintains a database of previous replies to the same questions and responds based on queries from the database. 
 It does not extract the meaning of sentences written by the user. When the user types a message, it is understood as an answer to previous statement made by the chatbot. The sentence typed by the user will then be associated with the words present in the previous message. The human message is decomposed in words. The program will try to identify which sentences correspond best to those words, according to its previous “experience”.
 The limitations of the SimpleBot are the motivation for using NLP and ML.
