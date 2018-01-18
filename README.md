@@ -75,6 +75,7 @@ An improvement over SimpleBot to enhance conversation between the user and Mapbo
 ## Install and Setup
 * Install Python 3.6
 * Install requirements.txt
+* Create an API key for Google Maps API on the Google Developer site
 * Create a new Facebook app on the Facebook Developer site
 * Setup Django server
 * Setup secure tunnels to localhost using ngrok
