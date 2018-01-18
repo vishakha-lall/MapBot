@@ -56,10 +56,18 @@ An improvement over SimpleBot to enhance conversation between the user and Mapbo
 * urllib3 1.22
 
 ## Files and Components
-* features.py Feature Generator
+* **features.py** Feature Generator
   This Python module extracts features from a sentence.
   The features.py module includes a function
      get_triples(pos)
   which returns a string of the form "POS-POS-POS" where "POS" is a Part-Of-Speech tag.
-* featuresDump.csv is a dump of features extracted from the sentences.csv using the Feature Generator. This data is then used to train a Random Forrest Model to classify a sentence as a Chat, Statement or Question. The Question and Statement predictions are reported as greater than 80% accurate and the features extraction method could easily be expanded on and enhanced.
-Also the training data-set is small. 
+* **featuresDump.py** is a list of extracted features. **featuresDump.csv** is a dump of features extracted from the sentences.csv using the Feature Generator. This data is then used to train a Random Forrest Model to classify a sentence as a Chat, Statement or Question. The Question and Statement predictions are reported as greater than 80% accurate and the features extraction method could easily be expanded on and enhanced. Also the training data-set is small. 
+* **googleMapsApiModule.py** is a module with several googleMaps functions. 
+  ** direction(origin,destination) Processes the origin and destination request to obtain the directions and display the result in the default browser.
+  ** add_to_maps_database(origin,destination) Add field to the maps table.
+  ** get_from_maps_database() Retrive field from the maps table.
+  ** geocoding(search_location) Processes search location to get geocoded result, and displays the result in the default browser.
+* **manage.py** 
+* **requirements.txt**
+* **utilities.py** Multiple functions to perform diverse tasks.
+* **chatbot.py** Main chatbot module.
