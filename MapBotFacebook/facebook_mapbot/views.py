@@ -14,7 +14,7 @@ clf, learn_response = setup()                                                   
 class mapbotView(generic.View):
 
     def get(self, request, **kwargs):
-        if self.request.GET['hub.verify_token'] == config.verification_token:
+        if self.request.GET['hub.verify_token'] == str(config.verification_token):
                 return HttpResponse(self.request.GET['hub.challenge'])
         else:
             return HttpResponse('Error, invalid token')

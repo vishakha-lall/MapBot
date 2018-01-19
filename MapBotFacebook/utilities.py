@@ -134,9 +134,9 @@ def get_question_response(subject,root,verb):
     import config
     import mysql.connector
     db = mysql.connector.connect(user=config.user,password=config.password,host=config.host,database=config.database)
-    cur = db.cursor()
+    cur = db.cursor(buffered=True)
     if str(subject) == '[]':
-        cur.execute('SELECT verb FROM statement table')
+        cur.execute('SELECT verb FROM statement_table')
         res = cur.fetchall()
         found = 0
         for r in res:

@@ -1,7 +1,8 @@
 def direction(origin,destination):
     import googlemaps
     import webbrowser
-    gmaps = googlemaps.Client(key='AIzaSyDK7i8tLOzpfgaSVg1bZ-4cQGOXfi_IfTg')
+    import config
+    gmaps = googlemaps.Client(config.key)
     result = gmaps.directions(origin,destination) #other attributes
     #print("Total distance: "+str(result[0]['legs'][0]['distance']['text']))
     #print("Calculated duration: "+str(result[0]['legs'][0]['duration']['text']))
@@ -57,7 +58,8 @@ def get_from_maps_database():
 def geocoding(search_location):
     import googlemaps
     import webbrowser
-    gmaps = googlemaps.Client(key='AIzaSyDK7i8tLOzpfgaSVg1bZ-4cQGOXfi_IfTg')
+    import config
+    gmaps = googlemaps.Client(config.key)
     result = gmaps.geocode(search_location)
     print("Formatted Address: "+result[0]['formatted_address'])
     print("Latitude: "+str(result[0]['geometry']['location']['lat'])+" "+"Longitude: "+str(result[0]['geometry']['location']['lng']))
