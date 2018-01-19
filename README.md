@@ -13,6 +13,7 @@ This project was attempted as a part of the Learn It, Girl mentorship program. T
 <br/>
 <br/>
 <br/>
+
 ## TestBlog 
 A blog example created using Django.
 The blog provides functionality of viewing blog posts, adding new blog posts and editing existing blog posts. It also includes security features so that changes can be made only by an authenticated user.
