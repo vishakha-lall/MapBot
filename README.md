@@ -1,5 +1,8 @@
 # MapBot
 The project aims to give users a new way to interact with Google Maps by building engaging text-based conversational interfaces. Using Natural Language Processing, it analyses the user's intent and responds in the most useful way.
+/n
+/n
+/n
 
 ## TestBlog
 **Week 2 LITG**   
