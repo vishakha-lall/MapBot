@@ -1,7 +1,9 @@
-def direction(origin,destination):
     import googlemaps
     import webbrowser
     import config
+    import mysql.connector
+
+def direction(origin,destination):
     gmaps = googlemaps.Client(config.key)
     result = gmaps.directions(origin,destination) #other attributes
     #print("Total distance: "+str(result[0]['legs'][0]['distance']['text']))
@@ -20,8 +22,6 @@ def direction(origin,destination):
     webbrowser.open_new(result_url)
 
 def add_to_maps_database(origin,destination):
-    import config
-    import mysql.connector
     db = mysql.connector.connect(user=config.user,password=config.password,host=config.host,database=config.database)
     cur = db.cursor()
     cur = db.cursor(buffered=True)
@@ -39,8 +39,6 @@ def add_to_maps_database(origin,destination):
         db.commit()
 
 def get_from_maps_database():
-    import config
-    import mysql.connector
     db = mysql.connector.connect(user=config.user,password=config.password,host=config.host,database=config.database)
     cur = db.cursor()
     cur = db.cursor(buffered=True)
@@ -56,9 +54,6 @@ def get_from_maps_database():
     return origin,destination
 
 def geocoding(search_location):
-    import googlemaps
-    import webbrowser
-    import config
     gmaps = googlemaps.Client(config.key)
     result = gmaps.geocode(search_location)
     print("Formatted Address: "+result[0]['formatted_address'])

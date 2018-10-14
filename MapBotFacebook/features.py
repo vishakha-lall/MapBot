@@ -1,19 +1,17 @@
 # pass in a sentence, pass out it's features
 import nltk
-from nltk import word_tokenize
-
-lemma = nltk.wordnet.WordNetLemmatizer()
-sno = nltk.stem.SnowballStemmer('english')
-from nltk.corpus import stopwords
-
 import pandas as pd
-
 import csv
 import sys
 import hashlib
 import re
 import string
 import itertools
+from nltk import word_tokenize
+from nltk.corpus import stopwords
+
+lemma = nltk.wordnet.WordNetLemmatizer()
+sno = nltk.stem.SnowballStemmer('english')
 
 line = ["xxx","Oracle 12.2 will be released for on-premises users on 15 March 2017",0,"S"]
 
