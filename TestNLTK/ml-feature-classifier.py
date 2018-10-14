@@ -4,7 +4,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 FNAME = 'C:\\Users\\Vishakha Lall\\Projects\\Python\\TestNLTK\\featuresDump.csv'
 
-df = pd.read_csv(filepath_or_buffer = FNAME, )
+df = pd.read_csv(filepath_or_buffer = FNAME)
 print(str(len(df)), "rows loaded")
 
 df.columns = df.columns[:].str.strip()
@@ -18,7 +18,7 @@ train, test = df[df['is_train']==True], df[df['is_train']==False]
 print(str(len(train)), " rows split into training set,", str(len(test)), "split into test set.")
 
 features = df.columns[1:width-1]  #remove the first ID col and last col=classifier
-print("FEATURES = {}".format(features))
+print(f"FEATURES = {features}")
 clf = RandomForestClassifier(n_jobs=2, n_estimators = 100)
 clf.fit(train[features], train['class'])
 preds = clf.predict(test[features])

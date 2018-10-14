@@ -1,7 +1,9 @@
 #converts given geographical coordinates to nearest Address
 import googlemaps
 import webbrowser
-gmaps = googlemaps.Client(key='AIzaSyDK7i8tLOzpfgaSVg1bZ-4cQGOXfi_IfTg')
+import config
+
+gmaps = googlemaps.Client(key=config.key)
 coordinates = [x for x in input("Enter latitude and longitude: ").split()];
 result = gmaps.reverse_geocode(coordinates)
 print("Formatted Address: "+result[0]['formatted_address'])
