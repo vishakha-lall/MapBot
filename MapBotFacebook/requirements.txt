@@ -3,7 +3,7 @@ chardet==3.0.4
 colorama==0.3.9
 cycler==0.10.0
 decorator==4.1.2
-Django==1.11.8
+Django==1.11.28
 googlemaps==2.5.1
 idna==2.6
 ipython==6.1.0
