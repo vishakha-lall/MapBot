@@ -67,3 +67,10 @@ During the GSSoC term, the primary scopes for MapBot would be around:
   - javahome = <your_path_to_jdk_bin_java.exe>
 - Install dependencies from `requirements.txt` file. Run `pip install -r requirements.txt`
 - You're all set up, run the `init.py` file. `python init.py` 
+
+------
+
+##### Want to see me in action?
+
+Here's a Medium article with the some superficial explanations, there are some video links too!
+
