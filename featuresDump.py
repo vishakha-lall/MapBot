@@ -1,7 +1,5 @@
-##################################################################
 # Use the features.py module to dump out features
 # read in a CSV of sentences and bulk-dump to dump.csv of features
-##################################################################
 
 #Input CSV fmt:  1st field is sentence ID, 2nd field is text to process, 3rd field is class
 

@@ -1,12 +1,17 @@
+def setup_nltk():
+    import nltk
+    nltk.download('punkt')
+    nltk.download('averaged_perceptron_tagger')
+    nltk.download('stopwords')
 #grammar parsing
 def parse_sentence(user_input):                               #returns root word, triples of StanfordDependencyParser
     import os
     from nltk.parse.stanford import StanfordDependencyParser
-    path = 'stanford-corenlp-full-2017-06-09\\'
-    path_to_jar = path + 'stanford-corenlp-3.8.0.jar'
-    path_to_models_jar = path + 'stanford-corenlp-3.8.0-models.jar'
+    import config
+    path_to_jar = config.stanford_path_to_jar
+    path_to_models_jar = config.stanford_path_to_models_jar
     dependency_parser = StanfordDependencyParser(path_to_jar=path_to_jar, path_to_models_jar=path_to_models_jar)
-    os.environ['JAVA_HOME'] = 'C:\\ProgramData\\Oracle\\Java\\javapath'
+    os.environ['JAVAHOME'] = config.javahome
     result = dependency_parser.raw_parse(user_input)
     dep = next(result)                                                          # get next item from the iterator result
     return dep.triples(),dep.root["word"]

@@ -1,7 +1,7 @@
-    import googlemaps
-    import webbrowser
-    import config
-    import mysql.connector
+import googlemaps
+import webbrowser
+import config
+import mysql.connector
 
 def direction(origin,destination):
     gmaps = googlemaps.Client(config.key)

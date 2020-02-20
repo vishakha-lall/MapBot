@@ -7,12 +7,14 @@ from utilities import get_chat_response
 from utilities import get_question_response
 from utilities import learn_question_response
 from utilities import add_learnt_statement_to_database
+from utilities import setup_nltk
 from googleMapsApiModule import direction
 from googleMapsApiModule import add_to_maps_database
 from googleMapsApiModule import get_from_maps_database
 from googleMapsApiModule import geocoding
 
 def setup():
+    setup_nltk()
     clf = classify_model()
     setup_database()
     learn_response = 0
