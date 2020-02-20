@@ -34,6 +34,23 @@ During the GSSoC term, the primary scopes for MapBot would be around:
 - Broad-ranging API integration
 - Broad-ranging UI integration
 
+#### What are the expectations from participants during GSSoC 2020?
+
+- This project is suitable for participants who find their skills aligning to the scopes as described above. 
+- Following is the proficiency expected from participants based on the level of tasks.
+  - The codebase is in Python, so **at least** beginner proficiency in the language is expected to pick up any task.
+  - Beginner level tasks would be suitable for those completely new to Open Source Contribution, these tasks would help you get in the gear for further contributions to the project.
+  - Easy level tasks would require understanding the project. These would still be tasks that could typically be completed in a couple of hours.
+  - Medium level tasks would be specific modules of the bigger picture. These would consume a few hours so make sure you get your cup of coffee.
+  - Hard level tasks will be gamechangers!
+- The mentors and admin will be extremely liberal with points awarded to participants as long as participants respect the correct methodology of contribution.
+- Participants are required to strictly follow the guidelines while attempting a task and raising pull requests.
+- All task issues would be created with a description of the requirements, if participants find any ambiguity/require clarification, feel free to start a thread on the issue tagging any mentor/admin. GitHub should be the primary medium to ask for clarifications on a specific issue.
+- Participants are expected to be creative, if you feel that an approach towards the issue is better for the project, do speak up! Express your idea on the issue thread, we might even create new issues and assign them to you to implement your idea! Remember more issues = more points for grabs!
+- If a participant wishes to try out something entirely new (beyond the scopes of the project), talk to the mentor and admins! We would be more than willing to adapt, the idea should of course align with the goals. Brownie points for thinking out of the box!
+- Mentors and project admin would support participants throughout the contribution period (and beyond) but never code out the solution. 
+- Make sure you are respectful of others participants, mentors and admin. Take criticism positively and share positive feedback whenever you feel like.
+
 ------
 
 ##### What are some pre-requisites?
