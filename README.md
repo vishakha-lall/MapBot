@@ -25,7 +25,7 @@ The primary motivation of the developers of MapBot is to provide a playground to
 
 ##### What are the scopes for MapBot during GSSoC 2020?
 
-MapBot is one of the projects open for contribution under [GSSoC 2020](https://www.gssoc.tech/). 
+MapBot is one of the projects open for contribution under [GSSoC 2020](https://www.gssoc.tech/projects.html). 
 
 During the GSSoC term, the primary scopes for MapBot would be around:
 
@@ -33,6 +33,8 @@ During the GSSoC term, the primary scopes for MapBot would be around:
 - Containerizing the application
 - Broad-ranging API integration
 - Broad-ranging UI integration
+
+For more information, check out the [GSSoC File](GSSoC.md)
 
 #### What are the expectations from participants during GSSoC 2020?
 
@@ -72,7 +74,9 @@ During the GSSoC term, the primary scopes for MapBot would be around:
   - Enter root password when prompted
   - `create database mapbot;`
   - Verify creation of the database `show databases;`
-- Unzip the StanfordCoreNLP package and keep the path to `stanford-corenlp-x.x.x.jar` and `stanford-corenlp-x.x.x-models.jar` handy.
+- Unzip the StanfordCoreNLP package in the repository and keep the file names `stanford-corenlp-x.x.x.jar` and `stanford-corenlp-x.x.x-models.jar` handy.
+- Add config.py file to .gitignore to avoid pushing changes made to config
+- Run `git rm --cached config.py`
 - Edit the config.py file with the corresponding values
   - user = "root"
   - password = <your_root_password>
@@ -89,5 +93,5 @@ During the GSSoC term, the primary scopes for MapBot would be around:
 
 ##### Want to see me in action?
 
-Here's a Medium article with the some superficial explanations, there are some video links too!
+Here's a [Medium article](http://bit.ly/39Y9WCq) with the some superficial explanations, there are some video links too!
 
