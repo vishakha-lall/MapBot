@@ -45,7 +45,7 @@ During the GSSoC term, the primary scopes for MapBot would be around:
 Use the `init.py` file to debug any changes made to the bot (with or without the API) before pushing it into your GitHub branch.
 
 #### Contribution Flow - How do I start contributing?
-- The first step is to find an active issue that you find interesting. Go over to the [Issues](https://github.com/vishakha-lall/MapBot/issues) and look for active issues. Few things to keep in mind:
+- The first step is to find an open issue that you find interesting. Go over to the [Issues](https://github.com/vishakha-lall/MapBot/issues) and look for active issues. Few things to keep in mind:
   - Only issues labelled as <kbd>gssoc</kbd> are being monitored constantly. If you want to take up a different issue/ suggest a new issue, get in touch with the mentors/project admin. They will certainly help you take it up.
   - Select the issue based on the level of difficulty. Look out for the <kbd>beginner</kbd>, <kbd>easy</kbd>, <kbd>medium</kbd> and <kbd>hard</kbd> labels.
 - Take a look at this [dummy issue](https://github.com/vishakha-lall/MapBot/issues/11) that describes the procedure of interacting on an issue. 
