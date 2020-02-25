@@ -29,7 +29,7 @@ MapBot is one of the projects open for contribution under [GSSoC 2020](https://w
 
 During the GSSoC term, the primary scopes for MapBot would be around:
 
-- NLP algorithm
+- NLP improvements
 - Containerizing the application
 - Broad-ranging API integration
 - Broad-ranging UI integration
@@ -67,7 +67,6 @@ For more information, check out the [GSSoC File](GSSoC.md)
   - Linux and MacOS- Follow the instructions to download the file from [here](https://stanfordnlp.github.io/CoreNLP/download.html).  
 
 ##### How to set me up?
-
 - Clone the repository
 - Create the **mapbot** database in mySQL
   -  `mysql -uroot -p -hlocalhost` 
@@ -88,6 +87,9 @@ For more information, check out the [GSSoC File](GSSoC.md)
   - javahome = <your_path_to_jdk_bin_java.exe>
 - Install dependencies from `requirements.txt` file. Run `pip install -r requirements.txt`
 - You're all set up, run the `init.py` file. `python init.py` 
+- It is recommended that you set this project up in a virtual environment to keep the dependencies separated and for easier debugging. Here's how you can do that - 
+    1. [Python](https://realpython.com/python-virtual-environments-a-primer/#why-the-need-for-virtual-environments)
+    2. [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
 
 ------
 

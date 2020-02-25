@@ -7,6 +7,7 @@ During the GSSoC term, the primary scopes for MapBot would be around:
 - NLP improvements
     - Increase the training data set through various methods (crowd sourcing, public datasets etc.)
     - Try out different NLP models (Sequence to Sequence Models, Ensemble Classification Models etc.) and word vectorization techniques (word2vec, tfidf)
+    - Retraining of models after a certain number of incorrect responses have been given as input by users
 - Containerizing the application
 - Broad-ranging API integration
 - Broad-ranging UI integration
@@ -30,3 +31,10 @@ During the GSSoC term, the primary scopes for MapBot would be around:
 
 #### Debugging
 Use the `init.py` file to debug any changes made to the bot (with or without the API) before pushing it into your GitHub branch.
+
+#### Data Information
+The [analysis](analysis/) folder contains data files for the project. The [sentences.csv](analysis/sentences.csv) contains the base training dataset which is used to classify the user's input into three classes - Statement, Question, and Chat. Going through some examples would clarify the difference between statement and chat. The [featuresDump.csv](analysis/featuresDump.csv) is the result of text pre-processing done using the code in [features.py](features.py) and [featuresDump.py](featuresDump.py).
+
+
+
+
