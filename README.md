@@ -66,7 +66,11 @@ Check out all related information [here](GSSoC.md)
     2. [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
 
 ------
+##### How do I work?
 
+The analysis folder contains data files for the project. The sentences.csv contains the base training dataset which is used to classify the user's input into three classes - Statement, Question, and Chat. Going through some examples would clarify the difference between statement and chat. The featuresDump.csv is the result of text pre-processing done using the code in features.py and featuresDump.py.
+
+------
 ##### Want to see me in action?
 
 Here's a [Medium article](http://bit.ly/39Y9WCq) with the some superficial explanations, there are some video links too!
