@@ -9,8 +9,20 @@ During the GSSoC term, the primary scopes for MapBot would be around:
     - Try out different NLP models (Sequence to Sequence Models, Ensemble Classification Models etc.) and word vectorization techniques (word2vec, tfidf)
     - Retraining of models after a certain number of incorrect responses have been given as input by users
 - Containerizing the application
+    - Set up docker-compose 
+    - Persist data in db and automate schema initialisation and data seeding 
 - Broad-ranging API integration
+    - Places API
+    - Distance Matrix API
+    - Elevation API
+    - Geocoding API
+    - Geolocation API
+    - Roads API
+    - Time Zone API
 - Broad-ranging UI integration
+    - Facebook
+    - Whatsapp
+    - Telegram
 
 #### What are the expectations from participants during GSSoC 2020?
 
