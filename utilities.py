@@ -73,7 +73,7 @@ def classify_sentence(clf,user_input):
     myFeatures = s[1:width-1]  #All but the last item (this is the class for supervised learning mode)
     predict = clf.predict([myFeatures])
     return predict[0].strip()
-
+'''
 #setup database
 def setup_database():
     import config
@@ -206,3 +206,4 @@ def learn_question_response(H):
     db.commit()
     B = "Thank you! I have learnt this."
     return B,0
+'''
