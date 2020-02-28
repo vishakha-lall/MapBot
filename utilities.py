@@ -21,7 +21,7 @@ def classify_model():
     import numpy as np
     import pandas as pd
     from sklearn.ensemble import RandomForestClassifier
-    FNAME = 'analysis\\featuresDump.csv'
+    FNAME = 'analysis/featuresDump.csv'
     df = pd.read_csv(filepath_or_buffer = FNAME, )
     df.columns = df.columns[:].str.strip()                                      # Strip any leading spaces from col names
     df['class'] = df['class'].map(lambda x: x.strip())

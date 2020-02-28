@@ -5,14 +5,7 @@ import mysql.connector
 
 def direction(origin,destination):
     gmaps = googlemaps.Client(config.key)
-    result = gmaps.directions(origin,destination) #other attributes
-    #print("Total distance: "+str(result[0]['legs'][0]['distance']['text']))
-    #print("Calculated duration: "+str(result[0]['legs'][0]['duration']['text']))
-    #print("Steps: ")
-    #for i in range(len(result[0]['legs'][0]['steps'])):
-    #    print("Step "+str(i+1)+" "+str(result[0]['legs'][0]['steps'][i]['html_instructions']))
-    #    print("Continue this step for "+str(result[0]['legs'][0]['steps'][i]['distance']['text'])+" and an approximate of "+str(result[0]['legs'][0]['steps'][i]['duration']['text']))
-    #    print("")
+    result = gmaps.directions(origin,destination)
     address = "origin="+origin+"&"+"destination="+destination
     address = address.lower()
     address = address.replace(" ","+")
