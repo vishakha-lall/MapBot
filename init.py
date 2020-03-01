@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 from chatbot import setup
 from chatbot import message_to_bot
 clf, learn_response = setup()    
