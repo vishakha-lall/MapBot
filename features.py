@@ -11,6 +11,7 @@ import hashlib
 import re
 import string
 import itertools
+import random
 from nltk import word_tokenize
 from nltk.corpus import stopwords
 
