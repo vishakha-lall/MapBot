@@ -1,4 +1,5 @@
 from utilities import getcoding
+
 from utilities import matplotlib.pyplot as plt setup
 from utilities import parse_sentence
 from utilities import classify_model
@@ -6,6 +7,7 @@ from utilities import classify_sentence
 from utilities import setup_database
 from utilities import add_to_database
 from utilities import get_chat_response
+from maps_utilities import get_chat_response
 from utilities import get_question_response
 from utilities import learn_question_response
 from utilities import add_learnt_statement_to_database
