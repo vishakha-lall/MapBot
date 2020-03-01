@@ -20,6 +20,7 @@ def setup():
     learn_response = 0
     return clf, learn_response
 
+
 def message_to_bot(H,clf,learn_response):
     if learn_response == 2:
         add_to_maps_database(H,"")
@@ -35,8 +36,11 @@ def message_to_bot(H,clf,learn_response):
         return B,learn_response
     if H.lower() == "bye" or H.lower() == "bye." or H.lower() == "bye!":                                                                 #empty input
         B = "Bye! I'll miss you!"
-        return B,learn_response                                                                #exit loop
+        return B,learn_response   
+    
+    #exit loop
     #grammar parsing
+    
     subj = set()
     obj = set()
     verb = set()
