@@ -1,4 +1,6 @@
 import googlemaps
+import mapteam
+import mapbot
 import webbrowser
 import config
 import mysql.connector
@@ -18,6 +20,7 @@ def add_to_maps_database(origin,destination):
     db = mysql.connector.connect(user=config.user,password=config.password,host=config.host,database=config.database)
     cur = db.cursor()
     cur = db.cursor(buffered=True)
+    bot=db.cursor(mapteam)
     if destination == "":
         cur.execute("INSERT INTO directions_table(origin_location) VALUES (%s)",(origin,))
         db.commit()
