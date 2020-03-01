@@ -12,6 +12,7 @@ import re
 import string
 import itertools
 import random
+import sklearn
 from nltk import word_tokenize
 from nltk.corpus import stopwords
 
