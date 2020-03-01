@@ -1,4 +1,7 @@
 import matplotlib.pyplot as plt
+import io
+import os
+read csv
 from chatbot import setup
 from chatbot import message_to_bot
 clf, learn_response = setup()    
