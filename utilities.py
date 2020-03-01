@@ -8,6 +8,7 @@ def parse_sentence(user_input):                               #returns root word
     import os
     from nltk.parse.stanford import StanfordDependencyParser
     import config
+    import re
     path_to_jar = config.stanford_path_to_jar
     path_to_models_jar = config.stanford_path_to_models_jar
     dependency_parser = StanfordDependencyParser(path_to_jar=path_to_jar, path_to_models_jar=path_to_models_jar)
@@ -45,7 +46,6 @@ def classify_sentence(clf,user_input):
     keys = ["id",
     "wordCount",
     "stemmedCount",
-    "stemmedEndNN",
     "CD",
     "NN",
     "NNP",
@@ -152,7 +152,9 @@ def get_question_response(subject,root,verb):
             cur.execute('SELECT sentence FROM statement_table WHERE verb="%s"'% (str(verb)))
             res = cur.fetchone()
             B = res[0]
+            C=call[0]
             return B,0
+            return C,0
         else:
             B = "Sorry I don't know the response to this. Please train me."
             return B,1
