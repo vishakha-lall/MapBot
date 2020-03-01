@@ -13,6 +13,7 @@ When will the Oracle 12.2 database be released,Q
 When will 12.3 be released?,Q
 Will that be on premise?,Q
 Who is Ed Bullen?,Q
+Min is android appliction grant
 MAX is Mobile Application Accelerator,S
 The Product Manager for MAX is Grant Henry,S
 ChatbotCS is the Oracle Chatbot Cloud Service,S
@@ -23,7 +24,6 @@ ABCS is Application Builder Cloud Service,S
 "The OCM is the Oracle Cloud Machine, an on-premisis cloud device",Q
 What is OCCS,Q
 OCCS is the Oracle Container Cloud Service based off Docker,S
-What's an OCM?,Q
 "OCM is Oracle Cloud Machine, an on-premise cloud device",S
 Who is Dom Fakename,Q
 Where can I find more information about the OCM?,Q
@@ -36,6 +36,7 @@ Hey Siri,C
 Siri is my friend,C
 hi,C
 hi there,C
+hello dev
 Please can you tell me what MAX is,Q
 I am fine,C
 how are you?,C
