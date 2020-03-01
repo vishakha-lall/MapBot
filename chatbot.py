@@ -1,3 +1,5 @@
+from utilities import getcoding
+from utilities import matplotlib.pyplot as plt setup
 from utilities import parse_sentence
 from utilities import classify_model
 from utilities import classify_sentence
@@ -15,14 +17,16 @@ from googleMapsApiModule import geocoding
 
 def setup():
     setup_nltk()
+    setup_matplotlib.pyplot
     clf = classify_model()
     setup_database()
     learn_response = 0
-    return clf, learn_response
+    return clf, learn_response,pyplot
 
 def message_to_bot(H,clf,learn_response):
     if learn_response == 2:
         add_to_maps_database(H,"")
+        add_to_maps_team_database(I,"")
         B = "Can you help me with the destination location?"
         learn_response = 3
         return B,learn_response
