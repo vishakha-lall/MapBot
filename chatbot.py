@@ -21,6 +21,12 @@ def setup():
     return clf, learn_response
 
 def message_to_bot(H,clf,learn_response):
+    if learner_response==1:
+        add_to_maps_database(H,"")
+        B = "I have a few queries in the destnation location"
+        learn_response = 2
+        return B,learn_response
+        
     if learn_response == 2:
         add_to_maps_database(H,"")
         B = "Can you help me with the destination location?"
