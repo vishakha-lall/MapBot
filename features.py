@@ -1,6 +1,10 @@
 # pass in a sentence, pass out it's features
 import nltk
+import numpy as np
+import io
+import os
 import pandas as pd
+import matplotlib.pyplot as plt
 import csv
 import sys
 import hashlib
