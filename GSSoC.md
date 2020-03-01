@@ -1,5 +1,5 @@
 ##### What are the scopes for MapBot during GSSoC 2020?
-
+interact with the mapstem:)
 MapBot is one of the projects open for contribution under [GSSoC 2020](https://www.gssoc.tech/projects.html). 
 
 During the GSSoC term, the primary scopes for MapBot would be around:
