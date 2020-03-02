@@ -1,13 +1,8 @@
 from utilities import parse_sentence
 from utilities import classify_model
 from utilities import classify_sentence
-from utilities import setup_database
-from utilities import add_to_database
-from utilities import get_chat_response
-from utilities import get_question_response
-from utilities import learn_question_response
-from utilities import add_learnt_statement_to_database
 from utilities import setup_nltk
+import databaseconnect
 from googleMapsApiModule import direction
 from googleMapsApiModule import add_to_maps_database
 from googleMapsApiModule import get_from_maps_database
@@ -16,7 +11,7 @@ from googleMapsApiModule import geocoding
 def setup():
     setup_nltk()
     clf = classify_model()
-    setup_database()
+    databaseconnect.setup_database()
     learn_response = 0
     return clf, learn_response
 
@@ -66,20 +61,20 @@ def message_to_bot(H,clf,learn_response):
     classification = classify_sentence(clf,H)
     #print(classification)
     if learn_response == 0:
-        add_to_database(classification,subj,root,verb,H)
+        databaseconnect.add_to_database(classification,subj,root,verb,H)
         if (classification == 'C'):
-            B = get_chat_response()
+            B = databaseconnect.get_chat_response()
         elif (classification == 'Q'):
-            B,learn_response = get_question_response(subj,root,verb)
+            B,learn_response = databaseconnect.get_question_response(subj,root,verb)
             if learn_response == 1 and (len(proper_nouns) == 0 or (len(proper_nouns) == 1 and H.split(" ",1)[0] != "Where")):
-                add_learnt_statement_to_database(subj,root,verb)
+                databaseconnect.add_learnt_statement_to_database(subj,root,verb)
             if learn_response == 1 and (len(proper_nouns) >= 2 or (len(proper_nouns) == 1 and H.split(" ",1)[0] == "Where")):
                 learn_response = 0
                 B = "I will certainly help you with that."
         else:
             B = "Oops! I'm not trained for this yet."
     else:
-        B,learn_response = learn_question_response(H)
+        B,learn_response = databaseconnect.learn_question_response(H)
     if (len(proper_nouns) >= 2 or (len(proper_nouns) >= 1 and H.split(" ",1)[0] == "Where")) and len(subj) != 0:
         if subj[0] == "distance":
             if len(proper_nouns) == 2:
