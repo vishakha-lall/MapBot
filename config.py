@@ -1,5 +1,5 @@
 user = "root"
-password = "localhost"
+password = "root"
 host = "localhost"
 database = "mapbot"
 port = "3306"
