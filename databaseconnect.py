@@ -3,7 +3,7 @@ def connection_to_database():
     import mysql.connector
     from time import sleep
 
-    max_tries = 5
+    max_tries = 10
     tries = 1
     conn = None
     while tries <= max_tries:
@@ -22,7 +22,7 @@ def connection_to_database():
         except mysql.connector.Error as e:
             tries += 1
             print(e)
-            sleep(5)
+            sleep(20)
     try:
         if conn.is_connected():
             # print("Connected")
