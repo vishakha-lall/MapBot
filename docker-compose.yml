@@ -1,0 +1,30 @@
+version: "3"
+services:
+    db:
+        image: mysql:8
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=mapbot
+        volumes:
+            - ./db-init/:/docker-entrypoint-initdb.d
+
+    java:
+        image: openjdk:11
+        volumes:
+            - java_storage:/usr/local/openjdk-11/
+
+    python:
+        image: python:3.6
+        build:
+            context: .
+            dockerfile: Dockerfile
+        depends_on:
+            - db
+            - java
+        volumes:
+            - java_storage:/usr/local/openjdk-11/:ro
+        stdin_open: true
+        tty: true
+
+volumes:
+    java_storage:
