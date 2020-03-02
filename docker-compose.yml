@@ -13,8 +13,9 @@ services:
         volumes:
             - java_storage:/usr/local/openjdk-11/
 
-    python:
+    bot:
         image: python:3.6
+        container_name: mapbot_logic
         build:
             context: .
             dockerfile: Dockerfile
