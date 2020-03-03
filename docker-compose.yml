@@ -2,6 +2,7 @@ version: "3"
 services:
     db:
         image: mysql:8
+        container_name: mapbot_db
         environment:
             - MYSQL_ROOT_PASSWORD=root
             - MYSQL_DATABASE=mapbot
@@ -10,12 +11,13 @@ services:
 
     java:
         image: openjdk:11
+        container_name: mapbot_java
         volumes:
             - java_storage:/usr/local/openjdk-11/
 
     bot:
         image: python:3.6
-        container_name: mapbot_logic
+        container_name: mapbot_bot
         environment:
             - DOCKER=true
         build:

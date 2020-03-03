@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-docker-compose up -d && docker attach mapbot_logic
+docker-compose up -d && docker attach mapbot_bot
