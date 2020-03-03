@@ -16,6 +16,8 @@ services:
     bot:
         image: python:3.6
         container_name: mapbot_logic
+        environment:
+            - DOCKER=true
         build:
             context: .
             dockerfile: Dockerfile
