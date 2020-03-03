@@ -2,19 +2,17 @@ import googlemaps
 import webbrowser
 import config
 import mysql.connector
+from constants import 
 
 gmaps = googlemaps.Client(config.key)
-#this line is repeated twice in the code and needs to be globalised
-
-url={'direction':"https://www.google.com/maps/dir/?api=1&" , 'geocoding':"https://www.google.com/maps/search/?api=1&query="}
-#this is a global dictionary 'url' having all the web address required throughtout the code for better understanding
+#global variable gmaps
 
 def direction(origin,destination):
     result = gmaps.directions(origin,destination)
     address = "origin="+origin+"&"+"destination="+destination
     address = address.lower()
     address = address.replace(" ","+")
-    result_url = url['direction']+address
+    result_url = "{}/{}".format(BASE_URL['direction'], address.lower().replace(" ", "+"))
     print(result_url)
     webbrowser.open_new(result_url)
 
@@ -57,5 +55,5 @@ def geocoding(search_location):
     print("Latitude: "+str(result[0]['geometry']['location']['lat'])+" "+"Longitude: "+str(result[0]['geometry']['location']['lng']))
     address = search_location.lower()
     address = address.replace(" ","+")
-    result_url = url['geocoding']+address
+    result_url = "{}/{}".format(BASE_URL['geocoding'], address.lower().replace(" ", "+"))
     webbrowser.open_new(result_url)
