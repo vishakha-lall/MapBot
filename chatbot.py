@@ -88,4 +88,5 @@ def message_to_bot(H,clf,learn_response):
             location = proper_nouns.pop()
             if subj[0] == "geocoding" or subj[0] == location:
                 geocoding(location)
+                mapsstatic(location)
     return B,learn_response
