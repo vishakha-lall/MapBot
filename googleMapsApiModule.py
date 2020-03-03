@@ -2,7 +2,7 @@ import googlemaps
 import webbrowser
 import config
 import mysql.connector
-from constants import 
+from constants import *
 
 gmaps = googlemaps.Client(config.key)
 #global variable gmaps
