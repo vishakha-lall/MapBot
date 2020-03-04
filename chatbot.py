@@ -7,6 +7,7 @@ from googleMapsApiModule import direction
 from googleMapsApiModule import geocoding
 
 location_dict={"origin":"null","destination":"null"}
+
 def setup():
     setup_nltk()
     clf = classify_model()
@@ -77,8 +78,8 @@ def message_to_bot(H,clf,learn_response):
     if (len(proper_nouns) >= 2 or (len(proper_nouns) >= 1 and H.split(" ",1)[0] == "Where")) and len(subj) != 0:
         if subj[0] == "distance":
             if len(proper_nouns) == 2:
-                location_Dict["origin"]=proper_nouns.pop()
-                location_Dict["destination"]=proper_nouns.pop()
+                location_dict["origin"]=proper_nouns.pop()
+                location_dict["destination"]=proper_nouns.pop()
                 origin, destination = location_dict["origin"], location_dict["destination"]
                 direction(origin,destination)
             else:
