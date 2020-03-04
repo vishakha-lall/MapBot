@@ -4,9 +4,9 @@ from utilities import classify_sentence
 from utilities import setup_nltk
 import databaseconnect
 from googleMapsApiModule import direction
-from googleMapsApiModule import add_to_maps_database
-from googleMapsApiModule import get_from_maps_database
 from googleMapsApiModule import geocoding
+
+location_dict={"origin":"null","destination":"null"}
 
 def setup():
     setup_nltk()
@@ -17,13 +17,13 @@ def setup():
 
 def message_to_bot(H,clf,learn_response):
     if learn_response == 2:
-        add_to_maps_database(H,"")
+        location_dict["origin"]=H
         B = "Can you help me with the destination location?"
         learn_response = 3
         return B,learn_response
     if learn_response == 3:
-        add_to_maps_database("",H)
-        origin,destination = get_from_maps_database()
+        location_dict["destination"]=H
+        origin, destination = location_dict["origin"], location_dict["destination"]
         direction(origin,destination)
         B = "I will certainly help you with that."
         learn_response = 0
@@ -78,8 +78,9 @@ def message_to_bot(H,clf,learn_response):
     if (len(proper_nouns) >= 2 or (len(proper_nouns) >= 1 and H.split(" ",1)[0] == "Where")) and len(subj) != 0:
         if subj[0] == "distance":
             if len(proper_nouns) == 2:
-                add_to_maps_database(proper_nouns.pop(),proper_nouns.pop())
-                origin,destination = get_from_maps_database()
+                location_dict["origin"]=proper_nouns.pop()
+                location_dict["destination"]=proper_nouns.pop()
+                origin, destination = location_dict["origin"], location_dict["destination"]
                 direction(origin,destination)
             else:
                 B = "I didn't get that. Can you please give me the origin location?"
