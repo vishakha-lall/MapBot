@@ -14,6 +14,7 @@ def direction(origin,destination):
     print(result_url)
     webbrowser.open_new(result_url)
 
+"""
 def add_to_maps_database(origin,destination):
     db = mysql.connector.connect(user=config.user,password=config.password,host=config.host,database=config.database)
     cur = db.cursor()
@@ -45,6 +46,7 @@ def get_from_maps_database():
     res = cur.fetchone()
     destination = res[0]
     return origin,destination
+"""
 
 def geocoding(search_location):
     gmaps = googlemaps.Client(config.key)
