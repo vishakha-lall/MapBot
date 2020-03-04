@@ -1,4 +1,4 @@
-﻿﻿googlemaps==2.5.1
+googlemaps==2.5.1
 nltk==3.4.5
 pandas==0.25.1
 mysql-connector-python==8.0.18

@@ -58,4 +58,9 @@ def geocoding(search_location):
     result_url = "{}={}".format(BASE_URL['geocoding'], address.lower().replace(" ", "+"))
     webbrowser.open_new(result_url)
 
-
+def mapsstatic(search_location):
+    address = search_location.lower()
+    address = address.replace(" ","+")
+    result_url = "https://maps.googleapis.com/maps/api/staticmap?center="+address+"&zoom=13&scale=1&size=600x350&maptype=roadmap&key="+config.key+"&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:L%7C"+address
+    print(result_url)
+    webbrowser.open_new(result_url)
