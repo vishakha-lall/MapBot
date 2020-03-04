@@ -12,7 +12,7 @@ def direction(origin,destination):
     address = "origin="+origin+"&"+"destination="+destination
     address = address.lower()
     address = address.replace(" ","+")
-    result_url = "{}={}".format(BASE_URL['direction'], address.lower().replace(" ", "+"))
+    result_url = "{}&{}".format(BASE_URL['direction'], address.lower().replace(" ", "+"))
     print(result_url)
     webbrowser.open_new(result_url)
 
