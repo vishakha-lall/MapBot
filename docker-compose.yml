@@ -28,6 +28,7 @@ services:
             - java
         volumes:
             - java_storage:/usr/local/openjdk-11/:ro
+            - .:/usr/var
         stdin_open: true
         tty: true
 
