@@ -38,13 +38,10 @@ Check out all related information [here](GSSoC.md)
 - StanfordCoreNLP
   - StanfordCoreNLP has a dependency on Java 8. `java -version` should complete successfully with version 1.8 or higher.
   - Windows- Download as a .zip file from [here](https://stanfordnlp.github.io/CoreNLP/download.html).  
-  - Linux and MacOS- Follow the instructions to download the file from [here](https://stanfordnlp.github.io/CoreNLP/download.html).  
-- Docker (if you want to set me up the Docker way)
-  - Take a look at [this](https://docs.docker.com/install/) for detailed installation instructions for Docker on Windows, Linux and Mac systems.
-  - You won't need to download MySQL locally to make Docker work, but it's recommended as a pre-requisite to be able to debug programs outside Docker.
-  - Verify the installations by `docker --version` and `docker-compose --version`
+  - Linux and MacOS- Follow the instructions to download the file from [here](https://stanfordnlp.github.io/CoreNLP/download.html).
 
-#### 1. How to set me up?
+#### How to set me up?
+
 - Clone the repository
 - Create the **mapbot** database in mySQL
   -  `mysql -uroot -p -hlocalhost`
@@ -69,8 +66,20 @@ Check out all related information [here](GSSoC.md)
     1. [Python](https://realpython.com/python-virtual-environments-a-primer/#why-the-need-for-virtual-environments)
     2. [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
 
-#### 2. How to set me up Docker style?
-- Make sure you have Docker and Docker-Compose (refer pre-requisite steps for installation instructions)
+------
+
+#### What are some pre-requisites? (with Docker)
+
+- StanfordCoreNLP
+  - StanfordCoreNLP has a dependency on Java 8. `java -version` should complete successfully with version 1.8 or higher.
+  - Windows- Download as a .zip file from [here](https://stanfordnlp.github.io/CoreNLP/download.html).  
+  - Linux and MacOS- Follow the instructions to download the file from [here](https://stanfordnlp.github.io/CoreNLP/download.html).  
+- Docker (if you want to set me up the Docker way)
+  - Take a look at [this](https://docs.docker.com/install/) for detailed installation instructions for Docker on Windows, Linux and Mac systems.
+  - Verify the installations by `docker --version` and `docker-compose --version`
+- You won't need to download MySQL locally to make Docker work, but it's recommended as a pre-requisite to be able to debug programs outside Docker.
+
+#### How to set me up Docker style?
 - Clone the repository
 - Unzip the StanfordCoreNLP package in the repository. Make sure the StanfordCoreNLP folder you downloaded in the prerequisite steps are in the cloned repository folder.
 - Add config.py file to .gitignore to avoid pushing changes made to config
