@@ -12,7 +12,7 @@ def direction(origin,destination):
     address = "origin="+origin+"&"+"destination="+destination
     address = address.lower()
     address = address.replace(" ","+")
-    result_url = "{}&{}".format(BASE_URL['direction'], address.lower().replace(" ", "+"))
+    result_url = "{}={}".format(BASE_URL['geocoding'], address.lower().replace(" ", "+"))
     print(result_url)
     webbrowser.open_new(result_url)
 
@@ -55,6 +55,7 @@ def geocoding(search_location):
     print("Latitude: "+str(result[0]['geometry']['location']['lat'])+" "+"Longitude: "+str(result[0]['geometry']['location']['lng']))
     address = search_location.lower()
     address = address.replace(" ","+")
-    result_url = "{}&{}".format(BASE_URL['geocoding'], address.lower().replace(" ", "+"))
+    result_url = "{}={}".format(BASE_URL['geocoding'], address.lower().replace(" ", "+"))
     webbrowser.open_new(result_url)
+
 
