@@ -9,8 +9,7 @@ gmaps = googlemaps.Client(config.key)      #global variable gmaps
 def direction(origin,destination):
     result = gmaps.directions(origin,destination)
     address = "origin="+origin+"&"+"destination="+destination
-    url = BASE_URL['direction']
-    result_url = f'{direction}&{address.lower().replace(" ", "+")}'
+    result_url = f'{BASE_URL["direction"]}&{address.lower().replace(" ", "+")}'
     print(result_url)
     webbrowser.open_new(result_url)
 
@@ -20,8 +19,7 @@ def geocoding(search_location):
     print("Formatted Address: "+result[0]['formatted_address'])
     print("Latitude: "+str(result[0]['geometry']['location']['lat'])+" "+"Longitude: "+str(result[0]['geometry']['location']['lng']))
     address = search_location
-    url = BASE_URL['geocoding']
-    result_url = f'{url}={address.lower().replace(" ", "+")}'
+    result_url = f'{BASE_URL["geocoding"]}={address.lower().replace(" ", "+")}'
     webbrowser.open_new(result_url)
 
 def mapsstatic(search_location):
