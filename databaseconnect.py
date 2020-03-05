@@ -150,3 +150,54 @@ def learn_question_response(H):
     db.commit()
     B = "Thank you! I have learnt this."
     return B,0
+
+def clear_table(table_name):
+    db = connection_to_database()
+    cur = db.cursor()
+
+    if table_name in ("question_table","statement_table"):
+        tables_to_be_deleted = ["question_table","statement_table"]
+        print("The following tables will be deleted:\n")
+        for table in tables_to_be_deleted:
+            cur.execute("DESC %s" % table)
+            res = cur.fetchall()
+            column_names = [col[0] for col in res]
+
+            cur.execute("SELECT COUNT(*) FROM %s" % table)
+            res = cur.fetchall()
+            records_no = res[0][0]
+
+            print("Table Name:", table)
+            print("Columns:", column_names)
+            print("Number of existing records:", records_no)
+            print()
+
+        if input("Enter 'Y' to confirm deletion of BOTH tables: ") in ("Y","y"):
+            for table in tables_to_be_deleted:
+                cur.execute("DELETE FROM %s" % table)
+            db.commit()
+            print("Tables deleted successfully")
+        else:
+            print("Table deletion skipped.")
+
+    else:
+        print("The following table will be deleted:\n")
+        cur.execute("DESC %s" % table_name)
+        res = cur.fetchall()
+        column_names = [col[0] for col in res]
+
+        cur.execute("SELECT COUNT(*) FROM %s" % table_name)
+        res = cur.fetchall()
+        records_no = res[0][0]
+
+        print("Table Name:", table_name)
+        print("Columns:", column_names)
+        print("Number of existing records:", records_no)
+        print()
+
+        if input("Enter 'Y' to confirm: ") in ("Y","y"):
+            print("Table deleted successfully")
+            cur.execute("DELETE FROM %s" % table_name)
+            db.commit()
+        else:
+            print("Table deletion skipped.")
