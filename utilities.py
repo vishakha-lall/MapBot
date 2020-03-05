@@ -1,3 +1,4 @@
+from pathlib import Path
 def setup_nltk():
     import nltk
     nltk.download('punkt')
