@@ -5,9 +5,14 @@ from utilities import setup_nltk
 import databaseconnect
 from googleMapsApiModule import direction
 from googleMapsApiModule import geocoding
-
+import logging
+from MapBot.config import logger
 location_dict={"origin":"null","destination":"null"}
 
+log = logging.getLogger(__name__)
+log.info('Entered module: %s' % __name__)
+
+@logger
 def setup():
     setup_nltk()
     clf = classify_model()
@@ -15,6 +20,7 @@ def setup():
     learn_response = 0
     return clf, learn_response
 
+@logger
 def message_to_bot(H,clf,learn_response):
     if learn_response == 2:
         location_dict["origin"]=H
@@ -45,7 +51,7 @@ def message_to_bot(H,clf,learn_response):
             subj.add(t[2][0])
         if relation[-3:] == 'obj':
             obj.add(t[2][0])
-    print("\t"+"Subject: "+str(subj)+"\n"+"\t"+"Object: "+str(obj)+"\n"+"\t"+"Topic: "+str(root)+"\n"+"\t"+"Verb: "+str(verb))
+    logging.debug("\t"+"Subject: "+str(subj)+"\n"+"\t"+"Object: "+str(obj)+"\n"+"\t"+"Topic: "+str(root)+"\n"+"\t"+"Verb: "+str(verb))
     subj = list(subj)
     obj = list(obj)
     verb = list(verb)
@@ -56,10 +62,10 @@ def message_to_bot(H,clf,learn_response):
         if t[2][1] == 'NNP':
             proper_nouns.add(t[2][0])
     proper_nouns == list(proper_nouns)
-    print("\t"+"Proper Nouns: "+str(proper_nouns))
+    logging.debug("\t"+"Proper Nouns: "+str(proper_nouns))
     #classification
     classification = classify_sentence(clf,H)
-    #print(classification)
+    #logging.debug(classification)
     if learn_response == 0:
         databaseconnect.add_to_database(classification,subj,root,verb,H)
         if (classification == 'C'):
