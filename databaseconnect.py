@@ -21,7 +21,7 @@ def connection_to_database():
 
         except mysql.connector.Error as e:
             tries += 1
-            print(e)
+            print(e, "...Retrying")
             sleep(20)
     try:
         if conn.is_connected():
@@ -45,7 +45,7 @@ def add_to_database(classification,subject,root,verb,H):
     cur = db.cursor()
     cur = db.cursor(buffered=True)
     if classification == 'C':
-        cur.execute(f"INSERT INTO chat_table(root_word,verb,sentence) VALUES ({root},{verb},{H})")
+        cur.execute(f"INSERT INTO chat_table(root_word,verb,sentence) VALUES ('{root}','{verb}','{H}')")
         db.commit()
     elif classification == 'Q':
         cur.execute("SELECT sentence FROM question_table")
@@ -56,7 +56,7 @@ def add_to_database(classification,subject,root,verb,H):
                 exist = 1
                 break
         if exist == 0:                                                          #do not add if question already exists
-            cur.execute(f"INSERT INTO question_table(subject,root_word,verb,sentence) VALUES ({subject},{root},{verb},{H})")
+            cur.execute(f"INSERT INTO question_table(subject,root_word,verb,sentence) VALUES ('{subject}','{root}','{verb}','{H}')")
             db.commit()
     else:
         cur.execute("SELECT sentence FROM statement_table")
@@ -67,7 +67,7 @@ def add_to_database(classification,subject,root,verb,H):
                 exist = 1
                 break
         if exist == 0:                                                          #do not add if question already exists
-            cur.execute(f"INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES ({subject},{root},{verb},{H})")
+            cur.execute(f"INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES ('{subject}','{root}','{verb}','{H}')")
             db.commit()
 
 #get a random chat response
@@ -97,7 +97,7 @@ def get_question_response(subject,root,verb):
                 found = 1
                 break
         if found == 1:
-            cur.execute(f'SELECT sentence FROM statement_table WHERE verb="{verb}"')
+            cur.execute(f"SELECT sentence FROM statement_table WHERE verb='{verb}'")
             res = cur.fetchone()
             B = res[0]
             return B,0
@@ -113,17 +113,17 @@ def get_question_response(subject,root,verb):
                 found = 1
                 break
         if found == 1:
-            cur.execute(f'SELECT verb FROM statement_table WHERE subject="{subject}"')
+            cur.execute(f"SELECT verb FROM statement_table WHERE subject='{subject}'")
             res = cur.fetchone()
             checkVerb = res[0]                                                  #checkVerb is a string while verb is a list. checkVerb ['verb']
             if checkVerb == '[]':
-                cur.execute(f'SELECT sentence FROM statement_table WHERE subject="{subject}"')
+                cur.execute(f"SELECT sentence FROM statement_table WHERE subject='{subject}'")
                 res = cur.fetchone()
                 B = res[0]
                 return B,0
             else:
                 if checkVerb[2:-2] == verb[0]:
-                    cur.execute(f'SELECT sentence FROM statement_table WHERE subject="{subject}"')
+                    cur.execute(f"SELECT sentence FROM statement_table WHERE subject='{subject}'")
                     res = cur.fetchone()
                     B = res[0]
                     return B,0
@@ -137,7 +137,7 @@ def get_question_response(subject,root,verb):
 def add_learnt_statement_to_database(subject,root,verb):
     db = connection_to_database()
     cur = db.cursor()
-    cur.execute(f"INSERT INTO statement_table(subject,root_word,verb) VALUES ({subject},{root},{verb})")
+    cur.execute(f"INSERT INTO statement_table(subject,root_word,verb) VALUES ('{subject}','{root}','{verb}')")
     db.commit()
 
 def learn_question_response(H):
@@ -146,7 +146,7 @@ def learn_question_response(H):
     cur.execute("SELECT id FROM statement_table ORDER BY id DESC")
     res = cur.fetchone()
     last_id = res[0]
-    cur.execute(f"UPDATE statement_table SET sentence={H} WHERE id={last_id}"")
+    cur.execute(f"UPDATE statement_table SET sentence='{H}' WHERE id={last_id}")
     db.commit()
     B = "Thank you! I have learnt this."
     return B,0
