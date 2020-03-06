@@ -1,3 +1,4 @@
+from pathlib import Path
 def setup_nltk():
     import nltk
     nltk.download('punkt')
@@ -8,10 +9,10 @@ def parse_sentence(user_input):                               #returns root word
     import os
     from nltk.parse.stanford import StanfordDependencyParser
     import config
-    path_to_jar = config.stanford_path_to_jar
-    path_to_models_jar = config.stanford_path_to_models_jar
+    path_to_jar = Path(config.stanford_path_to_jar)
+    path_to_models_jar = Path(config.stanford_path_to_models_jar)
     dependency_parser = StanfordDependencyParser(path_to_jar=path_to_jar, path_to_models_jar=path_to_models_jar)
-    os.environ['JAVAHOME'] = config.javahome
+    os.environ['JAVAHOME'] = Path(config.javahome)
     result = dependency_parser.raw_parse(user_input)
     dep = next(result)                                                          # get next item from the iterator result
     return dep.triples(),dep.root["word"]
@@ -21,7 +22,7 @@ def classify_model():
     import numpy as np
     import pandas as pd
     from sklearn.ensemble import RandomForestClassifier
-    FNAME = 'analysis/featuresDump.csv'
+    FNAME = Path('analysis/featuresDump.csv')
     df = pd.read_csv(filepath_or_buffer = FNAME, )
     df.columns = df.columns[:].str.strip()                                      # Strip any leading spaces from col names
     df['class'] = df['class'].map(lambda x: x.strip())
@@ -73,3 +74,7 @@ def classify_sentence(clf,user_input):
     myFeatures = s[1:width-1]  #All but the last item (this is the class for supervised learning mode)
     predict = clf.predict([myFeatures])
     return predict[0].strip()
+
+
+
+
