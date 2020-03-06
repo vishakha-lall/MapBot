@@ -6,21 +6,24 @@ import databaseconnect
 from googleMapsApiModule import direction
 from googleMapsApiModule import geocoding
 import logging
-from MapBot.config import logger
+import logger_config 
 location_dict={"origin":"null","destination":"null"}
 
 log = logging.getLogger(__name__)
 log.info('Entered module: %s' % __name__)
 
-@logger
+@logger_config.logger
 def setup():
     setup_nltk()
+    logging.debug('NLTK setup completed')
     clf = classify_model()
+    logging.debug('Classification model ready')
     databaseconnect.setup_database()
+    logging.debug('Database setup completed, database connected')
     learn_response = 0
     return clf, learn_response
 
-@logger
+@logger_config.logger
 def message_to_bot(H,clf,learn_response):
     if learn_response == 2:
         location_dict["origin"]=H

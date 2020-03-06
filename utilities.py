@@ -1,8 +1,17 @@
+import logging
+import logger_config 
+
+log = logging.getLogger(__name__)
+log.info('Entered module: %s' % __name__)
+
+@logger_config.logger
 def setup_nltk():
     import nltk
     nltk.download('punkt')
     nltk.download('averaged_perceptron_tagger')
     nltk.download('stopwords')
+
+@logger_config.logger    
 #grammar parsing
 def parse_sentence(user_input):                               #returns root word, triples of StanfordDependencyParser
     import os
@@ -16,6 +25,7 @@ def parse_sentence(user_input):                               #returns root word
     dep = next(result)                                                          # get next item from the iterator result
     return dep.triples(),dep.root["word"]
 
+@logger_config.logger
 #classification into statements questions and chat
 def classify_model():
     import numpy as np
@@ -39,6 +49,7 @@ def classify_model():
     predout = pd.DataFrame({ 'id' : test['id'], 'predicted' : preds, 'actual' : test['class'] })
     return clf
 
+@logger_config.logger
 def classify_sentence(clf,user_input):
     import features
     import pandas as pd

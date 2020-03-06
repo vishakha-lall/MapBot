@@ -1,3 +1,10 @@
+import logging
+import logger_config
+
+log = logging.getLogger(__name__)
+log.info('Entered module: %s' % __name__)
+
+@logger_config.logger
 def connection_to_database():
     import config
     import mysql.connector
@@ -16,7 +23,8 @@ def connection_to_database():
                 database=config.database,
             )
             if conn.is_connected():
-                # print("Connected")
+                # logging.debug("Connected")
+                logging.debug('MySQL connected')
                 break
 
         except mysql.connector.Error as e:
@@ -25,12 +33,14 @@ def connection_to_database():
             sleep(20)
     try:
         if conn.is_connected():
-            # print("Connected")
+            # logging.debug("Connected")
+            logging.debug('MySQL connected')
             return conn
     except:
         raise Exception("DATABASE NOT CONNECTED")
 
-#setup database
+@logger_config.logger   
+#setup database 
 def setup_database():
     db = connection_to_database()
     cur = db.cursor()
@@ -39,7 +49,8 @@ def setup_database():
     cur.execute("CREATE TABLE IF NOT EXISTS question_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))")
     cur.execute("CREATE TABLE IF NOT EXISTS directions_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, origin_location VARCHAR(100), destination_location VARCHAR(100))")
 
-#add classified sentences to database
+@logger_config.logger   
+#add classified sentences to database   
 def add_to_database(classification,subject,root,verb,H):
     db = connection_to_database()
     cur = db.cursor()
@@ -70,7 +81,8 @@ def add_to_database(classification,subject,root,verb,H):
             cur.execute("INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES (%s,%s,%s,%s)",(str(subject),str(root),str(verb),H))
             db.commit()
 
-#get a random chat response
+@logger_config.logger 
+#get a random chat response           
 def get_chat_response():
     db = connection_to_database()
     cur = db.cursor()
@@ -85,6 +97,7 @@ def get_chat_response():
     B = res[0]
     return B
 
+@logger_config.logger  
 def get_question_response(subject,root,verb):
     db = connection_to_database()
     cur = db.cursor(buffered=True)
@@ -134,12 +147,14 @@ def get_question_response(subject,root,verb):
             B = "Sorry I don't know the response to this. Please train me."
             return B,1
 
+@logger_config.logger  
 def add_learnt_statement_to_database(subject,root,verb):
     db = connection_to_database()
     cur = db.cursor()
     cur.execute("INSERT INTO statement_table(subject,root_word,verb) VALUES (%s,%s,%s)",(str(subject),str(root),str(verb)))
     db.commit()
 
+@logger_config.logger  
 def learn_question_response(H):
     db = connection_to_database()
     cur = db.cursor(buffered=True)
