@@ -9,10 +9,10 @@ def parse_sentence(user_input):                               #returns root word
     import os
     from nltk.parse.stanford import StanfordDependencyParser
     import config
-    path_to_jar = Path(config.stanford_path_to_jar)
-    path_to_models_jar = Path(config.stanford_path_to_models_jar)
+    path_to_jar = config.stanford_path_to_jar
+    path_to_models_jar = config.stanford_path_to_models_jar
     dependency_parser = StanfordDependencyParser(path_to_jar=path_to_jar, path_to_models_jar=path_to_models_jar)
-    os.environ['JAVAHOME'] = Path(config.javahome)
+    os.environ['JAVAHOME'] = config.javahome
     result = dependency_parser.raw_parse(user_input)
     dep = next(result)                                                          # get next item from the iterator result
     return dep.triples(),dep.root["word"]

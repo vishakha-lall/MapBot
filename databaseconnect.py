@@ -55,7 +55,8 @@ def add_to_database(classification,subject,root,verb,H):
             if r[-1] == H:
                 exist = 1
                 break
-        if exist == 0:                                                          #do not add if question already exists
+        if exist == 0:
+            #do not add if question already exists
             cur.execute(f"INSERT INTO question_table(subject,root_word,verb,sentence) VALUES ('{subject}','{root}','{verb}','{H}')")
             db.commit()
     else:
