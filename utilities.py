@@ -1,3 +1,4 @@
+from pathlib import Path
 import logging
 import logger_config 
 
@@ -13,7 +14,7 @@ def setup_nltk():
 
 @logger_config.logger    
 #grammar parsing
-def parse_sentence(user_input):                               #returns root word, triples of StanfordDependencyParser
+def parse_sentence(user_input):                                #returns root word, triples of StanfordDependencyParser
     import os
     from nltk.parse.stanford import StanfordDependencyParser
     import config
@@ -31,7 +32,7 @@ def classify_model():
     import numpy as np
     import pandas as pd
     from sklearn.ensemble import RandomForestClassifier
-    FNAME = 'analysis/featuresDump.csv'
+    FNAME = Path('analysis/featuresDump.csv')
     df = pd.read_csv(filepath_or_buffer = FNAME, )
     df.columns = df.columns[:].str.strip()                                      # Strip any leading spaces from col names
     df['class'] = df['class'].map(lambda x: x.strip())

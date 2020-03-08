@@ -4,6 +4,7 @@
 import csv
 import sys
 import hashlib
+from pathlib import Path
 import features # features.py is bepoke util to extract NLTK POS features from sentences
 import logging
 
@@ -11,17 +12,19 @@ log = logging.getLogger(__name__)
 log.info('Entered module: %s' % __name__)
 
 if len(sys.argv) > 1:
-    FNAME = sys.argv[1]
+    FNAME = Path(sys.argv[1])
 else:
-    FNAME = './analysis/sentences.csv'
+    FNAME = Path('./analysis/sentences.csv')
 logging.debug("reading input from ", FNAME)
 
 
+
 if len(sys.argv) > 2:
-    FOUT = sys.argv[2]
+    FOUT = Path(sys.argv[2])
 else:
-    FOUT = './analysis/featuresDump.csv'
+    FOUT = Path('./analysis/featuresDump.csv')
 logging.debug("Writing output to ", FOUT)
+
 
 fin = open(FNAME, 'rt')
 fout = open(FOUT, 'wt', newline='')

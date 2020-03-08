@@ -8,6 +8,7 @@ services:
             - MYSQL_DATABASE=mapbot
         volumes:
             - ./db-init/:/docker-entrypoint-initdb.d
+            - persistent_db:/var/lib/mysql
 
     java:
         image: openjdk:11
@@ -28,8 +29,10 @@ services:
             - java
         volumes:
             - java_storage:/usr/local/openjdk-11/:ro
+            - .:/usr/var
         stdin_open: true
         tty: true
 
 volumes:
     java_storage:
+    persistent_db:

@@ -29,7 +29,7 @@ def connection_to_database():
 
         except mysql.connector.Error as e:
             tries += 1
-            print(e)
+            print(e, "...Retrying")
             sleep(20)
     try:
         if conn.is_connected():
@@ -56,7 +56,7 @@ def add_to_database(classification,subject,root,verb,H):
     cur = db.cursor()
     cur = db.cursor(buffered=True)
     if classification == 'C':
-        cur.execute("INSERT INTO chat_table(root_word,verb,sentence) VALUES (%s,%s,%s)",(str(root),str(verb),H))
+        cur.execute(f"INSERT INTO chat_table(root_word,verb,sentence) VALUES ('{root}','{verb}','{H}')")
         db.commit()
     elif classification == 'Q':
         cur.execute("SELECT sentence FROM question_table")
@@ -66,8 +66,9 @@ def add_to_database(classification,subject,root,verb,H):
             if r[-1] == H:
                 exist = 1
                 break
-        if exist == 0:                                                          #do not add if question already exists
-            cur.execute("INSERT INTO question_table(subject,root_word,verb,sentence) VALUES (%s,%s,%s,%s)",(str(subject),str(root),str(verb),H))
+        if exist == 0:
+            #do not add if question already exists
+            cur.execute(f"INSERT INTO question_table(subject,root_word,verb,sentence) VALUES ('{subject}','{root}','{verb}','{H}')")
             db.commit()
     else:
         cur.execute("SELECT sentence FROM statement_table")
@@ -78,7 +79,7 @@ def add_to_database(classification,subject,root,verb,H):
                 exist = 1
                 break
         if exist == 0:                                                          #do not add if question already exists
-            cur.execute("INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES (%s,%s,%s,%s)",(str(subject),str(root),str(verb),H))
+            cur.execute(f"INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES ('{subject}','{root}','{verb}','{H}')")
             db.commit()
 
 @logger_config.logger 
@@ -92,7 +93,7 @@ def get_chat_response():
     total_chat_records = res[0]
     import random
     chat_id = random.randint(1,total_chat_records+1)
-    cur.execute("SELECT sentence FROM chat_table WHERE id = %s" % (int(chat_id)))
+    cur.execute(f"SELECT sentence FROM chat_table WHERE id = {chat_id}")
     res = cur.fetchone()
     B = res[0]
     return B
@@ -102,7 +103,7 @@ def get_question_response(subject,root,verb):
     db = connection_to_database()
     cur = db.cursor(buffered=True)
     if str(subject) == '[]':
-        cur.execute('SELECT verb FROM statement_table')
+        cur.execute("SELECT verb FROM statement_table")
         res = cur.fetchall()
         found = 0
         for r in res:
@@ -110,7 +111,7 @@ def get_question_response(subject,root,verb):
                 found = 1
                 break
         if found == 1:
-            cur.execute('SELECT sentence FROM statement_table WHERE verb="%s"'% (str(verb)))
+            cur.execute(f"SELECT sentence FROM statement_table WHERE verb='{verb}'")
             res = cur.fetchone()
             B = res[0]
             return B,0
@@ -118,7 +119,7 @@ def get_question_response(subject,root,verb):
             B = "Sorry I don't know the response to this. Please train me."
             return B,1
     else:
-        cur.execute('SELECT subject FROM statement_table')
+        cur.execute("SELECT subject FROM statement_table")
         res = cur.fetchall()
         found = 0
         for r in res:
@@ -126,17 +127,17 @@ def get_question_response(subject,root,verb):
                 found = 1
                 break
         if found == 1:
-            cur.execute('SELECT verb FROM statement_table WHERE subject="%s"' % (str(subject)))
+            cur.execute(f"SELECT verb FROM statement_table WHERE subject='{subject}'")
             res = cur.fetchone()
             checkVerb = res[0]                                                  #checkVerb is a string while verb is a list. checkVerb ['verb']
             if checkVerb == '[]':
-                cur.execute('SELECT sentence FROM statement_table WHERE subject="%s"' % (str(subject)))
+                cur.execute(f"SELECT sentence FROM statement_table WHERE subject='{subject}'")
                 res = cur.fetchone()
                 B = res[0]
                 return B,0
             else:
                 if checkVerb[2:-2] == verb[0]:
-                    cur.execute('SELECT sentence FROM statement_table WHERE subject="%s"' % (str(subject)))
+                    cur.execute(f"SELECT sentence FROM statement_table WHERE subject='{subject}'")
                     res = cur.fetchone()
                     B = res[0]
                     return B,0
@@ -151,7 +152,7 @@ def get_question_response(subject,root,verb):
 def add_learnt_statement_to_database(subject,root,verb):
     db = connection_to_database()
     cur = db.cursor()
-    cur.execute("INSERT INTO statement_table(subject,root_word,verb) VALUES (%s,%s,%s)",(str(subject),str(root),str(verb)))
+    cur.execute(f"INSERT INTO statement_table(subject,root_word,verb) VALUES ('{subject}','{root}','{verb}')")
     db.commit()
 
 @logger_config.logger  
@@ -161,7 +162,50 @@ def learn_question_response(H):
     cur.execute("SELECT id FROM statement_table ORDER BY id DESC")
     res = cur.fetchone()
     last_id = res[0]
-    cur.execute('UPDATE statement_table SET sentence=%s WHERE id=%s',(H,last_id))
+    cur.execute(f"UPDATE statement_table SET sentence='{H}' WHERE id={last_id}")
     db.commit()
     B = "Thank you! I have learnt this."
     return B,0
+
+def clear_table(table_name):
+    db = connection_to_database()
+    cur = db.cursor()
+
+    if table_name in ("question_table","statement_table"):
+        tables_to_be_cleaned = ("question_table","statement_table")
+        print("The following tables will be cleaned:\n")
+        for table in tables_to_be_cleaned:
+            describe_table(cur, table)
+
+        if input("Enter 'Y' to confirm cleaning of BOTH tables: ") in ("Y","y"):
+            for table in tables_to_be_cleaned:
+                cur.execute("DELETE FROM {table}")
+            db.commit()
+            print("Tables cleaned successfully")
+        else:
+            print("Table cleaning skipped.")
+
+    else:
+        print("The following table will be cleaned:\n")
+        describe_table(cur, table_name)
+
+        if input("Enter 'Y' to confirm: ") in ("Y","y"):
+            print("Table cleaned successfully")
+            cur.execute(f"DELETE FROM {table_name}")
+            db.commit()
+        else:
+            print("Table cleaning skipped.")
+
+def describe_table(cursor, table_name):
+    cur.execute(f"DESC {table_name}")
+    res = cur.fetchall()
+    column_names = [col[0] for col in res]
+
+    cur.execute(f"SELECT COUNT(*) FROM {table_name}")
+    res = cur.fetchall()
+    records_no = res[0][0]
+
+    print("Table Name:", table_name)
+    print("Columns:", column_names)
+    print("Number of existing records:", records_no)
+    print()
