@@ -19,7 +19,7 @@ def direction(origin,destination):
 def timezone(search_location,timestamp):
     address = search_location.lower()
     address = address.replace(" ","+")
-    result_url = 'https://maps.googleapis.com/maps/api/timezone/json?location=3'+address+'9.6034810,-119.6822510&timestamp='+timestamp+'&key='+config.key
+    result_url = f'https://maps.googleapis.com/maps/api/timezone/json?location={address}&timestamp={timestamp}&key={config.key}
     print(result_url)
     webbrowser.open_new(result_url)
 
