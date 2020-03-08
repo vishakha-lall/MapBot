@@ -5,7 +5,7 @@ def setup_nltk():
     nltk.download('averaged_perceptron_tagger')
     nltk.download('stopwords')
 #grammar parsing
-def parse_sentence(user_input):                               #returns root word, triples of StanfordDependencyParser
+def parse_sentence(user_input):                                #returns root word, triples of StanfordDependencyParser
     import os
     from nltk.parse.stanford import StanfordDependencyParser
     import config
