@@ -74,7 +74,3 @@ def classify_sentence(clf,user_input):
     myFeatures = s[1:width-1]  #All but the last item (this is the class for supervised learning mode)
     predict = clf.predict([myFeatures])
     return predict[0].strip()
-
-
-
-
