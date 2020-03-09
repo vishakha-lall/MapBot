@@ -31,7 +31,9 @@ def mapsstatic(search_location):
 def elevation(search_location):
     result = gmaps.geocode(search_location)
     json = requests.get(f'https://maps.googleapis.com/maps/api/elevation/json?locations={result[0]["geometry"]["location"]["lat"]},{result[0]["geometry"]["location"]["lng"]}&key={config.key}').json()
-    print(json['results'][0]['elevation'])
+    result_value = json['results'][0]['elevation']
+    position = "above" if result_value>0 else "below"
+    print(f'{search_location} is {round(result_value,2)} metres {position} sea level')
 
 
 
