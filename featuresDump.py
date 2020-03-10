@@ -1,27 +1,30 @@
 # Use the features.py module to dump out features
 # read in a CSV of sentences and bulk-dump to dump.csv of features
-
 #Input CSV fmt:  1st field is sentence ID, 2nd field is text to process, 3rd field is class
-
 import csv
 import sys
 import hashlib
 from pathlib import Path
-
 import features # features.py is bepoke util to extract NLTK POS features from sentences
+import logging
+
+log = logging.getLogger(__name__)
+log.info('Entered module: %s' % __name__)
 
 if len(sys.argv) > 1:
     FNAME = Path(sys.argv[1])
 else:
     FNAME = Path('./analysis/sentences.csv')
-print("reading input from ", FNAME)
+logging.debug("reading input from ", FNAME)
+
 
 
 if len(sys.argv) > 2:
     FOUT = Path(sys.argv[2])
 else:
     FOUT = Path('./analysis/featuresDump.csv')
-print("Writing output to ", FOUT)
+logging.debug("Writing output to ", FOUT)
+
 
 fin = open(FNAME, 'rt')
 fout = open(FOUT, 'wt', newline='')
@@ -72,15 +75,14 @@ for line in reader:
 
     if loopCount == 0:   # only extract and print header for first dict item
         header = header[1:]               #strip the first ","" off
-        print(header)   
+        logging.debug(header)   
         fout.writelines(header + '\n')
 
     output = output[1:]               #strip the first ","" off
 
     loopCount = loopCount + 1
-    print(output)
+    logging.debug(output)
     fout.writelines(output + '\n')
-
 
 fin.close()
 fout.close()
