@@ -1,22 +1,32 @@
 from pathlib import Path
+import logging
+import logger_config 
+
+log = logging.getLogger(__name__)
+log.info('Entered module: %s' % __name__)
+
+@logger_config.logger
 def setup_nltk():
     import nltk
     nltk.download('punkt')
     nltk.download('averaged_perceptron_tagger')
     nltk.download('stopwords')
+
+@logger_config.logger    
 #grammar parsing
-def parse_sentence(user_input):                               #returns root word, triples of StanfordDependencyParser
+def parse_sentence(user_input):                                #returns root word, triples of StanfordDependencyParser
     import os
     from nltk.parse.stanford import StanfordDependencyParser
     import config
-    path_to_jar = Path(config.stanford_path_to_jar)
-    path_to_models_jar = Path(config.stanford_path_to_models_jar)
+    path_to_jar = config.stanford_path_to_jar
+    path_to_models_jar = config.stanford_path_to_models_jar
     dependency_parser = StanfordDependencyParser(path_to_jar=path_to_jar, path_to_models_jar=path_to_models_jar)
-    os.environ['JAVAHOME'] = Path(config.javahome)
+    os.environ['JAVAHOME'] = config.javahome
     result = dependency_parser.raw_parse(user_input)
     dep = next(result)                                                          # get next item from the iterator result
     return dep.triples(),dep.root["word"]
 
+@logger_config.logger
 #classification into statements questions and chat
 def classify_model():
     import numpy as np
@@ -40,6 +50,7 @@ def classify_model():
     predout = pd.DataFrame({ 'id' : test['id'], 'predicted' : preds, 'actual' : test['class'] })
     return clf
 
+@logger_config.logger
 def classify_sentence(clf,user_input):
     import features
     import pandas as pd
@@ -74,7 +85,3 @@ def classify_sentence(clf,user_input):
     myFeatures = s[1:width-1]  #All but the last item (this is the class for supervised learning mode)
     predict = clf.predict([myFeatures])
     return predict[0].strip()
-
-
-
-

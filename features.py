@@ -9,14 +9,17 @@ import string
 import itertools
 from nltk import word_tokenize
 from nltk.corpus import stopwords
+import logging
+import logger_config
 
+log = logging.getLogger(__name__)
+log.info('Entered module: %s' % __name__)
 lemma = nltk.wordnet.WordNetLemmatizer()
 sno = nltk.stem.SnowballStemmer('english')
 
 line = ["xxx","Oracle 12.2 will be released for on-premises users on 15 March 2017",0,"S"]
 
 pos = []           #list of PartsOfSpeech
-
 output = ""        #comma separated string
 header = ""        #string for describing features header
 
@@ -92,13 +95,14 @@ feature_keys = ["id",
 "sTripleScore",
 "class"]
 
-
+@logger_config.logger
 def strip_sentence(sentence):
     sentence = sentence.strip(",")
     sentence = ''.join(filter(lambda x: x in string.printable, sentence))  #strip out non-alpha-numerix
     sentence = sentence.translate(str.maketrans('','',string.punctuation)) #strip punctuation
     return(sentence)
 
+@logger_config.logger
 def exists_pair_combos(comboCheckList, sentence):
     pos = get_pos(sentence)
     tag_string = "-".join([ i[1] for i in pos ])
@@ -114,15 +118,18 @@ def exists_pair_combos(comboCheckList, sentence):
     else:
         return 0
 
+@logger_config.logger
 # Parts Of Speech
 def get_pos(sentence):
     sentenceParsed = word_tokenize(sentence)
     return(nltk.pos_tag(sentenceParsed))
 
+@logger_config.logger
 # Count Q-Marks
 def count_qmark(sentence):
     return(sentence.count("?") )
 
+@logger_config.logger
 # Count a specific POS-Type
 #VBG = count_POSType(pos,'VBG')
 def count_POSType(pos, ptype):
@@ -133,6 +140,7 @@ def count_POSType(pos, ptype):
     #    VBG = 1
     #return(VBG)
 
+@logger_config.logger
 # Does Verb occur before first Noun
 def exists_vb_before_nn(pos):
     pos_tags = [ i[1] for i in pos ]
@@ -160,6 +168,7 @@ def exists_vb_before_nn(pos):
     else:
         return(0)
 
+@logger_config.logger
 # Stemmed sentence ends in "NN-NN"?
 def exists_stemmed_end_NN(stemmed):
     stemmedEndNN = 0
@@ -168,6 +177,7 @@ def exists_stemmed_end_NN(stemmed):
         stemmedEndNN = 1
     return(stemmedEndNN)
 
+@logger_config.logger
 # Go through the predefined list of start-tuples, 1 / 0 if given startTuple occurs in the list
 def exists_startTuple(startTuple):
     exists_startTuples = []
@@ -178,6 +188,7 @@ def exists_startTuple(startTuple):
             exists_startTuples.append(0)
         return(exists_startTuples)
 
+@logger_config.logger
 # Go through the predefined list of end-tuples, 1 / 0 if given Tuple occurs in the list
 def exists_endTuple(endTuple):
     exists_endTuples = []
@@ -188,6 +199,7 @@ def exists_endTuple(endTuple):
             exists_endTuples.append(0)
     return(exists_endTuples)
 
+@logger_config.logger
 #loop round list of triples and construct a list of binary 1/0 vals if triples occur in list
 def exists_triples(triples, tripleSet):
     exists = []
@@ -198,6 +210,7 @@ def exists_triples(triples, tripleSet):
             exists.append(0)
     return(exists)
 
+@logger_config.logger
 # Get a sentence and spit out the POS triples
 def get_triples(pos):
     list_of_triple_strings = []
@@ -210,6 +223,7 @@ def get_triples(pos):
             list_of_triple_strings.append(t)
     return list_of_triple_strings
 
+@logger_config.logger
 def get_first_last_tuples(sentence):
     first_last_tuples = []
     sentenceParsed = word_tokenize(sentence)
@@ -227,6 +241,7 @@ def get_first_last_tuples(sentence):
     first_last_tuples = [first, last]
     return first_last_tuples
 
+@logger_config.logger
 def lemmatize(sentence):
     """
     pass  in  a sentence as a string, return just core text that has been "lematised"
@@ -246,6 +261,7 @@ def lemmatize(sentence):
 
     return lem
 
+@logger_config.logger
 def stematize(sentence):
     """
     pass  in  a sentence as a string, return just core text stemmed
@@ -324,9 +340,9 @@ def get_string(id,sentence,c="X"):
     header = header + "class"
 
     return output,header
-
 # End of Get String wrapper
 
+@logger_config.logger
 # Build a dictionary of features
 def features_dict(id,sentence,c="X"):
     features = {}
@@ -369,6 +385,7 @@ def features_dict(id,sentence,c="X"):
 
     return features
 
+@logger_config.logger
 # pass in dict, get back series
 def features_series(features_dict):
     values=[]
@@ -385,7 +402,7 @@ if __name__ == '__main__':
     #  ID, WordCount, StemmedCount, Qmark, VBG, StemmedEnd, StartTuples, EndTuples,   QuestionTriples, StatementTriples, Class
     #                                     [1/0] [NN-NN?]    [3 x binary] [3 x binary] [10 x binary]    [10 x binary]
 
-    print("Starting...")
+    logging.debug("Starting...")
 
     c = "X"        # Dummy class
     header = ""
@@ -400,11 +417,11 @@ if __name__ == '__main__':
 
     features = features_dict(id,sentence, c)
     pos = get_pos(sentence)       #NLTK Parts Of Speech, duplicated just for the printout
-    print(pos)
+    logging.debug(pos)
 
-    print(features)
+    logging.debug(features)
     for key,value in features.items():
-        print(key, value)
+        logging.debug(key, value)
 
     #header string
     for key, value in features.items():
@@ -412,5 +429,5 @@ if __name__ == '__main__':
        output = output + ", " + str(value)
     header = header[1:]               #strip the first ","" off
     output = output[1:]               #strip the first ","" off
-    print("HEADER:", header)
-    print("VALUES:", output)
+    logging.debug("HEADER:", header)
+    logging.debug("VALUES:", output)
