@@ -1,10 +1,6 @@
-from utilities import parse_sentence
-from utilities import classify_model
-from utilities import classify_sentence
-from utilities import setup_nltk
+import utilities
 import databaseconnect
-from googleMapsApiModule import direction
-from googleMapsApiModule import geocoding
+import googleMapsApiModule  
 import logging
 import logger_config 
 location_dict={"origin":"null","destination":"null"}
@@ -14,9 +10,9 @@ log.info('Entered module: %s' % __name__)
 
 @logger_config.logger
 def setup():
-    setup_nltk()
+    utilities.setup_nltk()
     logging.debug('NLTK setup completed')
-    clf = classify_model()
+    clf = utilities.classify_model()
     logging.debug('Classification model ready')
     databaseconnect.setup_database()
     logging.debug('Database setup completed, database connected')
@@ -33,7 +29,7 @@ def message_to_bot(H,clf,learn_response):
     if learn_response == 3:
         location_dict["destination"]=H
         origin, destination = location_dict["origin"], location_dict["destination"]
-        direction(origin,destination)
+        googleMapsApiModule.direction(origin,destination)
         B = "I will certainly help you with that."
         learn_response = 0
         return B,learn_response
@@ -44,7 +40,7 @@ def message_to_bot(H,clf,learn_response):
     subj = set()
     obj = set()
     verb = set()
-    triples,root = parse_sentence(H)
+    triples,root = utilities.parse_sentence(H)
     triples = list(triples)
     for t in triples:
         if t[0][1][:2] == 'VB':
@@ -67,7 +63,7 @@ def message_to_bot(H,clf,learn_response):
     proper_nouns == list(proper_nouns)
     logging.debug("\t"+"Proper Nouns: "+str(proper_nouns))
     #classification
-    classification = classify_sentence(clf,H)
+    classification = utilities.classify_sentence(clf,H)
     #logging.debug(classification)
     if learn_response == 0:
         databaseconnect.add_to_database(classification,subj,root,verb,H)
@@ -90,14 +86,14 @@ def message_to_bot(H,clf,learn_response):
                 location_dict["origin"]=proper_nouns.pop()
                 location_dict["destination"]=proper_nouns.pop()
                 origin, destination = location_dict["origin"], location_dict["destination"]
-                direction(origin,destination)
+                googleMapsApiModule.direction(origin,destination)
             else:
                 B = "I didn't get that. Can you please give me the origin location?"
                 learn_response = 2
         if len(proper_nouns) == 1:
             location = proper_nouns.pop()
             if subj[0] == "geocoding" or subj[0] == location:
-                geocoding(location)
+                googleMapsApiModule.geocoding(location)
                 learn_response = 0
                 B = "I will certainly help you with that."
     return B,learn_response
