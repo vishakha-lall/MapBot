@@ -19,6 +19,7 @@ def direction(origin,destination):
     logging.debug(result_url)
     webbrowser.open_new(result_url)
 
+<<<<<<< HEAD
 def timezone(search_location,timestamp):
     address = search_location.lower()
     address = address.replace(" ","+")
@@ -26,6 +27,9 @@ def timezone(search_location,timestamp):
     print(result_url)
     webbrowser.open_new(result_url)
 
+=======
+@logger_config.logger 
+>>>>>>> upstream/gssoc-master
 def geocoding(search_location):
     result = gmaps.geocode(search_location)
     logging.debug("Formatted Address: "+result[0]['formatted_address'])
