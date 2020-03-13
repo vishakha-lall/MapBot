@@ -6,11 +6,12 @@ import databaseconnect
 from googleMapsApiModule import direction
 from googleMapsApiModule import geocoding
 import logging
-import logger_config 
-location_dict={"origin":"null","destination":"null"}
+import logger_config
+location_dict = {"origin": "null", "destination": "null"}
 
 log = logging.getLogger(__name__)
 log.info('Entered module: %s' % __name__)
+
 
 @logger_config.logger
 def setup():
@@ -23,28 +24,30 @@ def setup():
     learn_response = 0
     return clf, learn_response
 
+
 @logger_config.logger
-def message_to_bot(H,clf,learn_response):
+def message_to_bot(H, clf, learn_response):
     if learn_response == 2:
-        location_dict["origin"]=H
+        location_dict["origin"] = H
         B = "Can you help me with the destination location?"
         learn_response = 3
-        return B,learn_response
+        return B, learn_response
     if learn_response == 3:
-        location_dict["destination"]=H
-        origin, destination = location_dict["origin"], location_dict["destination"]
-        direction(origin,destination)
+        location_dict["destination"] = H
+        origin, destination = location_dict["origin"],
+        location_dict["destination"]
+        direction(origin, destination)
         B = "I will certainly help you with that."
         learn_response = 0
-        return B,learn_response
-    if H.lower() == "bye" or H.lower() == "bye." or H.lower() == "bye!":                                                                 #empty input
+        return B, learn_response
+    if H.lower() == "bye" or H.lower() == "bye." or H.lower() == "bye!":   # empty input
         B = "Bye! I'll miss you!"
-        return B,learn_response                                                                #exit loop
-    #grammar parsing
+        return B, learn_response      # exit loop
+    # grammar parsing
     subj = set()
     obj = set()
     verb = set()
-    triples,root = parse_sentence(H)
+    triples, root = parse_sentence(H)
     triples = list(triples)
     for t in triples:
         if t[0][1][:2] == 'VB':
@@ -66,31 +69,31 @@ def message_to_bot(H,clf,learn_response):
             proper_nouns.add(t[2][0])
     proper_nouns == list(proper_nouns)
     logging.debug("\t"+"Proper Nouns: "+str(proper_nouns))
-    #classification
-    classification = classify_sentence(clf,H)
-    #logging.debug(classification)
+    # classification
+    classification = classify_sentence(clf, H)
+    # logging.debug(classification)
     if learn_response == 0:
-        databaseconnect.add_to_database(classification,subj,root,verb,H)
+        databaseconnect.add_to_database(classification, subj, root, verb, H)
         if (classification == 'C'):
             B = databaseconnect.get_chat_response()
         elif (classification == 'Q'):
-            B,learn_response = databaseconnect.get_question_response(subj,root,verb)
-            if learn_response == 1 and (len(proper_nouns) == 0 or (len(proper_nouns) == 1 and H.split(" ",1)[0] != "Where")):
-                databaseconnect.add_learnt_statement_to_database(subj,root,verb)
-            if learn_response == 1 and (len(proper_nouns) >= 2 or (len(proper_nouns) == 1 and H.split(" ",1)[0] == "Where")):
+            B, learn_response = databaseconnect.get_question_response(subj, root, verb)
+            if learn_response == 1 and (len(proper_nouns) == 0 or (len(proper_nouns) == 1 and H.split(" ", 1)[0] != "Where")):
+                databaseconnect.add_learnt_statement_to_database(subj, root, verb)
+            if learn_response == 1 and (len(proper_nouns) >= 2 or (len(proper_nouns) == 1 and H.split(" ", 1)[0] == "Where")):
                 learn_response = 0
                 B = "I will certainly help you with that."
         else:
             B = "Oops! I'm not trained for this yet."
     else:
-        B,learn_response = databaseconnect.learn_question_response(H)
-    if (len(proper_nouns) >= 2 or (len(proper_nouns) >= 1 and H.split(" ",1)[0] == "Where")) and len(subj) != 0:
+        B, learn_response = databaseconnect.learn_question_response(H)
+    if (len(proper_nouns) >= 2 or (len(proper_nouns) >= 1 and H.split(" ", 1)[0] == "Where")) and len(subj) != 0:
         if subj[0] == "distance":
             if len(proper_nouns) == 2:
-                location_dict["origin"]=proper_nouns.pop()
-                location_dict["destination"]=proper_nouns.pop()
+                location_dict["origin"] = proper_nouns.pop()
+                location_dict["destination"] = proper_nouns.pop()
                 origin, destination = location_dict["origin"], location_dict["destination"]
-                direction(origin,destination)
+                direction(origin, destination)
             else:
                 B = "I didn't get that. Can you please give me the origin location?"
                 learn_response = 2
@@ -100,4 +103,4 @@ def message_to_bot(H,clf,learn_response):
                 geocoding(location)
                 learn_response = 0
                 B = "I will certainly help you with that."
-    return B,learn_response
+    return B, learn_response
