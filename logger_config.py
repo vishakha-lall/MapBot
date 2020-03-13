@@ -11,7 +11,7 @@ def logger(fn):
     def wrapper(*args, **kwargs):
         log = logging.getLogger(fn.__name__)
         log.info('About to run %s' % fn.__name__)
-        out = apply(fn, args, kwargs)
+        out = fn(*args, **kwargs)
         log.info('Done running %s' % fn.__name__)
         return out
     return wrapper
