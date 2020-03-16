@@ -21,8 +21,9 @@ def classify_model():
     import numpy as np
     import pandas as pd
     from sklearn.ensemble import RandomForestClassifier
-    FNAME = 'analysis\\featuresDump.csv'
+    FNAME = 'featuresDump.csv'
     df = pd.read_csv(filepath_or_buffer = FNAME, )
+    
     df.columns = df.columns[:].str.strip()                                      # Strip any leading spaces from col names
     df['class'] = df['class'].map(lambda x: x.strip())
     width = df.shape[1]
@@ -152,10 +153,10 @@ def get_question_response(subject,root,verb):
             cur.execute('SELECT sentence FROM statement_table WHERE verb="%s"'% (str(verb)))
             res = cur.fetchone()
             B = res[0]
-            return B,0
+            return B,'msg'
         else:
             B = "Sorry I don't know the response to this. Please train me."
-            return B,1
+            return B,'train_me'
     else:
         cur.execute('SELECT subject FROM statement_table')
         res = cur.fetchall()
@@ -172,19 +173,19 @@ def get_question_response(subject,root,verb):
                 cur.execute('SELECT sentence FROM statement_table WHERE subject="%s"' % (str(subject)))
                 res = cur.fetchone()
                 B = res[0]
-                return B,0
+                return B,'msg'
             else:
                 if checkVerb[2:-2] == verb[0]:
                     cur.execute('SELECT sentence FROM statement_table WHERE subject="%s"' % (str(subject)))
                     res = cur.fetchone()
                     B = res[0]
-                    return B,0
+                    return B,'msg'
                 else:
                     B = "Sorry I don't know the response to this. Please train me."
-                    return B,1
+                    return B,'train_me'
         else:
             B = "Sorry I don't know the response to this. Please train me."
-            return B,1
+            return B,'train_me'
 
 def add_learnt_statement_to_database(subject,root,verb):
     import config
@@ -205,4 +206,4 @@ def learn_question_response(H):
     cur.execute('UPDATE statement_table SET sentence=%s WHERE id=%s',(H,last_id))
     db.commit()
     B = "Thank you! I have learnt this."
-    return B,0
+    return B,'msg'
