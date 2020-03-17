@@ -8,32 +8,38 @@ from utilities import get_question_response
 from utilities import learn_question_response
 from utilities import add_learnt_statement_to_database
 from utilities import setup_nltk
+from googleMapsApiModule import direction
+from googleMapsApiModule import add_to_maps_database
+from googleMapsApiModule import get_from_maps_database
+from googleMapsApiModule import geocoding
+
 import enum
-class symbolic_constant(enum.Enum): 
-    msg=0
-    train_me=1
-    ogn=2
-    desti=3
-    
+from enum import Enum, auto
+class LearnResponse(enum.Enum): 
+    message = auto()
+    train_me = auto()
+    origin = auto()
+    destination = auto()
+
 def setup():
     setup_nltk()
     clf = classify_model()
     setup_database()
-    learn_response = 'msg'
+    learn_response = LearnResponse.message.name
     return clf, learn_response
 
 def message_to_bot(H,clf,learn_response):
-    if learn_response == 'ogn':
+    if learn_response == LearnResponse.origin.name:
         add_to_maps_database(H,"")
         B = "Can you help me with the destination location?"
-        learn_response = 'desti'
+        learn_response = LearnResponse.destination.name
         return B,learn_response
-    if learn_response == 'desti':
+    if learn_response == LearnResponse.destination.name:
         add_to_maps_database("",H)
         origin,destination = get_from_maps_database()
         direction(origin,destination)
         B = "I will certainly help you with that."
-        learn_response = 'msg'
+        learn_response = LearnResponse.message.name
         return B,learn_response
     if H.lower() == "bye" or H.lower() == "bye." or H.lower() == "bye!":                                                                 #empty input
         B = "Bye! I'll miss you!"
@@ -67,16 +73,16 @@ def message_to_bot(H,clf,learn_response):
     #classification
     classification = classify_sentence(clf,H)
     #print(classification)
-    if learn_response == 'msg':
+    if learn_response == LearnResponse.message.name:
         add_to_database(classification,subj,root,verb,H)
         if (classification == 'C'):
             B = get_chat_response()
         elif (classification == 'Q'):
             B,learn_response = get_question_response(subj,root,verb)
-            if learn_response == 'train_me' and (len(proper_nouns) == 0 or (len(proper_nouns) == 1 and H.split(" ",1)[0] != "Where")):
+            if learn_response == LearnResponse.train_me.name and (len(proper_nouns) == 0 or (len(proper_nouns) == 1 and H.split(" ",1)[0] != "Where")):
                 add_learnt_statement_to_database(subj,root,verb)
-            if learn_response == 'train_me' and (len(proper_nouns) >= 2 or (len(proper_nouns) == 1 and H.split(" ",1)[0] == "Where")):
-                learn_response = 'msg'
+            if learn_response == LearnResponse.train_me.name and (len(proper_nouns) >= 2 or (len(proper_nouns) == 1 and H.split(" ",1)[0] == "Where")):
+                learn_response = LearnResponse.message.name
                 B = "I will certainly help you with that."
         else:
             B = "Oops! I'm not trained for this yet."
@@ -90,7 +96,7 @@ def message_to_bot(H,clf,learn_response):
                 direction(origin,destination)
             else:
                 B = "I didn't get that. Can you please give me the origin location?"
-                learn_response = 'ogn'
+                learn_response = LearnResponse.origin.name
         if len(proper_nouns) == 1:
             location = proper_nouns.pop()
             if subj[0] == "geocoding" or subj[0] == location:
