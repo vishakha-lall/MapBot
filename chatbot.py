@@ -38,7 +38,7 @@ def message_to_bot(H, clf, learn_response):
     if H.lower() == "bye" or H.lower() == "bye." or H.lower() == "bye!":   
         B = "Bye! I'll miss you!"
         return B, learn_response      # exit loop
-        if not H:
+    if not H:
         B = "Please say something!" 
         return B, learn_response          #empty input
     # grammar parsing
