@@ -8,3 +8,4 @@ while(True):
     print("MapBot:  " + send_message)
     if send_message == EXIT_CONVERSATION:
     	break
+    	

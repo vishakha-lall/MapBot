@@ -35,13 +35,13 @@ def message_to_bot(H, clf, learn_response):
         B = "I will certainly help you with that."
         learn_response = 0
         return B, learn_response
-    if H.lower() == "bye" or H.lower() == "bye." or H.lower() == "bye!":   
+    if "bye" in H.lower().split(" "):       #check in words within H   
         B = "Bye! I'll miss you!"
         return B, learn_response      # exit loop
     if not H:
         B = "Please say something!" 
         return B, learn_response          #empty input
-    # grammar parsing
+    # grammar parsing   
     subj = set()
     obj = set()
     verb = set()
