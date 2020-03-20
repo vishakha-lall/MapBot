@@ -3,15 +3,15 @@ from chatbot import message_to_bot, setup
 
 app = Flask(__name__)
 
-@app.route('/chatbot/<input_user>', methods=['GET'])
-def chat(input_user):
+@app.route('/chatbot/<user_input>', methods=['GET'])
+def chat(user_input):
     clf, learn_response = setup()
     try:
-        response = message_to_bot(input_user, clf, learn_response)
+        response = message_to_bot(user_input, clf, learn_response)
     except:
-        return jsonify({'chatbot': "Unable to get response"})
+        return jsonify({'message': "Unable to get response"}, 500)
     
-    return jsonify({'chatbot': response})
+    return jsonify({'message': response}, 200)
 
 if __name__ == '__main__':
     app.run(debug=False)
