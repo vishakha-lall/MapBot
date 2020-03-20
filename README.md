@@ -49,14 +49,15 @@ Check out all related information [here](GSSoC.md)
   - `create database mapbot;`
   - Verify creation of the database `show databases;`
 - Unzip the StanfordCoreNLP package in the repository and keep the file names `stanford-corenlp-x.x.x.jar` and `stanford-corenlp-x.x.x-models.jar` handy.
-- Add config.py file to .gitignore to avoid pushing changes made to config
 - Run `git rm --cached config.py`
-- Edit the `config.py` file with the corresponding values
-  - user = "root"
-  - password = <your_root_password>
-  - host = "localhost"
-  - database = "mapbot"
-  - key = <your_Google_Cloud_API_key>
+-Create a file `.env` in the repository
+-Copy the content of `template.txt` into `.env`
+- Edit the `.env` file with the corresponding values
+  - mapbotuser = "root"
+  - mapbotpassword = <your_root_password>
+  - mapbothost = "localhost"
+  - mapbotdatabase = "mapbot"
+  - mapbotkey = <your_Google_Cloud_API_key>
   - stanford_path_to_jar = <your_path_to_stanford-corenlp-x.x.x.jar>
   - stanford_path_to_models_jar = <your_path_to_stanford-corenlp-x.x.x-models.jar>
   - javahome = <your_path_to_jdk_bin_java.exe>
