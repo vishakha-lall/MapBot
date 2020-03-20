@@ -4,8 +4,9 @@ import pytest
 
 @pytest.mark.parametrize('source,destination',
                                             [
-                                                ('paris','brussels'),
-                                                ('denver','boston')
+                                                ('paris','brussels'),    ## Add places for testing here
+                                                ('denver','boston'),
+                                                ('efef','weufhw')
                                             ])
 class TestClass:
     def test_direction(self,source,destination):
