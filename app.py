@@ -9,9 +9,9 @@ def chat(input_user):
     try:
         response = message_to_bot(input_user, clf, learn_response)
     except:
-        return jsonify({'error' : "Unable to get response"})
+        return jsonify({'chatbot': "Unable to get response"})
     
-    return jsonify({'chatbot' : response})
+    return jsonify({'chatbot': response})
 
 if __name__ == '__main__':
     app.run(debug=False)

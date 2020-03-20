@@ -1,15 +1,9 @@
 def setup_nltk():
     import nltk
-    import ssl
-    try:
-        _create_unverified_https_context = ssl._create_unverified_context
-    except AttributeError:
-        pass
-    else:
-        ssl._create_default_https_context = _create_unverified_https_context
     nltk.download('punkt')
     nltk.download('averaged_perceptron_tagger')
     nltk.download('stopwords')
+
 #grammar parsing
 def parse_sentence(user_input):                               #returns root word, triples of StanfordDependencyParser
     import os
