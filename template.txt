@@ -15,6 +15,7 @@ stanford_path_to_models_jar = "./stanford-corenlp-full-2018-10-05/stanford-coren
 javahome = '*your_path_to_jdk_bin_java.exe*'
 
 #DOCKER variables
+    DOCKER = "Y"
     dockeruser = "root"
     dockerpassword = "root"
     dockerhost = "db"
