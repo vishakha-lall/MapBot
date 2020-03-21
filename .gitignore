@@ -127,3 +127,4 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
+config.py
