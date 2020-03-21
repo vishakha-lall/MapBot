@@ -8,7 +8,7 @@ def chat(user_input):
     try:
         response = message_to_bot(user_input, clf, learn_response)
     except:
-        return jsonify({'message': "Unable to get response"}, 500)
+        return jsonify({'message': ('Unable to get response', 0)}, 500)
     
     return jsonify({'message': response}, 200)
 
