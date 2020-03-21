@@ -19,7 +19,8 @@ javahome = os.getenv('javahome')
 
 # DONOT CHANGE THE VALUES BELOW DURING INITIAL CONFIGURATION SET UP
 
-if os.getenv("DOCKER"):
+docker = os.getenv("DOCKER"):
+if(docker=="Y"):
     # print("Inside Docker")
     user = os.getenv('dockeruser')
     password = os.getenv('dockerpassword')
