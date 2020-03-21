@@ -6,6 +6,9 @@ from constants import BASE_URL
 import requests
 import logging
 import logger_config
+from datetime import datetime, date
+import calendar
+
 
 gmaps = googlemaps.Client(config.key)      #global variable gmaps
 
@@ -20,15 +23,29 @@ def direction(origin,destination):
     logging.debug(result_url)
     webbrowser.open_new(result_url)
 
-def timezone(search_location,timestamp):
-    address = search_location.lower()
-    address = address.replace(" ","+")
-    result_url = f'https://maps.googleapis.com/maps/api/timezone/json?location={address}&timestamp={timestamp}&key={config.key}
-    print(result_url)
-    webbrowser.open_new(result_url)
+def get_timestamp(datetime):        #format of datetime should be YYYY MM DD Hrs Mins
+	yr,mon,day,hr,mi=map(int,datetime.split())
+	d=datetime(yr,mon,day,hr,mi)
+	timestamp = calendar.timegm(d.timetuple())
+	return timestamp
+
+def get_lat_lng(place):
+	response = requests.get(f'https://maps.googleapis.com/maps/api/geocode/json?address={place}&key={config.key}')
+	resp_json_payload = response.json()
+	lat_lng=resp_json_payload['results'][0]['geometry']['location']
+	return (lat_lng)
 
 @logger_config.logger 
 
+def timezone(place,date_time):
+	lat_lng=get_lat_lng(place)
+	timestamp=get_timestamp(date_time)
+	response= requests.get('https://maps.googleapis.com/maps/api/timezone/json?location={},{}&timestamp={}&key={}'.format(lat_lng['lat'],lat_lng['lng'],timestamp,config.key))
+	resp_dict= response.json()
+	for key in resp_dict:
+		print("{} : {}".format(key,resp_dict[key]))
+
+    
 def geocoding(search_location):
     result = gmaps.geocode(search_location)
     logging.debug("Formatted Address: "+result[0]['formatted_address'])
