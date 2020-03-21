@@ -50,8 +50,8 @@ Check out all related information [here](GSSoC.md)
   - Verify creation of the database `show databases;`
 - Unzip the StanfordCoreNLP package in the repository and keep the file names `stanford-corenlp-x.x.x.jar` and `stanford-corenlp-x.x.x-models.jar` handy.
 - Run `git rm --cached config.py`
--Create a file `.env` in the repository
--Copy the content of `template.txt` into `.env`
+- Create a file `.env` in the same folder as config.py in the repository
+- Copy the content of `template.txt` into `.env`
 - Edit the `.env` file with the corresponding values
   - mapbotuser = "root"
   - mapbotpassword = <your_root_password>
