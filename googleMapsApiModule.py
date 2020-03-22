@@ -23,8 +23,8 @@ def direction(origin,destination):
     logging.debug(result_url)
     webbrowser.open_new(result_url)
 @logger_config.logger 
-def get_timestamp(datetime):        
-	yr,mon,day,hr,mi=map(int,datetime.split())
+def get_timestamp(date_time):        
+	yr,mon,day,hr,mi=map(int,date_time.split())
 	d=datetime(yr,mon,day,hr,mi)
 	timestamp = calendar.timegm(d.timetuple())
 	return timestamp
