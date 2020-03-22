@@ -1,6 +1,5 @@
 stanford-corenlp-full-2018-10-05/
 __pycache__
-config.py
 # Editors
 .vscode/
 .idea/
@@ -126,5 +125,3 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
-
-config.py

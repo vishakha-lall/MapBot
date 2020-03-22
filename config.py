@@ -12,14 +12,13 @@ stanford_path_to_jar = "../stanford-corenlp-full-2018-10-05/stanford-corenlp-3.9
 # your_path_to_stanford-corenlp-x.x.x-models.jar
 stanford_path_to_models_jar = "../stanford-corenlp-full-2018-10-05/stanford-corenlp-3.9.2-models.jar"
 
-# for eg. 'C:\\Program\ Files\\Java\\jdk1.8.0_201\\bin\\java.exe' or '/usr/local/openjdk-11/bin/java'
-javahome = '*your_path_to_jdk_bin_java.exe*'
 
 # DONOT CHANGE THE VALUES BELOW DURING INITIAL CONFIGURATION SET UP
 
-if os.getenv("DOCKER"):
+docker = os.getenv("DOCKER")
+if(docker=="Y"):
     # print("Inside Docker")
-    user = "root"
-    password = "root"
-    host = "db"
-    javahome = '/usr/local/openjdk-11/bin/java'
+    user = os.getenv('dockeruser')
+    password = os.getenv('dockerpassword')
+    host = os.getenv('dockerhost')
+    javahome = os.getenv('dockerjavahome')
