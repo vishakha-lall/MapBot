@@ -9,6 +9,7 @@ host = os.getenv('mapbothost')
 database = os.getenv('mapbotdatabase')
 port = os.getenv('mapbotport')
 key = os.getenv('mapbotkey')
+slack_bot_token = os.getenv('slack_bot_token')
 
 stanford_path_to_jar = os.getenv('stanford_path_to_jar')
 
