@@ -1,54 +1,60 @@
-from utilities import parse_sentence
-from utilities import classify_model
-from utilities import classify_sentence
-from utilities import setup_database
-from utilities import add_to_database
-from utilities import get_chat_response
-from utilities import get_question_response
-from utilities import learn_question_response
-from utilities import add_learnt_statement_to_database
-from utilities import setup_nltk
-from googleMapsApiModule import direction
-from googleMapsApiModule import add_to_maps_database
-from googleMapsApiModule import get_from_maps_database
-from googleMapsApiModule import geocoding
-
-import enum
+import utilities
+import databaseconnect
+import googleMapsApiModule
 from enum import Enum, auto
-class LearnResponse(enum.Enum): 
-    message = auto()
-    train_me = auto()
-    origin = auto()
-    destination = auto()
+import logging
+import logger_config
+location_dict = {"origin": "null", "destination": "null"}
 
+log = logging.getLogger(__name__)
+log.info('Entered module: %s' % __name__)
+
+
+class LearnResponse(Enum):
+    MESSAGE = auto()
+    TRAIN_ME = auto()
+    ORIGIN = auto()
+    DESTINATION = auto()
+
+
+@logger_config.logger
 def setup():
-    setup_nltk()
-    clf = classify_model()
-    setup_database()
-    learn_response = LearnResponse.message.name
+    utilities.setup_nltk()
+    logging.debug('NLTK setup completed')
+    clf = utilities.classify_model()
+    logging.debug('Classification model ready')
+    databaseconnect.setup_database()
+    logging.debug('Database setup completed, database connected')
+    learn_response = LearnResponse.MESSAGE.name
     return clf, learn_response
 
-def message_to_bot(H,clf,learn_response):
-    if learn_response == LearnResponse.origin.name:
-        add_to_maps_database(H,"")
+
+@logger_config.logger
+def message_to_bot(H, clf, learn_response):
+    if learn_response == LearnResponse.DESTINATION.name:
+        location_dict["origin"] = H
         B = "Can you help me with the destination location?"
-        learn_response = LearnResponse.destination.name
-        return B,learn_response
-    if learn_response == LearnResponse.destination.name:
-        add_to_maps_database("",H)
-        origin,destination = get_from_maps_database()
-        direction(origin,destination)
+        learn_response = LearnResponse.DESTINATION.name
+        return B, learn_response
+    if learn_response == LearnResponse.DESTINATION.name:
+        location_dict["destination"] = H
+        origin, destination = location_dict["origin"], location_dict["dest"
+                                                                     "ination"]
+        googleMapsApiModule.direction(origin, destination)
         B = "I will certainly help you with that."
-        learn_response = LearnResponse.message.name
-        return B,learn_response
-    if H.lower() == "bye" or H.lower() == "bye." or H.lower() == "bye!":                                                                 #empty input
+        learn_response = LearnResponse.MESSAGE.name
+        return B, learn_response
+    if "bye" in H.lower().split(" "):   # check in words within H
         B = "Bye! I'll miss you!"
-        return B,learn_response                                                                #exit loop
-    #grammar parsing
+        return B, learn_response      # exit loop
+    if not H:
+        B = "Please say something!"
+        return B, learn_response          # empty input
+    # grammar parsing
     subj = set()
     obj = set()
     verb = set()
-    triples,root = parse_sentence(H)
+    triples, root = utilities.parse_sentence(H)
     triples = list(triples)
     for t in triples:
         if t[0][1][:2] == 'VB':
@@ -58,7 +64,7 @@ def message_to_bot(H,clf,learn_response):
             subj.add(t[2][0])
         if relation[-3:] == 'obj':
             obj.add(t[2][0])
-    print("\t"+"Subject: "+str(subj)+"\n"+"\t"+"Object: "+str(obj)+"\n"+"\t"+"Topic: "+str(root)+"\n"+"\t"+"Verb: "+str(verb))
+    logging.debug("\t"+"Subject: "+str(subj)+"\n"+"\t"+"Object: "+str(obj)+"\n"+"\t"+"Topic: "+str(root)+"\n"+"\t"+"Verb: "+str(verb))
     subj = list(subj)
     obj = list(obj)
     verb = list(verb)
@@ -69,36 +75,39 @@ def message_to_bot(H,clf,learn_response):
         if t[2][1] == 'NNP':
             proper_nouns.add(t[2][0])
     proper_nouns == list(proper_nouns)
-    print("\t"+"Proper Nouns: "+str(proper_nouns))
-    #classification
-    classification = classify_sentence(clf,H)
-    #print(classification)
-    if learn_response == LearnResponse.message.name:
-        add_to_database(classification,subj,root,verb,H)
+    logging.debug("\t"+"Proper Nouns: "+str(proper_nouns))
+    # classification
+    classification = utilities.classify_sentence(clf, H)
+    # logging.debug(classification)
+    if learn_response == LearnResponse.MESSAGE.name:
+        databaseconnect.add_to_database(classification, subj, root, verb, H)
         if (classification == 'C'):
-            B = get_chat_response()
+            B = databaseconnect.get_chat_response()
         elif (classification == 'Q'):
-            B,learn_response = get_question_response(subj,root,verb)
-            if learn_response == LearnResponse.train_me.name and (len(proper_nouns) == 0 or (len(proper_nouns) == 1 and H.split(" ",1)[0] != "Where")):
-                add_learnt_statement_to_database(subj,root,verb)
-            if learn_response == LearnResponse.train_me.name and (len(proper_nouns) >= 2 or (len(proper_nouns) == 1 and H.split(" ",1)[0] == "Where")):
-                learn_response = LearnResponse.message.name
+            B, learn_response = databaseconnect.get_question_response(subj, root, verb)
+            if learn_response == LearnResponse.TRAIN_ME.name and (len(proper_nouns) == 0 or (len(proper_nouns) == 1 and H.split(" ", 1)[0] != "Where")):
+                databaseconnect.add_learnt_statement_to_database(subj, root, verb)
+            if learn_response == LearnResponse.TRAIN_ME.name and (len(proper_nouns) >= 2 or (len(proper_nouns) == 1 and H.split(" ", 1)[0] == "Where")):
+                learn_response = LearnResponse.MESSAGE.name
                 B = "I will certainly help you with that."
         else:
             B = "Oops! I'm not trained for this yet."
     else:
-        B,learn_response = learn_question_response(H)
-    if (len(proper_nouns) >= 2 or (len(proper_nouns) >= 1 and H.split(" ",1)[0] == "Where")) and len(subj) != 0:
+        B, learn_response = databaseconnect.learn_question_response(H)
+    if (len(proper_nouns) >= 2 or (len(proper_nouns) >= 1 and H.split(" ", 1)[0] == "Where")) and len(subj) != 0:
         if subj[0] == "distance":
             if len(proper_nouns) == 2:
-                add_to_maps_database(proper_nouns.pop(),proper_nouns.pop())
-                origin,destination = get_from_maps_database()
-                direction(origin,destination)
+                location_dict["origin"] = proper_nouns.pop()
+                location_dict["destination"] = proper_nouns.pop()
+                origin, destination = location_dict["origin"], location_dict["destination"]
+                googleMapsApiModule.direction(origin, destination)
             else:
                 B = "I didn't get that. Can you please give me the origin location?"
-                learn_response = LearnResponse.origin.name
+                learn_response = LearnResponse.ORIGIN.name
         if len(proper_nouns) == 1:
             location = proper_nouns.pop()
             if subj[0] == "geocoding" or subj[0] == location:
-                geocoding(location)
-    return B,learn_response
+                googleMapsApiModule.geocoding(location)
+                learn_response = LearnResponse.MESSAGE.name
+                B = "I will certainly help you with that."
+    return B, learn_response
