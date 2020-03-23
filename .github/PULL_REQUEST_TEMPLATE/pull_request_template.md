@@ -19,7 +19,7 @@ Fixes #    <!-- Add the issue number that is fixed by this PR -->
 - [ ] The code has been tested
 - [ ] No new warnings are generated
 
-<!-- Add screenshots if there is a change in user interface -->
+<!-- Add screenshots of locally tested code -->
 ## Screenshots:
 
 
