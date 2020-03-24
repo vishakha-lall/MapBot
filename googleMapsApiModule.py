@@ -73,7 +73,7 @@ def mapsstatic(search_location):
         result_value(int): elevation(in metres) above/below sea level
     """
 
-
+@logger_config.logger
 def elevation(search_location):
     result = gmaps.geocode(search_location)
     json = requests.get(f'https://maps.googleapis.com/maps/api/elevation/json?locations={result[0]["geometry"]["location"]["lat"]},{result[0]["geometry"]["location"]["lng"]}&key={config.key}').json()
@@ -82,12 +82,13 @@ def elevation(search_location):
     print(f'{search_location} is {round(result_value,2)} metres {position} sea level')
     return result_value
 
+@logger_config.logger
 def places(search_location):
     address = search_location
     json = requests.get(f'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={address.lower().replace(" ", "+")}&inputtype=textquery&fields=photos,formatted_address,place_id&key={config.key}').json()
-    print("Address:"+json["candidates"][0]["formatted_address"])
+    logging.debug("Address:"+json["candidates"][0]["formatted_address"])
     details = requests.get(f'https://maps.googleapis.com/maps/api/place/details/json?place_id={json["candidates"][0]["place_id"]}&fields=rating,formatted_phone_number&key={config.key}').json()
-    print("Rating:"+str(details["result"]["rating"]))
-    print("Phone:"+details["result"]["formatted_phone_number"])
+    logging.debug("Rating:"+str(details["result"]["rating"]))
+    logging.debug("Phone:"+details["result"]["formatted_phone_number"])
     photo = f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={json["candidates"][0]["photos"][0]["photo_reference"]}&key={config.key}'
     webbrowser.open_new(photo)
