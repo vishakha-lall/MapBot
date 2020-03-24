@@ -32,7 +32,7 @@ def handle_command(command, channel):
     """
         Executes bot command if command is known
     """
-    default_response = "Not sure what you mean. Try *{}*.".format(EXAMPLE_COMMAND)
+    default_response = f"Not sure what you mean. Try {EXAMPLE_COMMAND}."
 
     response = None
     if command.startswith(EXAMPLE_COMMAND):
