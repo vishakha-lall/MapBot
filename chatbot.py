@@ -38,8 +38,7 @@ def message_to_bot(H, clf, learn_response):
         return B, learn_response
     if learn_response == LearnResponse.DESTINATION.name:
         location_dict["destination"] = H
-        origin, destination = location_dict["origin"], location_dict["dest"
-                                                                     "ination"]
+        origin, destination = location_dict["origin"], location_dict["destination"]
         googleMapsApiModule.direction(origin, destination)
         B = "I will certainly help you with that."
         learn_response = LearnResponse.MESSAGE.name
