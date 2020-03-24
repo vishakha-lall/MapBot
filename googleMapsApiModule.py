@@ -81,3 +81,13 @@ def elevation(search_location):
     position = "above" if result_value > 0 else "below"
     print(f'{search_location} is {round(result_value,2)} metres {position} sea level')
     return result_value
+
+def places(search_location):
+    address = search_location
+    json = requests.get(f'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={address.lower().replace(" ", "+")}&inputtype=textquery&fields=photos,formatted_address,place_id&key={config.key}').json()
+    print("Address:"+json["candidates"][0]["formatted_address"])
+    details = requests.get(f'https://maps.googleapis.com/maps/api/place/details/json?place_id={json["candidates"][0]["place_id"]}&fields=rating,formatted_phone_number&key={config.key}').json()
+    print("Rating:"+str(details["result"]["rating"]))
+    print("Phone:"+details["result"]["formatted_phone_number"])
+    photo = f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={json["candidates"][0]["photos"][0]["photo_reference"]}&key={config.key}'
+    webbrowser.open_new(photo)
