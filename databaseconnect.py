@@ -29,7 +29,7 @@ def connection_to_database():
 
         except mysql.connector.Error as e:
             tries += 1
-            print(e, "...Retrying")
+            logging.debug(e, "...Retrying")
             sleep(20)
     try:
         if conn.is_connected():
@@ -56,7 +56,6 @@ def add_to_database(classification,subject,root,verb,H):
     cur = db.cursor()
     cur = db.cursor(prepared=True)
     if classification == 'C':
-        print(root, verb, H)
         cur.execute("INSERT INTO chat_table(root_word,verb,sentence) VALUES (%s, %s, %s)", (str(root), str(verb), H))
         db.commit()
     elif classification == 'Q':
@@ -112,7 +111,7 @@ def get_question_response(subject,root,verb):
                 found = 1
                 break
         if found == 1:
-            cur.execute(f"SELECT sentence FROM statement_table WHERE verb={verb}")
+            cur.execute("SELECT sentence FROM statement_table WHERE verb= %s", str(verb))
             res = cur.fetchone()
             B = res[0]
             return B,0
@@ -128,17 +127,17 @@ def get_question_response(subject,root,verb):
                 found = 1
                 break
         if found == 1:
-            cur.execute(f"SELECT verb FROM statement_table WHERE subject={subject}")
+            cur.execute(f"SELECT verb FROM statement_table WHERE subject= {subject}")
             res = cur.fetchone()
             checkVerb = res[0]                                                  #checkVerb is a string while verb is a list. checkVerb ['verb']
             if checkVerb == '[]':
-                cur.execute(f"SELECT sentence FROM statement_table WHERE subject={subject}")
+                cur.execute(f"SELECT sentence FROM statement_table WHERE subject= {subject}")
                 res = cur.fetchone()
                 B = res[0]
                 return B,0
             else:
                 if checkVerb[2:-2] == verb[0]:
-                    cur.execute(f"SELECT sentence FROM statement_table WHERE subject={subject}")
+                    cur.execute(f"SELECT sentence FROM statement_table WHERE subject= {subject}")
                     res = cur.fetchone()
                     B = res[0]
                     return B,0
@@ -163,42 +162,43 @@ def learn_question_response(H):
     cur.execute("SELECT id FROM statement_table ORDER BY id DESC")
     res = cur.fetchone()
     last_id = res[0]
-    cur.execute(f"UPDATE statement_table SET sentence={H} WHERE id={last_id}")
+    #cur.execute("UPDATE statement_table SET sentence={H} WHERE id={last_id}")
+    cur.execute("UPDATE statement_table SET sentence = %s WHERE id = %s",(H, last_id))
     db.commit()
     B = "Thank you! I have learnt this."
     return B,0
 
-
+@logger_config.logger 
 def clear_table(table_name):
     db = connection_to_database()
     cur = db.cursor()
 
     if table_name in ("question_table","statement_table"):
         tables_to_be_cleaned = ("question_table","statement_table")
-        print("The following tables will be cleaned:\n")
+        logging.debug("The following tables will be cleaned:\n")
         for table in tables_to_be_cleaned:
             describe_table(cur, table)
 
         if input("Enter 'Y' to confirm cleaning of BOTH tables: ") in ("Y","y"):
             for table in tables_to_be_cleaned:
-                cur.execute("DELETE FROM {table}")
+                cur.execute(f"DELETE FROM {table}")
             db.commit()
-            print("Tables cleaned successfully")
+            logging.debug("Tables cleaned successfully")
         else:
-            print("Table cleaning skipped.")
+            logging.debug("Table cleaning skipped.")
 
     else:
-        print("The following table will be cleaned:\n")
+        logging.debug("The following table will be cleaned:\n")
         describe_table(cur, table_name)
 
         if input("Enter 'Y' to confirm: ") in ("Y","y"):
-            print("Table cleaned successfully")
+            logging.debug("Table cleaned successfully")
             cur.execute(f"DELETE FROM {table_name}")
             db.commit()
         else:
-            print("Table cleaning skipped.")
+            logging.debug("Table cleaning skipped.")
 
-@@logger_config.logger 
+@logger_config.logger 
 def describe_table(cursor, table_name):
     cur.execute(f"DESC {table_name}")
     res = cur.fetchall()
@@ -208,7 +208,7 @@ def describe_table(cursor, table_name):
     res = cur.fetchall()
     records_no = res[0][0]
 
-    print("Table Name:", table_name)
-    print("Columns:", column_names)
-    print("Number of existing records:", records_no)
-    print()
+    logging.debug("Table Name:", table_name)
+    logging.debug("Columns:", column_names)
+    logging.debug("Number of existing records:", records_no)
+    logging.debug()
