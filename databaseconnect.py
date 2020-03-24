@@ -119,14 +119,14 @@ def get_question_response(subject, root, verb):
             cur.execute(f"SELECT sentence FROM statement_table WHERE verb='{verb}'")
             res = cur.fetchone()
             B = res[0]
-            return B, LearnResponse.MESSAGE.name
+            return B, 0
         else:
             B = "Sorry I don't know the response to this. Please train me."
-            return B, LearnResponse.TRAIN_ME.name
+            return B, 1
     else:
         cur.execute("SELECT subject FROM statement_table")
         res = cur.fetchall()
-        found = LearnResponse.MESSAGE.name
+        found = 0
         for r in res:
             if r[-1] == str(subject):
                 found = 1
@@ -139,19 +139,19 @@ def get_question_response(subject, root, verb):
                 cur.execute(f"SELECT sentence FROM statement_table WHERE subject='{subject}'")
                 res = cur.fetchone()
                 B = res[0]
-                return B, LearnResponse.MESSAGE.name
+                return B, 0
             else:
                 if checkVerb[2:-2] == verb[0]:
                     cur.execute(f"SELECT sentence FROM statement_table WHERE subject='{subject}'")
                     res = cur.fetchone()
                     B = res[0]
-                    return B, LearnResponse.MESSAGE.name
+                    return B, 0
                 else:
                     B = "Sorry I don't know the response to this. Please train me."
-                    return B, LearnResponse.TRAIN_ME.name
+                    return B, 1
         else:
             B = "Sorry I don't know the response to this. Please train me."
-            return B, LearnResponse.TRAIN_ME.name
+            return B, 1
 
 
 @logger_config.logger
@@ -172,7 +172,7 @@ def learn_question_response(H):
     cur.execute(f"UPDATE statement_table SET sentence='{H}' WHERE id={last_id}")
     db.commit()
     B = "Thank you! I have learnt this."
-    return B, LearnResponse.MESSAGE.name
+    return B, 0
 
 
 def clear_table(table_name):
