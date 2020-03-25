@@ -50,6 +50,7 @@ def setup_database():
     cur.execute("CREATE TABLE IF NOT EXISTS statement_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))")
     cur.execute("CREATE TABLE IF NOT EXISTS question_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))")
     cur.execute("CREATE TABLE IF NOT EXISTS directions_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, origin_location VARCHAR(100), destination_location VARCHAR(100))")
+    return db
 
 
 @logger_config.logger
@@ -84,6 +85,7 @@ def add_to_database(classification, subject, root, verb, H):
         if exist == 0:    # do not add if question already exists
             cur.execute(f"INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES ('{subject}','{root}','{verb}','{H}')")
             db.commit()
+    return db
 
 
 @logger_config.logger
@@ -96,8 +98,8 @@ def get_chat_response():
     res = cur.fetchone()
     total_chat_records = res[0]
     import random
-    chat_id = random.randint(1, total_chat_records+1)
-    cur.execute(f"SELECT sentence FROM chat_table WHERE id = {chat_id}")
+    chat_id = random.randint(1, total_chat_records)
+    cur.execute(f"SELECT sentence FROM chat_table WHERE id ={chat_id}")
     res = cur.fetchone()
     B = res[0]
     return B
@@ -160,6 +162,7 @@ def add_learnt_statement_to_database(subject, root, verb):
     cur = db.cursor()
     cur.execute(f"INSERT INTO statement_table(subject,root_word,verb) VALUES ('{subject}','{root}','{verb}')")
     db.commit()
+    return db
 
 
 @logger_config.logger
@@ -172,7 +175,7 @@ def learn_question_response(H):
     cur.execute(f"UPDATE statement_table SET sentence='{H}' WHERE id={last_id}")
     db.commit()
     B = "Thank you! I have learnt this."
-    return B, 0
+    return B, 0                                 
 
 
 def clear_table(table_name):
@@ -203,6 +206,8 @@ def clear_table(table_name):
             db.commit()
         else:
             print("Table cleaning skipped.")
+    
+    return db
 
 
 def describe_table(cur, table_name):
@@ -218,3 +223,5 @@ def describe_table(cur, table_name):
     print("Columns:", column_names)
     print("Number of existing records:", records_no)
     print()
+
+    return records_no
