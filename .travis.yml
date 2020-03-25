@@ -7,4 +7,4 @@ install:
 before_script:
   - flake8 .
 script:
-  - python ./init.py
+  - python test_googleMapsApiModule.py
