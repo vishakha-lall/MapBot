@@ -2,10 +2,9 @@ import googleMapsApiModule
 import config
 import pytest
 from googlemaps.exceptions import ApiError
-import unittest 
 
  
-class TestClass(unittest.TestCase):
+class TestClass():
     def test_direction_with_valid_input(self):
         result = googleMapsApiModule.direction('paris','brussels')
         assert result == "https://www.google.com/maps/dir/?api=1&origin=paris&destination=brussels"
@@ -36,6 +35,3 @@ class TestClass(unittest.TestCase):
         with pytest.raises(IndexError):
             result = googleMapsApiModule.elevation('hihih')
             assert type(result) is float
-         
-if __name__ == '__main__': 
-    unittest.main() 
