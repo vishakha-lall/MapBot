@@ -3,7 +3,7 @@ FROM python:3.6
 COPY requirements.txt ./requirements.txt
 RUN pip install -r requirements.txt
 
-COPY . /usr/var/
-WORKDIR /usr/var/
+COPY . /usr/var/MapBot
+WORKDIR /usr/var/MapBot
 
-CMD ["python", "./init.py"]
+ENTRYPOINT ["/bin/sh","./docker-entrypoint.sh"]
