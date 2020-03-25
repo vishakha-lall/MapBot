@@ -85,10 +85,10 @@ def elevation(search_location):
 @logger_config.logger
 def places(search_location):
     address = search_location
-    json = requests.get(f'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input={address.lower().replace(" ", "+")}&inputtype=textquery&fields=photos,formatted_address,place_id&key={config.key}').json()
+    json = requests.get(f'{BASE_URL["places_textsearch"]}={address.lower().replace(" ", "+")}&inputtype=textquery&fields=photos,formatted_address,place_id&key={config.key}').json()
     logging.debug("Address:"+json["candidates"][0]["formatted_address"])
-    details = requests.get(f'https://maps.googleapis.com/maps/api/place/details/json?place_id={json["candidates"][0]["place_id"]}&fields=rating,formatted_phone_number&key={config.key}').json()
+    details = requests.get(f'{BASE_URL["places_details"]}={json["candidates"][0]["place_id"]}&fields=rating,formatted_phone_number&key={config.key}').json()
     logging.debug("Rating:"+str(details["result"]["rating"]))
     logging.debug("Phone:"+details["result"]["formatted_phone_number"])
-    photo = f'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={json["candidates"][0]["photos"][0]["photo_reference"]}&key={config.key}'
+    photo = f'{BASE_URL["places_photos"]}={json["candidates"][0]["photos"][0]["photo_reference"]}&key={config.key}'
     webbrowser.open_new(photo)
