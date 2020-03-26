@@ -20,7 +20,7 @@ services:
         image: python:3.6
         container_name: mapbot_bot
         environment:
-            - DOCKER=true
+            - DOCKER=Y
         build:
             context: .
             dockerfile: Dockerfile
@@ -29,7 +29,7 @@ services:
             - java
         volumes:
             - java_storage:/usr/local/openjdk-11/:ro
-            - .:/usr/var
+            - .:/usr/var/MapBot
         stdin_open: true
         tty: true
 

@@ -1,28 +1,25 @@
 import os
-import dotenv
+from dotenv import load_dotenv
 
-dotenv.load_dotenv()
+if os.getenv("DOCKER") == 'Y':
+    load_dotenv('ENV/docker.env')
+else:
+    load_dotenv('ENV/.env')
 
-user = os.getenv('mapbotuser')
-password = os.getenv('mapbotpassword')
-host = os.getenv('mapbothost')
-database = os.getenv('mapbotdatabase')
-port = os.getenv('mapbotport')
-key = os.getenv('mapbotkey')
+### MAKE SURE you have filled environment variables in `.env` files in `./ENV/` folder
 
-stanford_path_to_jar = os.getenv('stanford_path_to_jar')
+user = os.getenv("DB_USER")
+password = os.getenv("DB_PASSWORD")
+host = os.getenv("DB_HOST")
+database = os.getenv("DATABASE")
+port = os.getenv("DB_PORT")
+key = os.getenv("GCLOUD_API_KEY")  # Will be provided by mentors
 
-stanford_path_to_models_jar = os.getenv('stanford_path_to_models_jar')
+# your_path_to_stanford-corenlp-x.x.x.jar
+stanford_path_to_jar = os.getenv("STANFORD_PATH_TO_JAR")
 
-javahome = os.getenv('javahome')
+# your_path_to_stanford-corenlp-x.x.x-models.jar
+stanford_path_to_models_jar = os.getenv("STANFORD_PATH_TO_MODELS_JAR")
 
-
-# DONOT CHANGE THE VALUES BELOW DURING INITIAL CONFIGURATION SET UP
-
-docker = os.getenv("DOCKER")
-if(docker=="Y"):
-    # print("Inside Docker")
-    user = os.getenv('dockeruser')
-    password = os.getenv('dockerpassword')
-    host = os.getenv('dockerhost')
-    javahome = os.getenv('dockerjavahome')
+# for eg. 'C:\\Program\ Files\\Java\\jdk1.8.0_201\\bin\\java.exe' or '/usr/local/openjdk-11/bin/java'
+javahome = os.getenv("JAVAHOME")
