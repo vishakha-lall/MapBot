@@ -31,7 +31,7 @@ def setup():
 
 @logger_config.logger
 def message_to_bot(H, clf, learn_response):
-    if learn_response == LearnResponse.DESTINATION.name:
+    if learn_response == LearnResponse.ORIGIN.name:
         location_dict["origin"] = H
         B = "Can you help me with the destination location?"
         learn_response = LearnResponse.DESTINATION.name

@@ -127,7 +127,7 @@ def get_question_response(subject, root, verb):
     else:
         cur.execute("SELECT subject FROM statement_table")
         res = cur.fetchall()
-        found = LearnResponse.MESSAGE.name
+        found = 0
         for r in res:
             if r[-1] == str(subject):
                 found = 1
@@ -188,7 +188,7 @@ def clear_table(table_name):
 
         if input("Enter 'Y' to confirm cleaning of BOTH tables: ") in ("Y", "y"):
             for table in tables_to_be_cleaned:
-                cur.execute("DELETE FROM {table}")
+                cur.execute(f"DELETE FROM {table}")
             db.commit()
             print("Tables cleaned successfully")
         else:
@@ -206,7 +206,7 @@ def clear_table(table_name):
             print("Table cleaning skipped.")
 
 
-def describe_table(cursor, table_name, cur):
+def describe_table(cur, table_name):
     cur.execute(f"DESC {table_name}")
     res = cur.fetchall()
     column_names = [col[0] for col in res]
