@@ -48,19 +48,9 @@ Check out all related information [here](GSSoC.md)
   - Enter root password when prompted
   - `create database mapbot;`
   - Verify creation of the database `show databases;`
-- Unzip the StanfordCoreNLP package in the repository and keep the file names `stanford-corenlp-x.x.x.jar` and `stanford-corenlp-x.x.x-models.jar` handy.
-- Run `git rm --cached config.py`
-- Create a file `.env` in the base directory of the repository
-- Copy the content of `template.txt` into `.env`
-- Edit the `.env` file with the corresponding values
-  - mapbotuser = "root"
-  - mapbotpassword = <your_root_password>
-  - mapbothost = "localhost"
-  - mapbotdatabase = "mapbot"
-  - mapbotkey = <your_Google_Cloud_API_key>
-  - stanford_path_to_jar = <your_path_to_stanford-corenlp-x.x.x.jar>
-  - stanford_path_to_models_jar = <your_path_to_stanford-corenlp-x.x.x-models.jar>
-  - javahome = <your_path_to_jdk_bin_java.exe>
+- Unzip the StanfordCoreNLP package in the repository and keep the file paths `stanford-corenlp-x.x.x.jar` and `stanford-corenlp-x.x.x-models.jar` handy.
+- Run `git update-index --assume-unchanged ENV/*`
+- Fill the existing template in `ENV/.env` with the corresponding values following the `KEY=VALUE` format
 - Install dependencies from `requirements.txt` file. Run `pip install -r requirements.txt`
 - You're all set up, run the `init.py` file. `python init.py`
 - It is recommended that you set this project up in a virtual environment to keep the dependencies separated and for easier debugging. Here's how you can do that -
@@ -71,22 +61,15 @@ Check out all related information [here](GSSoC.md)
 
 #### What are some pre-requisites? (with Docker)
 
-- StanfordCoreNLP
-  - StanfordCoreNLP has a dependency on Java 8. `java -version` should complete successfully with version 1.8 or higher.
-  - Windows- Download as a .zip file from [here](https://stanfordnlp.github.io/CoreNLP/download.html).  
-  - Linux and MacOS- Follow the instructions to download the file from [here](https://stanfordnlp.github.io/CoreNLP/download.html).  
 - Docker
   - Take a look at [this](https://docs.docker.com/install/) for detailed installation instructions for Docker on Windows, Linux and Mac systems.
   - Verify the installations by `docker --version` and `docker-compose --version`
-- You won't need to download MySQL locally to make Docker work, but it's recommended as a pre-requisite to be able to debug programs outside Docker.
 
 #### How to set me up Docker style?
 - Clone the repository
-- Unzip the StanfordCoreNLP package in the repository. Make sure the StanfordCoreNLP folder you downloaded in the prerequisite steps are in the cloned repository folder.
-- Add config.py file to .gitignore to avoid pushing changes made to config
-- Run `git rm --cached config.py`
-- Modify *only* the following fields in `config.py` file with the corresponding values:
-  - key = <your_Google_Cloud_API_key>
+- Run `git update-index --assume-unchanged ENV/*`
+- Modify *only* the following fields in `ENV/docker.env` with the corresponding values:
+  - `GCLOUD_API_KEY=<your_Google_Cloud_API_key>`
 - You're all set up, kick off with `start.sh` file by running `bash start.sh`.
 
 ------
