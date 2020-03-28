@@ -79,11 +79,22 @@ def mapsstatic(search_location):
         result_value(int): elevation(in metres) above/below sea level
     """
 
-
+@logger_config.logger
 def elevation(search_location):
     result = gmaps.geocode(search_location)
     json = requests.get(f'https://maps.googleapis.com/maps/api/elevation/json?locations={result[0]["geometry"]["location"]["lat"]},{result[0]["geometry"]["location"]["lng"]}&key={config.key}').json()   # noqa: E501
     result_value = json['results'][0]['elevation']
     position = "above" if result_value > 0 else "below"
-    print(f'{search_location} is {round(result_value,2)} metres {position} sea level')   # noqa: E501
+    print(f'{search_location} is {round(result_value,2)} metres {position} sea level')
     return result_value
+
+@logger_config.logger
+def places(search_location):
+    address = search_location
+    json = requests.get(f'{BASE_URL["places_textsearch"]}={address.lower().replace(" ", "+")}&inputtype=textquery&fields=photos,formatted_address,place_id&key={config.key}').json()   # noqa: E501
+    logging.debug("Address:"+json["candidates"][0]["formatted_address"])
+    details = requests.get(f'{BASE_URL["places_details"]}={json["candidates"][0]["place_id"]}&fields=rating,formatted_phone_number&key={config.key}').json()   # noqa: E501
+    logging.debug("Rating:"+str(details["result"]["rating"]))
+    logging.debug("Phone:"+details["result"]["formatted_phone_number"])
+    photo = f'{BASE_URL["places_photos"]}={json["candidates"][0]["photos"][0]["photo_reference"]}&key={config.key}'   # noqa: E501
+    webbrowser.open_new(photo)
