@@ -1,6 +1,6 @@
 import utilities
 import databaseconnect
-import googleMapsApiModule  
+import googleMapsApiModule
 import logging
 import logger_config
 location_dict = {"origin": "null", "destination": "null"}
@@ -29,23 +29,23 @@ def message_to_bot(H, clf, learn_response):
         learn_response = 3
         return B, learn_response
     if learn_response == 3:
-        location_dict["destination"]=H
-        origin, destination = location_dict["origin"], location_dict["destination"]
-        googleMapsApiModule.direction(origin,destination)
+        location_dict["destination"] = H
+        origin, destination = location_dict["origin"], location_dict["destination"]         # noqa: E501
+        googleMapsApiModule.direction(origin, destination)
         B = "I will certainly help you with that."
         learn_response = 0
         return B, learn_response
-    if "bye" in H.lower().split(" "):       #check in words within H   
+    if "bye" in H.lower().split(" "):       # check in words within H
         B = "Bye! I'll miss you!"
         return B, learn_response      # exit loop
     if not H:
-        B = "Please say something!" 
-        return B, learn_response          #empty input
-    # grammar parsing   
+        B = "Please say something!"
+        return B, learn_response          # empty input
+    # grammar parsing
     subj = set()
     obj = set()
     verb = set()
-    triples,root = utilities.parse_sentence(H)
+    triples, root = utilities.parse_sentence(H)
     triples = list(triples)
     for t in triples:
         if t[0][1][:2] == 'VB':
@@ -55,7 +55,7 @@ def message_to_bot(H, clf, learn_response):
             subj.add(t[2][0])
         if relation[-3:] == 'obj':
             obj.add(t[2][0])
-    logging.debug("\t"+"Subject: "+str(subj)+"\n"+"\t"+"Object: "+str(obj)+"\n"+"\t"+"Topic: "+str(root)+"\n"+"\t"+"Verb: "+str(verb))
+    logging.debug("\t"+"Subject: "+str(subj)+"\n"+"\t"+"Object: "+str(obj)+"\n"+"\t"+"Topic: "+str(root)+"\n"+"\t"+"Verb: "+str(verb))  # noqa: E501
     subj = list(subj)
     obj = list(obj)
     verb = list(verb)
@@ -67,33 +67,33 @@ def message_to_bot(H, clf, learn_response):
             proper_nouns.add(t[2][0])
     proper_nouns == list(proper_nouns)
     logging.debug("\t"+"Proper Nouns: "+str(proper_nouns))
-    #classification
-    classification = utilities.classify_sentence(clf,H)
-    #logging.debug(classification)
+    # classification
+    classification = utilities.classify_sentence(clf, H)
+    # logging.debug(classification)
     if learn_response == 0:
         databaseconnect.add_to_database(classification, subj, root, verb, H)
         if (classification == 'C'):
             B = databaseconnect.get_chat_response()
         elif (classification == 'Q'):
-            B, learn_response = databaseconnect.get_question_response(subj, root, verb)
-            if learn_response == 1 and (len(proper_nouns) == 0 or (len(proper_nouns) == 1 and H.split(" ", 1)[0] != "Where")):
-                databaseconnect.add_learnt_statement_to_database(subj, root, verb)
-            if learn_response == 1 and (len(proper_nouns) >= 2 or (len(proper_nouns) == 1 and H.split(" ", 1)[0] == "Where")):
+            B, learn_response = databaseconnect.get_question_response(subj, root, verb)     # noqa: E501
+            if learn_response == 1 and (len(proper_nouns) == 0 or (len(proper_nouns) == 1 and H.split(" ", 1)[0] != "Where")):  # noqa: E501
+                databaseconnect.add_learnt_statement_to_database(subj, root, verb)    # noqa: E501
+            if learn_response == 1 and (len(proper_nouns) >= 2 or (len(proper_nouns) == 1 and H.split(" ", 1)[0] == "Where")):  # noqa: E501
                 learn_response = 0
                 B = "I will certainly help you with that."
         else:
             B = "Oops! I'm not trained for this yet."
     else:
         B, learn_response = databaseconnect.learn_question_response(H)
-    if (len(proper_nouns) >= 2 or (len(proper_nouns) >= 1 and H.split(" ", 1)[0] == "Where")) and len(subj) != 0:
+    if (len(proper_nouns) >= 2 or (len(proper_nouns) >= 1 and H.split(" ", 1)[0] == "Where")) and len(subj) != 0:   # noqa: E501
         if subj[0] == "distance":
             if len(proper_nouns) == 2:
                 location_dict["origin"] = proper_nouns.pop()
                 location_dict["destination"] = proper_nouns.pop()
-                origin, destination = location_dict["origin"], location_dict["destination"]
-                googleMapsApiModule.direction(origin,destination)
+                origin, destination = location_dict["origin"], location_dict["destination"]     # noqa: E501
+                googleMapsApiModule.direction(origin, destination)
             else:
-                B = "I didn't get that. Can you please give me the origin location?"
+                B = "I didn't get that. Can you please give me the origin location?"    # noqa: E501
                 learn_response = 2
         if len(proper_nouns) == 1:
             location = proper_nouns.pop()

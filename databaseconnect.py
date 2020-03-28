@@ -37,7 +37,7 @@ def connection_to_database():
             # logging.debug("Connected")
             logging.debug('MySQL connected')
             return conn
-    except:
+    except:    # noqa: E722
         raise Exception("DATABASE NOT CONNECTED")
 
 
@@ -46,10 +46,10 @@ def connection_to_database():
 def setup_database():
     db = connection_to_database()
     cur = db.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS chat_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))")
-    cur.execute("CREATE TABLE IF NOT EXISTS statement_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))")
-    cur.execute("CREATE TABLE IF NOT EXISTS question_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))")
-    cur.execute("CREATE TABLE IF NOT EXISTS directions_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, origin_location VARCHAR(100), destination_location VARCHAR(100))")
+    cur.execute("CREATE TABLE IF NOT EXISTS chat_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))")    # noqa: E501
+    cur.execute("CREATE TABLE IF NOT EXISTS statement_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))")   # noqa: E501
+    cur.execute("CREATE TABLE IF NOT EXISTS question_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))")    # noqa: E501
+    cur.execute("CREATE TABLE IF NOT EXISTS directions_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, origin_location VARCHAR(100), destination_location VARCHAR(100))")  # noqa: E501
 
 
 @logger_config.logger
@@ -59,7 +59,7 @@ def add_to_database(classification, subject, root, verb, H):
     cur = db.cursor()
     cur = db.cursor(buffered=True)
     if classification == 'C':
-        cur.execute(f"INSERT INTO chat_table(root_word,verb,sentence) VALUES ('{root}','{verb}','{H}')")
+        cur.execute(f"INSERT INTO chat_table(root_word,verb,sentence) VALUES ('{root}','{verb}','{H}')")    # noqa: E501
         db.commit()
     elif classification == 'Q':
         cur.execute("SELECT sentence FROM question_table")
@@ -71,7 +71,7 @@ def add_to_database(classification, subject, root, verb, H):
                 break
         if exist == 0:
             # do not add if question already exists
-            cur.execute(f"INSERT INTO question_table(subject,root_word,verb,sentence) VALUES ('{subject}','{root}','{verb}','{H}')")
+            cur.execute(f"INSERT INTO question_table(subject,root_word,verb,sentence) VALUES ('{subject}','{root}','{verb}','{H}')")    # noqa: E501
             db.commit()
     else:
         cur.execute("SELECT sentence FROM statement_table")
@@ -82,7 +82,7 @@ def add_to_database(classification, subject, root, verb, H):
                 exist = 1
                 break
         if exist == 0:    # do not add if question already exists
-            cur.execute(f"INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES ('{subject}','{root}','{verb}','{H}')")
+            cur.execute(f"INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES ('{subject}','{root}','{verb}','{H}')")   # noqa: E501
             db.commit()
 
 
@@ -116,7 +116,7 @@ def get_question_response(subject, root, verb):
                 found = 1
                 break
         if found == 1:
-            cur.execute(f"SELECT sentence FROM statement_table WHERE verb='{verb}'")
+            cur.execute(f"SELECT sentence FROM statement_table WHERE verb='{verb}'")    # noqa: E501
             res = cur.fetchone()
             B = res[0]
             return B, 0
@@ -132,22 +132,22 @@ def get_question_response(subject, root, verb):
                 found = 1
                 break
         if found == 1:
-            cur.execute(f"SELECT verb FROM statement_table WHERE subject='{subject}'")
+            cur.execute(f"SELECT verb FROM statement_table WHERE subject='{subject}'")  # noqa: E501
             res = cur.fetchone()
-            checkVerb = res[0]   # checkVerb is a string while verb is a list. checkVerb ['verb']
+            checkVerb = res[0]   # checkVerb is a string while verb is a list. checkVerb ['verb']   # noqa: E501
             if checkVerb == '[]':
-                cur.execute(f"SELECT sentence FROM statement_table WHERE subject='{subject}'")
+                cur.execute(f"SELECT sentence FROM statement_table WHERE subject='{subject}'")  # noqa: E501
                 res = cur.fetchone()
                 B = res[0]
                 return B, 0
             else:
                 if checkVerb[2:-2] == verb[0]:
-                    cur.execute(f"SELECT sentence FROM statement_table WHERE subject='{subject}'")
+                    cur.execute(f"SELECT sentence FROM statement_table WHERE subject='{subject}'")  # noqa: E501
                     res = cur.fetchone()
                     B = res[0]
                     return B, 0
                 else:
-                    B = "Sorry I don't know the response to this. Please train me."
+                    B = "Sorry I don't know the response to this. Please train me."  # noqa: E501
                     return B, 1
         else:
             B = "Sorry I don't know the response to this. Please train me."
@@ -158,7 +158,7 @@ def get_question_response(subject, root, verb):
 def add_learnt_statement_to_database(subject, root, verb):
     db = connection_to_database()
     cur = db.cursor()
-    cur.execute(f"INSERT INTO statement_table(subject,root_word,verb) VALUES ('{subject}','{root}','{verb}')")
+    cur.execute(f"INSERT INTO statement_table(subject,root_word,verb) VALUES ('{subject}','{root}','{verb}')")  # noqa: E501
     db.commit()
 
 
@@ -169,7 +169,7 @@ def learn_question_response(H):
     cur.execute("SELECT id FROM statement_table ORDER BY id DESC")
     res = cur.fetchone()
     last_id = res[0]
-    cur.execute(f"UPDATE statement_table SET sentence='{H}' WHERE id={last_id}")
+    cur.execute(f"UPDATE statement_table SET sentence='{H}' WHERE id={last_id}")    # noqa: E501
     db.commit()
     B = "Thank you! I have learnt this."
     return B, 0
@@ -185,7 +185,7 @@ def clear_table(table_name):
         for table in tables_to_be_cleaned:
             describe_table(cur, table)
 
-        if input("Enter 'Y' to confirm cleaning of BOTH tables: ") in ("Y", "y"):
+        if input("Enter 'Y' to confirm cleaning of BOTH tables: ") in ("Y", "y"):   # noqa: E501
             for table in tables_to_be_cleaned:
                 cur.execute(f"DELETE FROM {table}")
             db.commit()
