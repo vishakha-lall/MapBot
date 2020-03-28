@@ -96,7 +96,7 @@ def get_chat_response():
     res = cur.fetchone()
     total_chat_records = res[0]
     import random
-    chat_id = random.randint(1, total_chat_records+1)
+    chat_id = random.randint(1, total_chat_records)
     cur.execute(f"SELECT sentence FROM chat_table WHERE id = {chat_id}")
     res = cur.fetchone()
     B = res[0]
