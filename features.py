@@ -16,7 +16,7 @@ log.info('Entered module: %s' % __name__)
 lemma = nltk.wordnet.WordNetLemmatizer()
 sno = nltk.stem.SnowballStemmer('english')
 
-line = ["xxx", "Oracle 12.2 will be released for on-premises users on 15 March 2017", 0, "S"]
+line = ["xxx", "Oracle 12.2 will be released for on-premises users on 15 March 2017", 0, "S"]  # noqa: E501
 
 pos = []           # list of PartsOfSpeech
 output = ""        # comma separated string
@@ -70,7 +70,8 @@ endTuples = ['IN-NN',
              'VB-VBN',
              'VBZ-NNP']
 
-# Because python dict's return key-vals in random order, provide ordered list to pass to ML models
+'''Because python dict's return key-vals in random order, provide ordered
+   list to pass to ML models'''
 feature_keys = ["id",
                 "wordCount",
                 "stemmedCount",
@@ -98,8 +99,8 @@ feature_keys = ["id",
 @logger_config.logger
 def strip_sentence(sentence):
     sentence = sentence.strip(",")
-    sentence = ''.join(filter(lambda x: x in string.printable, sentence))   # strip out non-alpha-numerix
-    sentence = sentence.translate(str.maketrans('', '', string.punctuation))   # strip punctuation
+    sentence = ''.join(filter(lambda x: x in string.printable, sentence))   # strip out non-alpha-numerix     # noqa: E501
+    sentence = sentence.translate(str.maketrans('', '', string.punctuation))   # strip punctuation    # noqa: E501
     return(sentence)
 
 
@@ -184,7 +185,7 @@ def exists_stemmed_end_NN(stemmed):
 
 
 @logger_config.logger
-# Go through the predefined list of start-tuples, 1 / 0 if given startTuple occurs in the list
+# Go through the predefined list of start-tuples, 1 / 0 if given startTuple occurs in the list  # noqa: E501
 def exists_startTuple(startTuple):
     exists_startTuples = []
     for tstring in startTuples:  # startTuples defined as global var
@@ -196,7 +197,7 @@ def exists_startTuple(startTuple):
 
 
 @logger_config.logger
-# Go through the predefined list of end-tuples, 1 / 0 if given Tuple occurs in the list
+# Go through the predefined list of end-tuples, 1 / 0 if given Tuple occurs in the list  # noqa: E501
 def exists_endTuple(endTuple):
     exists_endTuples = []
     for tstring in endTuples:    # endTuples defined as global var
@@ -208,7 +209,7 @@ def exists_endTuple(endTuple):
 
 
 @logger_config.logger
-# loop round list of triples and construct a list of binary 1/0 vals if triples occur in list
+# loop round list of triples and construct a list of binary 1/0 vals if triples occur in list  # noqa: E501
 def exists_triples(triples, tripleSet):
     exists = []
     for tstring in tripleSet:
@@ -223,12 +224,12 @@ def exists_triples(triples, tripleSet):
 # Get a sentence and spit out the POS triples
 def get_triples(pos):
     list_of_triple_strings = []
-    pos = [i[1] for i in pos]  # extract the 2nd element of the POS tuples in list
+    pos = [i[1] for i in pos]  # extract the 2nd element of the POS tuples in list  # noqa: E501
     n = len(pos)
 
     if n > 2:  # need to have three items
         for i in range(0, n-2):
-            t = "-".join(pos[i:i+3])  # pull out 3 list item from counter, convert to string
+            t = "-".join(pos[i:i+3])  # pull out 3 list item from counter, convert to string  # noqa: E501
             list_of_triple_strings.append(t)
     return list_of_triple_strings
 
@@ -238,7 +239,7 @@ def get_first_last_tuples(sentence):
     first_last_tuples = []
     sentenceParsed = word_tokenize(sentence)
     pos = nltk.pos_tag(sentenceParsed)  # Parts Of Speech
-    pos = [i[1] for i in pos]  # extract the 2nd element of the POS tuples in list
+    pos = [i[1] for i in pos]  # extract the 2nd element of the POS tuples in list  # noqa: E501
 
     n = len(pos)
     first = ""
@@ -255,9 +256,11 @@ def get_first_last_tuples(sentence):
 @logger_config.logger
 def lemmatize(sentence):
     """
-    pass  in  a sentence as a string, return just core text that has been "lematised"
-    stop words are removed - could effect ability to detect if this is a question or answer
-    - depends on import lemma = nltk.wordnet.WordNetLemmatizer() and from nltk.corpus import stopwords
+    pass  in  a sentence as a string, return just core text that has
+    been "lematised" stop words are removed - could effect ability to detect if
+    this is a question or answer - depends on import
+    lemma = nltk.wordnet.WordNetLemmatizer()
+    and from nltk.corpus import stopwords
     """
     stop_words = set(stopwords.words('english'))
     word_tokens = word_tokenize(sentence)
@@ -277,8 +280,10 @@ def lemmatize(sentence):
 def stematize(sentence):
     """
     pass  in  a sentence as a string, return just core text stemmed
-    stop words are removed - could effect ability to detect if this is a question or answer
-    - depends on import sno = nltk.stem.SnowballStemmer('english') and from nltk.corpus import stopwords
+    stop words are removed - could effect ability to detect if this is a
+    question or answer - depends on import
+    sno = nltk.stem.SnowballStemmer('english')
+    and from nltk.corpus import stopwords
     """
     stop_words = set(stopwords.words('english'))
     word_tokens = word_tokenize(sentence)
@@ -313,8 +318,8 @@ def get_string(id, sentence, c="X"):
 
     verbBeforeNoun = exists_vb_before_nn(pos)
 
-    output = id + "," + str(wordCount) + "," + str(stemmedCount) + "," + str(qVerbCombo) + "," + str(qMark) + "," + str(verbBeforeNoun)
-    header = header + "id,wordCount,stemmedCount,qVerbCombo,qMark,verbBeforeNoun"
+    output = id + "," + str(wordCount) + "," + str(stemmedCount) + "," + str(qVerbCombo) + "," + str(qMark) + "," + str(verbBeforeNoun)  # noqa: E501
+    header = header + "id,wordCount,stemmedCount,qVerbCombo,qMark,verbBeforeNoun"  # noqa: E501
 
     # list of POS-TYPES to count , generate a list of counts in the CSV line
     for ptype in ["VBG", "VBZ", "NNP", "NN", "NNS", "NNPS", "PRP", "CD"]:
@@ -338,7 +343,7 @@ def get_string(id, sentence, c="X"):
         header = header + "endTuple" + str(i+1) + ","
 
     # look for special Triple Combinations ##
-    triples = get_triples(pos)  # all the triple sequences in the sentence POS list
+    triples = get_triples(pos)  # all the triple sequences in the sentence POS list  # noqa: E501
 
     list1 = exists_triples(triples, questionTriples)
     total = sum(list1)
@@ -364,7 +369,7 @@ def features_dict(id, sentence, c="X"):
     pos = get_pos(sentence)
 
     features["id"] = id
-    features["qMark"] = count_qmark(sentence)  # count Qmarks before stripping punctuation
+    features["qMark"] = count_qmark(sentence)  # count Qmarks before stripping punctuation   # noqa: E501
     sentence = strip_sentence(sentence)
     stemmed = stematize(sentence)
     startTuple, endTuple = get_first_last_tuples(sentence)
@@ -388,13 +393,13 @@ def features_dict(id, sentence, c="X"):
         features["endTuple" + str(i)] = list1[i]
 
     # look for special Triple Combinations ##
-    triples = get_triples(pos)  # all the triple sequences in the sentence POS list
+    triples = get_triples(pos)  # all the triple sequences in the sentence POS list   # noqa: E501
 
-    list1 = exists_triples(triples, questionTriples)  # a list of 1/0 for hits on this triple-set
-    features["qTripleScore"] = sum(list1)  # add all the triple matches up to get a score
+    list1 = exists_triples(triples, questionTriples)  # a list of 1/0 for hits on this triple-set   # noqa: E501
+    features["qTripleScore"] = sum(list1)  # add all the triple matches up to get a score   # noqa: E501
 
-    list1 = exists_triples(triples, statementTriples)  # Do same check for the Statement t-set
-    features["sTripleScore"] = sum(list1)  # add all the triple matches up to get a score
+    list1 = exists_triples(triples, statementTriples)  # Do same check for the Statement t-set   # noqa: E501
+    features["sTripleScore"] = sum(list1)  # add all the triple matches up to get a score   # noqa: E501
 
     features["class"] = c  # Class Type on end
 
@@ -416,8 +421,9 @@ def features_series(features_dict):
 # MAIN ##
 if __name__ == '__main__':
 
-    #  ID, WordCount, StemmedCount, Qmark, VBG, StemmedEnd, StartTuples, EndTuples,   QuestionTriples, StatementTriples, Class
-    #                                     [1/0] [NN-NN?]    [3 x binary] [3 x binary] [10 x binary]    [10 x binary]
+    '''ID, WordCount, StemmedCount, Qmark, VBG, StemmedEnd, StartTuples,
+    EndTuples, QuestionTriples, StatementTriples, Class
+    [1/0] [NN-NN?] [3 x binary] [3 x binary] [10 x binary] [10 x binary]'''
 
     logging.debug("Starting...")
 
@@ -433,7 +439,7 @@ if __name__ == '__main__':
     id = hashlib.md5(str(sentence).encode('utf-8')).hexdigest()[:16]
 
     features = features_dict(id, sentence, c)
-    pos = get_pos(sentence)       # NLTK Parts Of Speech, duplicated just for the printout
+    pos = get_pos(sentence)       # NLTK Parts Of Speech, duplicated just for the printout   # noqa: E501
     logging.debug(pos)
 
     logging.debug(features)
