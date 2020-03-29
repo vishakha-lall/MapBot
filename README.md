@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://forthebadge.com/images/badges/made-with-python.svg">
+</p>
+
 # MapBot
 
 #### Hey! I'm your friendly navigator bot! Try me out, not to brag but I'm FUN!
@@ -66,16 +70,15 @@ Check out all related information [here](GSSoC.md)
   - Verify the installations by `docker --version` and `docker-compose --version`
 
 #### How to set me up Docker style?
-- Clone the repository
-- Run `git update-index --assume-unchanged ENV/*`
-- Modify *only* the following fields in `ENV/docker.env` with the corresponding values:
-  - `GCLOUD_API_KEY=<your_Google_Cloud_API_key>`
+- Download the `start.sh` and modify it appropriately:
+    - `git clone <GITHUB_LINK_OF_REPO_TO_CLONE> -b <BRANCH_NAME_TO_CHECKOUT>`
+    - `export GCLOUD_API_KEY=<YOUR_API_KEY_HERE>`
 - You're all set up, kick off with `start.sh` file by running `bash start.sh`.
 
 ------
 #### How do I work?
 
-The analysis folder contains data files for the project. The sentences.csv contains the base training dataset which is used to classify the user's input into three classes - Statement, Question, and Chat. Going through some examples would clarify the difference between statement and chat. The featuresDump.csv is the result of text pre-processing done using the code in features.py and featuresDump.py.
+The `/analysis` folder contains data files for the project. The `sentences.csv` contains the base training dataset which is used to classify the user's input into three classes - *Statement*, *Question*, and *Chat*. Going through some examples would clarify the difference between statement and chat. The `featuresDump.csv` is the result of text pre-processing done using the code in `features.py` and `featuresDump.py`.
 
 ------
 #### Want to see me in action?

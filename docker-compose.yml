@@ -17,13 +17,11 @@ services:
             - java_storage:/usr/local/openjdk-11/
 
     bot:
-        image: python:3.6
+        image: chttrje/chatbot
         container_name: mapbot_bot
         environment:
             - DOCKER=Y
-        build:
-            context: .
-            dockerfile: Dockerfile
+            - GCLOUD_API_KEY
         depends_on:
             - db
             - java
