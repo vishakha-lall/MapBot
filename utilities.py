@@ -59,12 +59,12 @@ def classify_model():
 def classify_model_adv(model="rf"):
     import numpy as np
     import pandas as pd
-	from sklearn.ensemble import RandomForestClassifier
+    from sklearn.ensemble import RandomForestClassifier
     from sklearn.svm import SVC
-	from xgboost import XGBClassifier
-	from sklearn.ensemble import AdaBoostClassifier
-	from sklearn.tree import DecisionTreeClassifier
-	from sklearn.naive_bayes import MultinomialNB
+    from xgboost import XGBClassifier
+    from sklearn.ensemble import AdaBoostClassifier
+    from sklearn.tree import DecisionTreeClassifier
+    from sklearn.naive_bayes import MultinomialNB
     FNAME = Path('analysis/featuresDump.csv')
     df = pd.read_csv(filepath_or_buffer=FNAME, )
     df.columns = df.columns[:].str.strip()                                      # Strip any leading spaces from col names
