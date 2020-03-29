@@ -88,7 +88,7 @@ def classify_model_adv(model="rf"):
     elif model=="nb":
 	clf= MultinomialNB()
     ## best performance by adaboost
-    elif model="ada":
+    elif model=="ada":
 	clf=AdaBoostClassifier(learning_rate=0.001,n_estimators=2000)
     clf.fit(train[features], train['class'])
     # Predict against test set
