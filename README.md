@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://forthebadge.com/images/badges/made-with-python.svg">
+</p>
+
 # MapBot
 
 #### Hey! I'm your friendly navigator bot! Try me out, not to brag but I'm FUN!
