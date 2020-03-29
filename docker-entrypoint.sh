@@ -1,5 +1,7 @@
 set -ex
 
+git pull
+
 if [ ! -d ./stanford-corenlp-full-2018-10-05 ]; then
     wget http://nlp.stanford.edu/software/stanford-corenlp-full-2018-10-05.zip -nc -c
 fi
