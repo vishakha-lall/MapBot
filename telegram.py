@@ -16,19 +16,19 @@ class TelegramBot(object):
         """Initiates a TelegramBot object with unique Telegram BOT_TOKEN and creates the base URL"""
         super(TelegramBot, self).__init__()
         self.TOKEN = TOKEN
-        self.URL = "https://api.telegram.org/bot{}/".format(TOKEN)
+        self.URL = f"https://api.telegram.org/bot{TOKEN}/"
         logging.debug("Telegram Bot ready")
 
     @logger_config.logger
     def send_message(self, text: str, chat_id: int) -> None:
         """Combine :text: and :chat_id:, create message and perform requests to Telegram Bot API"""
-        url = self.URL + "sendMessage?text={}&chat_id={}".format(text, chat_id)
+        url = self.URL + f"sendMessage?text={text}&chat_id={chat_id}"
         self.get_url(url)
 
     @logger_config.logger
     def get_url(self, url: str) -> str:
         """Gather response from :url: and decode using 'utf8'"""
-        response = requests.get(url, timeout=3)
+        response = requests.get(url)
         content = response.content.decode("utf8")
         return content
 
