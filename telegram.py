@@ -9,11 +9,11 @@ log.info("Entered module: %s" % __name__)
 
 
 class TelegramBot(object):
-    """Class for TelegramBot housing functions required to interact with Telegram"""
+    """Class for TelegramBot housing functions required to interact with Telegram."""
 
     @logger_config.logger
     def __init__(self, TOKEN: str) -> None:
-        """Initiates a TelegramBot object with unique Telegram BOT_TOKEN and creates the base URL"""
+        """Initiates a TelegramBot object with unique Telegram BOT_TOKEN and creates the base URL."""
         super(TelegramBot, self).__init__()
         self.TOKEN = TOKEN
         self.URL = f"https://api.telegram.org/bot{TOKEN}/"
@@ -21,34 +21,34 @@ class TelegramBot(object):
 
     @logger_config.logger
     def send_message(self, text: str, chat_id: int) -> None:
-        """Combine :text: and :chat_id:, create message and perform requests to Telegram Bot API"""
+        """Combine :text: and :chat_id:, create message and perform requests to Telegram Bot API."""
         url = self.URL + f"sendMessage?text={text}&chat_id={chat_id}"
         self.get_url(url)
 
     @logger_config.logger
     def get_url(self, url: str) -> str:
-        """Gather response from :url: and decode using 'utf8'"""
+        """Gather response from :url: and decode using 'utf8'."""
         response = requests.get(url)
         content = response.content.decode("utf8")
         return content
 
     @logger_config.logger
     def get_json_from_url(self, url: str) -> dict:
-        """Takes :url: and returns json-like object of response"""
+        """Takes :url: and returns json-like object of response."""
         content = self.get_url(url)
         js = json.loads(content)
         return js
 
     @logger_config.logger
     def get_updates(self) -> dict:
-        """Gets json-like object of message Updates to bot"""
+        """Gets json-like object of message Updates to bot."""
         url = self.URL + "getUpdates"
         js = self.get_json_from_url(url)
         return js
 
     @logger_config.logger
     def get_last_chat_id_and_text(self) -> (str, int):
-        """Fetches :updates: and returns last update's :text: and :chat_id:"""
+        """Fetches :updates: and returns last update's :text: and :chat_id:."""
         updates = self.get_updates()
         try:
             text = updates["result"][-1]["message"]["text"]
