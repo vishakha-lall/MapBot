@@ -16,16 +16,16 @@ def setup_nltk():
 
 @logger_config.logger
 # grammar parsing
-def parse_sentence(user_input):   # returns root word, triples of StanfordDependencyParser
+def parse_sentence(user_input):   # returns root word, triples of StanfordDependencyParser   # noqa: E501
     import os
     from nltk.parse.stanford import StanfordDependencyParser
     import config
     path_to_jar = config.stanford_path_to_jar
     path_to_models_jar = config.stanford_path_to_models_jar
-    dependency_parser = StanfordDependencyParser(path_to_jar=path_to_jar, path_to_models_jar=path_to_models_jar)
+    dependency_parser = StanfordDependencyParser(path_to_jar=path_to_jar, path_to_models_jar=path_to_models_jar)   # noqa: E501
     os.environ['JAVAHOME'] = config.javahome
     result = dependency_parser.raw_parse(user_input)
-    dep = next(result)                                                          # get next item from the iterator result
+    dep = next(result)              # get next item from the iterator result
     return dep.triples(), dep.root["word"]
 
 
@@ -37,20 +37,20 @@ def classify_model():
     from sklearn.ensemble import RandomForestClassifier
     FNAME = Path('analysis/featuresDump.csv')
     df = pd.read_csv(filepath_or_buffer=FNAME, )
-    df.columns = df.columns[:].str.strip()                                      # Strip any leading spaces from col names
+    df.columns = df.columns[:].str.strip()          # Strip any leading spaces from col names   # noqa: E501
     df['class'] = df['class'].map(lambda x: x.strip())
     width = df.shape[1]
     # split into test and training (is_train: True / False col)
     np.random.seed(seed=1)
     df['is_train'] = np.random.uniform(0, 1, len(df)) <= .75
-    train, test = df[df['is_train'] == True], df[df['is_train'] == False]
-    features = df.columns[1:width-1]  # remove the first ID col and last col=classifier
+    train, test = df[df['is_train'] == True], df[df['is_train'] == False]   # noqa: E712, E501
+    features = df.columns[1:width-1]  # remove the first ID col and last col=classifier   # noqa: E501
     # Fit an RF Model for "class" given features
     clf = RandomForestClassifier(n_jobs=2, n_estimators=100)
     clf.fit(train[features], train['class'])
     # Predict against test set
     preds = clf.predict(test[features])
-    predout = pd.DataFrame({'id': test['id'], 'predicted': preds, 'actual': test['class']})
+    predout = pd.DataFrame({'id': test['id'], 'predicted': preds, 'actual': test['class']})   # noqa: E501, F841
     return clf
 
 
@@ -86,6 +86,6 @@ def classify_sentence(clf, user_input):
         values.append(myFeatures[key])
     s = pd.Series(values)
     width = len(s)
-    myFeatures = s[1:width-1]  # All but the last item (this is the class for supervised learning mode)
+    myFeatures = s[1:width-1]  # All but the last item (this is the class for supervised learning mode)   # noqa: E501
     predict = clf.predict([myFeatures])
     return predict[0].strip()
