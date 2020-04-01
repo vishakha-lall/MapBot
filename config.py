@@ -1,12 +1,12 @@
 import os
 from dotenv import load_dotenv
 
-if os.getenv("DOCKER") == 'Y':
-    load_dotenv('ENV/docker.env')
+if os.getenv("DOCKER") == "Y":
+    load_dotenv("ENV/docker.env")
 else:
-    load_dotenv('ENV/.env')
+    load_dotenv("ENV/.env")
 
-''' MAKE SURE you have filled environment variables in `.env` files in `./ENV/` folder'''       # noqa: E501
+""" MAKE SURE you have filled environment variables in `.env` files in `./ENV/` folder"""  # noqa: E501
 
 user = os.getenv("DB_USER")
 password = os.getenv("DB_PASSWORD")
@@ -14,6 +14,7 @@ host = os.getenv("DB_HOST")
 database = os.getenv("DATABASE")
 port = os.getenv("DB_PORT")
 key = os.getenv("GCLOUD_API_KEY")  # Will be provided by mentors
+tbot_token = os.getenv("TELEGRAM_BOT_TOKEN")
 
 # your_path_to_stanford-corenlp-x.x.x.jar
 stanford_path_to_jar = os.getenv("STANFORD_PATH_TO_JAR")
