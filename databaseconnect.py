@@ -1,5 +1,6 @@
 import logging
 import logger_config
+import chatbot
 
 log = logging.getLogger(__name__)
 log.info('Entered module: %s' % __name__)
@@ -119,10 +120,10 @@ def get_question_response(subject, root, verb):
             cur.execute(f"SELECT sentence FROM statement_table WHERE verb='{verb}'")    # noqa: E501
             res = cur.fetchone()
             B = res[0]
-            return B, 0
+            return B, chatbot.LearnResponse.MESSAGE.name
         else:
             B = "Sorry I don't know the response to this. Please train me."
-            return B, 1
+            return B, chatbot.LearnResponse.TRAIN_ME.name
     else:
         cur.execute("SELECT subject FROM statement_table")
         res = cur.fetchall()
@@ -139,19 +140,19 @@ def get_question_response(subject, root, verb):
                 cur.execute(f"SELECT sentence FROM statement_table WHERE subject='{subject}'")  # noqa: E501
                 res = cur.fetchone()
                 B = res[0]
-                return B, 0
+                return B, chatbot.LearnResponse.MESSAGE.name
             else:
                 if checkVerb[2:-2] == verb[0]:
                     cur.execute(f"SELECT sentence FROM statement_table WHERE subject='{subject}'")  # noqa: E501
                     res = cur.fetchone()
                     B = res[0]
-                    return B, 0
+                    return B, chatbot.LearnResponse.MESSAGE.name
                 else:
-                    B = "Sorry I don't know the response to this. Please train me."  # noqa: E501
-                    return B, 1
+                    B = "Sorry I don't know the response to this. Please train me."
+                    return B, chatbot.LearnResponse.TRAIN_ME.name
         else:
             B = "Sorry I don't know the response to this. Please train me."
-            return B, 1
+            return B, chatbot.LearnResponse.TRAIN_ME.name
 
 
 @logger_config.logger
@@ -172,7 +173,7 @@ def learn_question_response(H):
     cur.execute(f"UPDATE statement_table SET sentence='{H}' WHERE id={last_id}")    # noqa: E501
     db.commit()
     B = "Thank you! I have learnt this."
-    return B, 0
+    return B, chatbot.LearnResponse.MESSAGE.name
 
 
 def clear_table(table_name):
