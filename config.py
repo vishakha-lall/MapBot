@@ -6,7 +6,7 @@ if os.getenv("DOCKER") == "Y":
 else:
     load_dotenv("ENV/.env")
 
-""" MAKE SURE you have filled environment variables in `.env` files in `./ENV/` folder"""  # noqa: E501
+""" MAKE SURE you have filled environment variables in `.env` files in `./ENV/` folder"""
 
 user = os.getenv("DB_USER")
 password = os.getenv("DB_PASSWORD")
@@ -22,5 +22,5 @@ stanford_path_to_jar = os.getenv("STANFORD_PATH_TO_JAR")
 # your_path_to_stanford-corenlp-x.x.x-models.jar
 stanford_path_to_models_jar = os.getenv("STANFORD_PATH_TO_MODELS_JAR")
 
-# for eg. 'C:\\Program\ Files\\Java\\jdk1.8.0_201\\bin\\java.exe' or '/usr/local/openjdk-11/bin/java'       # noqa: E501
+# for eg. 'C:\\Program\ Files\\Java\\jdk1.8.0_201\\bin\\java.exe' or '/usr/local/openjdk-11/bin/java'
 javahome = os.getenv("JAVAHOME")
