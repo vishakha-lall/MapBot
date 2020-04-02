@@ -59,6 +59,7 @@ def setup_database():
     cur.execute(
         "CREATE TABLE IF NOT EXISTS directions_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, origin_location VARCHAR(100), destination_location VARCHAR(100))"  # noqa: E501
     )
+    return db
 
 
 @logger_config.logger
@@ -99,6 +100,7 @@ def add_to_database(classification, subject, root, verb, H):
                 f"INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES ('{subject}','{root}','{verb}','{H}')"
             )
             db.commit()
+    return db
 
 
 @logger_config.logger
@@ -183,8 +185,9 @@ def add_learnt_statement_to_database(subject, root, verb):
         f"INSERT INTO statement_table(subject,root_word,verb) VALUES ('{subject}','{root}','{verb}')"
     )
     db.commit()
+    return db
 
-
+    
 @logger_config.logger
 def learn_question_response(H):
     db = connection_to_database()
@@ -226,6 +229,8 @@ def clear_table(table_name):
             db.commit()
         else:
             print("Table cleaning skipped.")
+    
+    return db
 
 
 def describe_table(cur, table_name):
