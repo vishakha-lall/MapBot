@@ -246,3 +246,5 @@ def describe_table(cur, table_name):
     print("Columns:", column_names)
     print("Number of existing records:", records_no)
     print()
+
+    return records_no
