@@ -36,9 +36,7 @@ def get_timestamp(date_time):
 
 @logger_config.logger
 def get_lat_lng(place):
-    response = requests.get(
-        f'{BASE_URL["latlng"]}?address={place}&key={config.key}'
-    )  # noqa: E501
+    response = requests.get(f'{BASE_URL["latlng"]}?address={place}&key={config.key}')
     resp_json_payload = response.json()
     lat_lng = resp_json_payload["results"][0]["geometry"]["location"]
     return lat_lng
@@ -51,7 +49,7 @@ def timezone(place, date_time):
     timestamp = get_timestamp(date_time)
     response = requests.get(
         f'{BASE_URL["timezone"]}?location={lat_lng["lat"]},{lat_lng["lng"]}&timestamp={timestamp}&key={config.key}'
-    )  # noqa: E501
+    )
     resp_dict = response.json()
     for key in resp_dict:
         print(f"{key} : {resp_dict[key]}")
@@ -97,8 +95,8 @@ def mapsstatic(search_location):
 def elevation(search_location):
     result = gmaps.geocode(search_location)
     json = requests.get(
-        f'{BASE_URL["elevation"]}?locations={result[0]["geometry"]["location"]["lat"]},{result[0]["geometry"]["location"]["lng"]}&key={config.key}'
-    ).json()  # noqa: E501
+        f'{BASE_URL["elevation"]}?locations={result[0]["geometry"]["location"]["lat"]},{result[0]["geometry"]["location"]["lng"]}&key={config.key}'  # noqa: E501
+    ).json()
     result_value = json["results"][0]["elevation"]
     position = "above" if result_value > 0 else "below"
     print(f"{search_location} is {round(result_value,2)} metres {position} sea level")
@@ -109,12 +107,12 @@ def elevation(search_location):
 def places(search_location):
     address = search_location
     json = requests.get(
-        f'{BASE_URL["places"]}/findplacefromtext/json?input={address.lower().replace(" ", "+")}&inputtype=textquery&fields=photos,formatted_address,place_id&key={config.key}'
-    ).json()  # noqa: E501
+        f'{BASE_URL["places"]}/findplacefromtext/json?input={address.lower().replace(" ", "+")}&inputtype=textquery&fields=photos,formatted_address,place_id&key={config.key}'  # noqa: E501
+    ).json()
     logging.debug("Address:" + json["candidates"][0]["formatted_address"])
     details = requests.get(
-        f'{BASE_URL["places"]}/details/json?place_id={json["candidates"][0]["place_id"]}&fields=rating,formatted_phone_number&key={config.key}'
-    ).json()  # noqa: E501
+        f'{BASE_URL["places"]}/details/json?place_id={json["candidates"][0]["place_id"]}&fields=rating,formatted_phone_number&key={config.key}'  # noqa: E501
+    ).json()
     logging.debug("Rating:" + str(details["result"]["rating"]))
     logging.debug("Phone:" + details["result"]["formatted_phone_number"])
     photo = f'{BASE_URL["places"]}/photo?maxwidth=400&photoreference={json["candidates"][0]["photos"][0]["photo_reference"]}&key={config.key}'  # noqa: E501

@@ -6,4 +6,4 @@ BASE_URL = {
     "mapsstatic": "https://maps.googleapis.com/maps/api/staticmap",
     "elevation": "https://maps.googleapis.com/maps/api/elevation/json",
     "places": "https://maps.googleapis.com/maps/api/place",
-}  # noqa: E501
+}
