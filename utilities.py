@@ -10,9 +10,11 @@ log.info("Entered module: %s" % __name__)
 def setup_nltk():
     import nltk
 
-    nltk.download("punkt")
-    nltk.download("averaged_perceptron_tagger")
-    nltk.download("stopwords")
+    punkt = nltk.download("punkt")
+    averaged_perceptron_tagger = nltk.download("averaged_perceptron_tagger")
+    stopwords = nltk.download("stopwords")
+
+    return all((punkt, averaged_perceptron_tagger, stopwords))
 
 
 @logger_config.logger
