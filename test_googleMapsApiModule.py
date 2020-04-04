@@ -48,19 +48,23 @@ class TestClass:
             assert type(result) is float
 
     def test_places_with_valid_input(self):
-        result = googleMapsApiModule.places('princeton university')
+        result = googleMapsApiModule.places("princeton university")
         assert result == "ChIJ6baYzdjmw4kRTwKQ-tZ-ugI"
 
     def test_places_with_invalid_input(self):
         with pytest.raises(IndexError):
-            result = googleMapsApiModule.places('esffsf')
-            assert result == "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=CmRaAAAA8o1VGVvds8zkqh745Pa6t2KcBbMA&key="+config.key
+            result = googleMapsApiModule.places("esffsf")
+            assert (
+                result
+                == "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=CmRaAAAA8o1VGVvds8zkqh745Pa6t2KcBbMA&key="  # noqa: E501
+                + config.key
+            )
 
     def test_timezone_with_valid_input(self):
-        result = googleMapsApiModule.timezone('ohio','2000 11 21 11 41')
+        result = googleMapsApiModule.timezone("ohio", "2000 11 21 11 41")
         assert result == "America/New_York"
 
     def test_timezone_with_invalid_input(self):
         with pytest.raises(ValueError):
-            result = googleMapsApiModule.timezone('wijd..','2000 18 21 11 41')
+            result = googleMapsApiModule.timezone("wijd..", "2000 18 21 11 41")
             assert result == "America/New_York"
