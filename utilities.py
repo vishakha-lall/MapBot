@@ -77,16 +77,16 @@ def classify_model_adv(model="rf"):
     features = df.columns[1:width-1]  # remove the first ID col and last col=classifier
     # Fit an  Model for "class" given features rf:random forest,xgb:xgboost,nb:naive bayes,ada:adaboost
     if model=="svm":
-	clf = SVC(C=1000, cache_size=200, class_weight=None, coef0=0.0,decision_function_shape='ovr', degree=3, gamma=0.0001, kernel='rbf',max_iter=-1, probability=False, random_state=None, shrinking=True,tol=0.001, verbose=False)
+        clf = SVC(C=1000, cache_size=200, class_weight=None, coef0=0.0,decision_function_shape='ovr', degree=3, gamma=0.0001, kernel='rbf',max_iter=-1, probability=False, random_state=None, shrinking=True,tol=0.001, verbose=False)
     elif model=="rf":
-	clf= RandomForestClassifier(n_jobs=2, n_estimators=100)
+        clf= RandomForestClassifier(n_jobs=2, n_estimators=100)
     elif model=="xgb":
-	clf= XGBClassifier(learning_rate= 0.01, n_estimators= 500)
+        clf= XGBClassifier(learning_rate= 0.01, n_estimators= 500)
     elif model=="nb":
-	clf= MultinomialNB()
+        clf= MultinomialNB()
     ## best performance by adaboost
     elif model=="ada":
-	clf=AdaBoostClassifier(learning_rate=0.001,n_estimators=2000)
+        clf=AdaBoostClassifier(learning_rate=0.001,n_estimators=2000)
     clf.fit(train[features], train['class'])
     # Predict against test set
     preds = clf.predict(test[features])
