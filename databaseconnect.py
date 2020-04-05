@@ -187,7 +187,7 @@ def add_learnt_statement_to_database(subject, root, verb):
     db.commit()
     return db
 
-    
+
 @logger_config.logger
 def learn_question_response(H):
     db = connection_to_database()
@@ -229,7 +229,7 @@ def clear_table(table_name):
             db.commit()
         else:
             print("Table cleaning skipped.")
-    
+
     return db
 
 
