@@ -11,19 +11,32 @@ def connection_to_database():
     import config
     import mysql.connector
     from time import sleep
+    import sys
+
+    called_from = sys.argv[0]
+    logging.debug(called_from)
 
     max_tries = 10
     tries = 1
     conn = None
     while tries <= max_tries:
         try:
-            conn = mysql.connector.connect(
-                user=config.user,
-                password=config.password,
-                host=config.host,
-                port=config.port,
-                database=config.database,
-            )
+            if called_from.endswith("pytest"):
+                conn = mysql.connector.connect(
+                    user="root",
+                    password="",
+                    host=config.host,
+                    port=config.port,
+                    database="pytest_testdb",
+                )
+            else:
+                conn = mysql.connector.connect(
+                    user=config.user,
+                    password=config.password,
+                    host=config.host,
+                    port=config.port,
+                    database=config.database,
+                )
             if conn.is_connected():
                 # logging.debug("Connected")
                 logging.debug("MySQL connected")
@@ -59,7 +72,10 @@ def setup_database():
     cur.execute(
         "CREATE TABLE IF NOT EXISTS directions_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, origin_location VARCHAR(100), destination_location VARCHAR(100))"  # noqa: E501
     )
-    return db
+
+    cur.execute("SHOW TABLES")
+    TABLES = cur.fetchall()
+    return TABLES
 
 
 @logger_config.logger
@@ -68,39 +84,43 @@ def add_to_database(classification, subject, root, verb, H):
     db = connection_to_database()
     cur = db.cursor()
     cur = db.cursor(buffered=True)
-    if classification == "C":
-        cur.execute(
-            f"INSERT INTO chat_table(root_word,verb,sentence) VALUES ('{root}','{verb}','{H}')"
-        )
-        db.commit()
-    elif classification == "Q":
-        cur.execute("SELECT sentence FROM question_table")
-        res = cur.fetchall()
-        exist = 0
-        for r in res:
-            if r[-1] == H:
-                exist = 1
-                break
-        if exist == 0:
-            # do not add if question already exists
+    try:
+        if classification == "C":
             cur.execute(
-                f"INSERT INTO question_table(subject,root_word,verb,sentence) VALUES ('{subject}','{root}','{verb}','{H}')"
+                f"INSERT INTO chat_table(root_word,verb,sentence) VALUES ('{root}','{verb}','{H}')"
             )
             db.commit()
+        elif classification == "Q":
+            cur.execute("SELECT sentence FROM question_table")
+            res = cur.fetchall()
+            exist = 0
+            for r in res:
+                if r[-1] == H:
+                    exist = 1
+                    break
+            if exist == 0:
+                # do not add if question already exists
+                cur.execute(
+                    f"INSERT INTO question_table(subject,root_word,verb,sentence) VALUES ('{subject}','{root}','{verb}','{H}')"
+                )
+                db.commit()
+        else:
+            cur.execute("SELECT sentence FROM statement_table")
+            res = cur.fetchall()
+            exist = 0
+            for r in res:
+                if r[-1] == H:
+                    exist = 1
+                    break
+            if exist == 0:  # do not add if question already exists
+                cur.execute(
+                    f"INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES ('{subject}','{root}','{verb}','{H}')"
+                )
+                db.commit()
+    except Exception as e:
+        return e
     else:
-        cur.execute("SELECT sentence FROM statement_table")
-        res = cur.fetchall()
-        exist = 0
-        for r in res:
-            if r[-1] == H:
-                exist = 1
-                break
-        if exist == 0:  # do not add if question already exists
-            cur.execute(
-                f"INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES ('{subject}','{root}','{verb}','{H}')"
-            )
-            db.commit()
-    return db
+        return "Success"
 
 
 @logger_config.logger
@@ -177,6 +197,7 @@ def get_question_response(subject, root, verb):
             return B, chatbot.LearnResponse.TRAIN_ME.name
 
 
+# May be redundant. Can be handled by add_to_database("O", subject, root, verb, H)
 @logger_config.logger
 def add_learnt_statement_to_database(subject, root, verb):
     db = connection_to_database()
@@ -185,7 +206,8 @@ def add_learnt_statement_to_database(subject, root, verb):
         f"INSERT INTO statement_table(subject,root_word,verb) VALUES ('{subject}','{root}','{verb}')"
     )
     db.commit()
-    return db
+    # return db
+    return True
 
 
 @logger_config.logger
