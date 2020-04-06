@@ -8,11 +8,14 @@ import logger_config
 from datetime import datetime
 import calendar
 
-
-gmaps = googlemaps.Client(config.key)  # global variable gmaps
-
 log = logging.getLogger(__name__)
 log.info("Entered module: %s" % __name__)
+
+try:
+    gmaps = googlemaps.Client(config.key)  # global variable gmaps
+except ValueError as e:
+    logging.debug(e)
+    gmaps = None
 
 
 @logger_config.logger

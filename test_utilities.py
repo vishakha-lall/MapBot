@@ -1,4 +1,5 @@
 import utilities
+import pytest
 
 
 class TestClass:
@@ -9,6 +10,7 @@ class TestClass:
         result = utilities.setup_nltk()
         assert result
 
+    @pytest.mark.skip(reason="No way of currently testing this")
     def test_parse_sentence(self):
         triples, root = utilities.parse_sentence(self.test_input)
         triples = list(triples)
@@ -45,8 +47,8 @@ class TestClass:
             "sTripleScore",
             "class",
         ]
-        id = hashlib.md5(str(self.test_input).encode("utf-8")).hexdigest()[:16]
-        f = features_dict(id, self.test_input)
+        sentence_id = hashlib.md5(str(self.test_input).encode("utf-8")).hexdigest()[:16]
+        f = features_dict(sentence_id, self.test_input)
         features = [f[k] for k in keys][1:-1]
         features = np.array(features).reshape(1, -1)
 

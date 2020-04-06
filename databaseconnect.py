@@ -114,7 +114,7 @@ def add_to_database(classification, subject, root, verb, H):
                     break
             if exist == 0:  # do not add if question already exists
                 cur.execute(
-                    f"INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES ('{subject}','{root}','{verb}','{H}')"
+                    f"INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES ('{subject}','{root}','{verb}','{H}')"  # noqa: E501
                 )
                 db.commit()
     except Exception as e:
