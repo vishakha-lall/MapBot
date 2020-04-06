@@ -54,5 +54,3 @@ def post_install():
 if __name__ == '__main__':
     clf, learn_response = setup()
     app.run(debug=True)
-
-
