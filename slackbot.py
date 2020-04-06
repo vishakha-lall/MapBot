@@ -1,61 +1,51 @@
 import os
-import time
-import re
+from slack import RTMClient
+import ssl, certifi
 import requests
-from slackclient import SlackClient
-from config import slack_bot_token 
+import dotenv
 
-slack_client = SlackClient(slack_bot_token)
-mapbot_id = None
+dotenv.load_dotenv('ENV/.env')
 
-RTM_READ_DELAY = 1
-EXAMPLE_COMMAND = "help"
-MENTION_REGEX = "^<@(|[pipWU].+?)>(.*)"
+# API ENDPOINT
+URL = 'http://localhost:5000/chatbot/'
 
-# API endpoint currently running on localhost
-URL = "http://127.0.0.1:5000/chatbot/"
+ssl_context = ssl.create_default_context(cafile=certifi.where())
 
-def parse_bot_commands(slack_events):
-    for event in slack_events:
-        if event["type"] == "message" and not "subtype" in event:
-            user_id, message = parse_direct_mention(event["text"])
-            if user_id == mapbot_id:
-                return message, event["channel"]
-    return None, None
+@RTMClient.run_on(event="message")
+def mapbot(**payload):
+  '''
+  This function is a listener for 
+  message events happening in the 
+  the workspace.
+  '''
+  data = payload['data']
+  web_client = payload['web_client']
+  bot_id = data.get('bot_id', '')
 
-def parse_direct_mention(message_text):
-    matches = re.search(MENTION_REGEX, message_text)
-    # the first group contains the username, the second group contains the remaining message
-    return (matches.group(1), matches.group(2).strip()) if matches else (None, None)
+  # Ignore Bot Messages
+  if bot_id == '':
+    channel_id = data['channel']
+    # User message from slack
+    text = data.get('text', '')
+    text = text.split('>')[-1].strip()
 
-def handle_command(command, channel):
-    """
-        Executes bot command if command is known
-    """
-    default_response = f"Not sure what you mean. Try {EXAMPLE_COMMAND}."
-
-    response = None
-    if command.startswith(EXAMPLE_COMMAND):
-        response = "Hey There! I am MapBot. Nice to meet you"
+    response = ""
+    if 'help' in text.lower():
+      user = data.get('user', '')
+      response = f"Hi <@{user}>! I am Mapbot :)"
+    else:
+      chatbot_response = requests.get(f"{URL}{text}").json()
+      response = chatbot_response[0]['message'][0]
     
-    else:
-        response = requests.get(url= URL+str(command)).json()
-        response = response[0]['message'][0]
-    slack_client.api_call(
-        "chat.postMessage",
-        channel=channel,
-        text=response or default_response
-    )
+    # Sends the message to the slack
+    web_client.chat_postMessage(
+        channel=channel_id,
+        text=response
+      )
 
-if __name__ == '__main__':
-    if slack_client.rtm_connect(with_team_state=False):
-        print("Mapbot started and running!")
-        mapbot_id = slack_client.api_call("auth.test")["user_id"]
-
-        while True:
-            command, channel = parse_bot_commands(slack_client.rtm_read())
-            if command:
-                handle_command(command, channel)
-            time.sleep(RTM_READ_DELAY)
-    else:
-        print("Connection failed")
+try:
+  rtm_client = RTMClient(token=os.getenv("SLACK_BOT_TOKEN"), ssl=ssl_context)
+  print("Mapbot is up and running!")
+  rtm_client.start()
+except Exception as err:
+  print("Slack token or server error", err)
