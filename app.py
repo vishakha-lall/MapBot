@@ -1,10 +1,14 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template, request
 from chatbot import message_to_bot, setup
 
 app = Flask(__name__)
 
 
 @app.route("/chatbot/<user_input>", methods=["GET"])
+def home():
+    return render_template("temp.html")
+
+
 def chat(user_input):
     try:
         response = message_to_bot(user_input, clf, learn_response)
