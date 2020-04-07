@@ -109,6 +109,28 @@ Check out all related information [here](GSSoC.md)
     1. [Python](https://realpython.com/python-virtual-environments-a-primer/#why-the-need-for-virtual-environments)
     2. [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
 ------
+
+#### How to set me up on Slack?
+
+- Clone the repository
+- Create the **mapbot** database in mySQL
+  -  `mysql -uroot -p -hlocalhost`
+  - Enter root password when prompted
+  - `create database mapbot;`
+  - Verify creation of the database `show databases;`
+- Unzip the StanfordCoreNLP package in the repository and keep the file paths `stanford-corenlp-x.x.x.jar` and `stanford-corenlp-x.x.x-models.jar` handy.
+- Run `git update-index --assume-unchanged ENV/.env`
+- Fill the existing template in `ENV/.env` with the corresponding values following the `KEY=VALUE` format
+- Next create a **classic** slack app from [here](https://api.slack.com/apps?new_classic_app=1).
+- After creating a classic slack app and filling out some basic details, go to **Basic Information** section from the sidebar.
+- In the Basic Information page, copy the **Client ID** and **Client Secret** and paste these in the `ENV/.env` file as: `slack_client_id=Your Client ID` and `slack_client_secret=Your Client Secret`.
+  - Also add slack bot scope in the `ENV/.env` file as `slack_oauth_scope=channels:write, bot`
+- Install dependencies from `requirements.txt` file. Run `pip install -r requirements.txt`
+- Run `python3 app.py`. The server will start at your localhost. Go to `http://localhost:5000/begin_auth`. Click `Add to Slack` button. Next, select the workspace from the top right in which you want to install mapbot and hit Allow. After doing this step you will notice that `SLACK_BOT_TOKEN` gets automatically added to the `ENV/.env` file.
+- Run `python3 slackbot.py` in another terminal.
+- Now you can go to your workspace and can interact with the mapbot after inviting the mapbot to the channel.
+
+
 #### How do I work?
 
 The `/analysis` folder contains data files for the project. The `sentences.csv` contains the base training dataset which is used to classify the user's input into three classes - *Statement*, *Question*, and *Chat*. Going through some examples would clarify the difference between statement and chat. The `featuresDump.csv` is the result of text pre-processing done using the code in `features.py` and `featuresDump.py`.
