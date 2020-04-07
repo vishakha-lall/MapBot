@@ -1,0 +1,58 @@
+h1 {
+  background-color: lightgrey;
+  color: blue;
+  font-size: 50px;
+}
+#textInput {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+#buttonInput{
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
+  margin: 4px 2px;
+  cursor: pointer;
+  width: 100%;
+}
+.botcontainer {
+    margin-top: 100px;
+    margin-bottom: 100px;
+    margin-right: 300px;
+    margin-left: 300px;
+}
+.userText {
+    color: white;
+    font-family: monospace;
+    font-size: 17px;
+    text-align: right;
+    line-height: 30px;
+}
+.userText span {
+    background-color: #009688;
+    padding: 10px;
+    border-radius: 2px;
+}
+.botText {
+    color: white;
+    font-family: monospace;
+    font-size: 17px;
+    text-align: left;
+    line-height: 30px;
+}
+.botText span {
+    background-color: #EF5350;
+    padding: 10px;
+    border-radius: 2px;
+}
+

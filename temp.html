@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="description" content="template for chatbot">
+  <meta name="keywords" content="HTML,CSS,XML,JavaScript,ChatBot">
+  <meta name="author" content="Najma Mahabub">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="static/style.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
+</head>
+<body>
+<center>
+   <h1 id="heading"> MAPBOT </h1>
+</center>
+   <div class="botcontainer">
+	<div id="chatbox">
+		<p class="botText"><span>Hey! I'm your friendly navigator bot! Try me out, not to brag but I'm FUN!</span></p>
+	</div>
+	<div class="userInput">
+		<input id="textInput" type="text" name="msgfromuser" placeholder="Type your message here">
+		<button id="buttonInput" type="submit" name="submitbutton" onclick="reply()">SEND</button>
+	</div>
+	<script>
+	 function reply() {
+          var rawText = $("#textInput").val();
+          var userHtml = '<p class="userText"><span>' + rawText + "</span></p>";
+          $("#textInput").val("");
+          $("#chatbox").append(userHtml);
+          document
+            .getElementById("userInput")
+            .scrollIntoView({ block: "start", behavior: "smooth" });
+          $.get("/get", { msg: rawText }).done(function(data) {
+            var botHtml = '<p class="botText"><span>' + data + "</span></p>";
+            $("#chatbox").append(botHtml);
+            document
+              .getElementById("userInput")
+              .scrollIntoView({ block: "start", behavior: "smooth" });
+          });
+        }
+        $("#textInput").keypress(function(e) {
+          if (e.which == 13) {
+            reply();
+          }
+        });
+	</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+   </div>
+</body>
+</html>
