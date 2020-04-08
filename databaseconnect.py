@@ -11,19 +11,32 @@ def connection_to_database():
     import config
     import mysql.connector
     from time import sleep
+    import sys
+
+    called_from = sys.argv[0]
+    logging.debug(called_from)
 
     max_tries = 10
     tries = 1
     conn = None
     while tries <= max_tries:
         try:
-            conn = mysql.connector.connect(
-                user=config.user,
-                password=config.password,
-                host=config.host,
-                port=config.port,
-                database=config.database,
-            )
+            if called_from.endswith("pytest"):
+                conn = mysql.connector.connect(
+                    user="root",
+                    password="",
+                    host=config.host,
+                    port=config.port,
+                    database="pytest_testdb",
+                )
+            else:
+                conn = mysql.connector.connect(
+                    user=config.user,
+                    password=config.password,
+                    host=config.host,
+                    port=config.port,
+                    database=config.database,
+                )
             if conn.is_connected():
                 # logging.debug("Connected")
                 logging.debug("MySQL connected")
@@ -48,19 +61,21 @@ def setup_database():
     db = connection_to_database()
     cur = db.cursor()
     cur.execute(
-      "CREATE TABLE IF NOT EXISTS chat_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))"  # noqa: E501
-    ) 
+        "CREATE TABLE IF NOT EXISTS chat_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))"  # noqa: E501
+    )
     cur.execute(
-      "CREATE TABLE IF NOT EXISTS statement_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))"  # noqa: E501
-    ) 
+        "CREATE TABLE IF NOT EXISTS statement_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))"  # noqa: E501
+    )
     cur.execute(
-      "CREATE TABLE IF NOT EXISTS question_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))"  # noqa: E501
-    ) 
+        "CREATE TABLE IF NOT EXISTS question_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))"  # noqa: E501
+    )
     cur.execute(
-      "CREATE TABLE IF NOT EXISTS directions_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, origin_location VARCHAR(100), destination_location VARCHAR(100))"  # noqa: E501
-    ) 
-    return db
-    
+        "CREATE TABLE IF NOT EXISTS directions_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, origin_location VARCHAR(100), destination_location VARCHAR(100))"  # noqa: E501
+    )
+    cur.execute("SHOW TABLES")
+    TABLES = cur.fetchall()
+    return TABLES
+
 
 @logger_config.logger
 # add classified sentences to database
@@ -68,39 +83,46 @@ def add_to_database(classification, subject, root, verb, H):
     db = connection_to_database()
     cur = db.cursor()
     cur = db.cursor(prepared=True)
-    if classification == 'C':
-        cur.execute(
-            "INSERT INTO chat_table(root_word,verb,sentence) VALUES (%s, %s, %s)", (str(root), str(verb), H,)
-        )
-        db.commit()
-    elif classification == "Q":
-        cur.execute("SELECT sentence FROM question_table")
-        res = cur.fetchall()
-        exist = 0
-        for r in res:
-            if r[-1] == H:
-                exist = 1
-                break
-        if exist == 0:
-            # do not add if question already exists
+    try:
+        if classification == "C":
             cur.execute(
-              "INSERT INTO question_table(subject,root_word,verb,sentence) VALUES (%s,%s,%s,%s)", (str(subject), str(root),str(verb),H,)
+                "INSERT INTO chat_table(root_word,verb,sentence) VALUES (%s, %s, %s)",
+                (str(root), str(verb), H,),
             )
             db.commit()
+        elif classification == "Q":
+            cur.execute("SELECT sentence FROM question_table")
+            res = cur.fetchall()
+            exist = 0
+            for r in res:
+                if r[-1] == H:
+                    exist = 1
+                    break
+            if exist == 0:
+                # do not add if question already exists
+                cur.execute(
+                    "INSERT INTO question_table(subject,root_word,verb,sentence) VALUES (%s,%s,%s,%s)",
+                    (str(subject), str(root), str(verb), H,),
+                )
+                db.commit()
+        else:
+            cur.execute("SELECT sentence FROM statement_table")
+            res = cur.fetchall()
+            exist = 0
+            for r in res:
+                if r[-1] == H:
+                    exist = 1
+                    break
+            if exist == 0:  # do not add if question already exists
+                cur.execute(
+                    "INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES (%s,%s,%s,%s)",
+                    (str(subject), str(root), str(verb), H,),
+                )
+                db.commit()
+    except Exception as e:
+        return e
     else:
-        cur.execute("SELECT sentence FROM statement_table")
-        res = cur.fetchall()
-        exist = 0
-        for r in res:
-            if r[-1] == H:
-                exist = 1
-                break
-        if exist == 0:    # do not add if question already exists
-            cur.execute(
-              "INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES (%s,%s,%s,%s)", (str(subject), str(root), str(verb), H,)
-            )
-            db.commit()
-    return db
+        return "Success"
 
 
 @logger_config.logger
@@ -115,7 +137,7 @@ def get_chat_response():
     import random
 
     chat_id = random.randint(1, total_chat_records)
-    cur.execute("SELECT sentence FROM chat_table WHERE id = %s",(str(chat_id),))
+    cur.execute("SELECT sentence FROM chat_table WHERE id = %s", (str(chat_id),))
     res = cur.fetchone()
     B = res[0]
     return B
@@ -135,7 +157,7 @@ def get_question_response(subject, root, verb):
                 break
         if found == 1:
             cur.execute(
-                "SELECT sentence FROM statement_table WHERE verb= %s",(str(verb),)
+                "SELECT sentence FROM statement_table WHERE verb= %s", (str(verb),)
             )
             res = cur.fetchone()
             B = res[0]
@@ -156,11 +178,12 @@ def get_question_response(subject, root, verb):
                 "SELECT verb FROM statement_table WHERE subject= %s", (str(subject[0]),)
             )
             res = cur.fetchone()
-            checkVerb = res[0]   
+            checkVerb = res[0]
             # checkVerb is a string while verb is a list. checkVerb ['verb']
             if checkVerb == "[]":
                 cur.execute(
-                    "SELECT sentence FROM statement_table WHERE subject= %s", (str(subject[0]),)
+                    "SELECT sentence FROM statement_table WHERE subject= %s",
+                    (str(subject[0]),),
                 )
                 res = cur.fetchone()
                 B = res[0]
@@ -168,7 +191,8 @@ def get_question_response(subject, root, verb):
             else:
                 if checkVerb[2:-2] == verb[0]:
                     cur.execute(
-                        "SELECT sentence FROM statement_table WHERE subject= %s", (str(subject[0]),)
+                        "SELECT sentence FROM statement_table WHERE subject= %s",
+                        (str(subject[0]),),
                     )
                     res = cur.fetchone()
                     B = res[0]
@@ -181,15 +205,18 @@ def get_question_response(subject, root, verb):
             return B, chatbot.LearnResponse.TRAIN_ME.name
 
 
+# May be redundant. Can be handled by add_to_database("O", subject, root, verb, H)
 @logger_config.logger
 def add_learnt_statement_to_database(subject, root, verb):
     db = connection_to_database()
     cur = db.cursor()
     cur.execute(
-      "INSERT INTO statement_table(subject,root_word,verb) VALUES (%s,%s,%s)", (str(subject), str(root), str(verb),)
+        "INSERT INTO statement_table(subject,root_word,verb) VALUES (%s,%s,%s)",
+        (str(subject), str(root), str(verb),),
     )
     db.commit()
-    return db
+    # return db
+    return True
 
 
 @logger_config.logger
@@ -199,7 +226,9 @@ def learn_question_response(H):
     cur.execute("SELECT id FROM statement_table ORDER BY id DESC")
     res = cur.fetchone()
     last_id = res[0]
-    cur.execute("UPDATE statement_table SET sentence = %s WHERE id = %s",(H, str(last_id),))
+    cur.execute(
+        "UPDATE statement_table SET sentence = %s WHERE id = %s", (H, str(last_id),)
+    )
     db.commit()
     B = "Thank you! I have learnt this."
     return B, chatbot.LearnResponse.MESSAGE.name
@@ -215,10 +244,10 @@ def clear_table(table_name):
         logging.debug("The following tables will be cleaned:\n")
         for table in tables_to_be_cleaned:
             describe_table(cur, table)
-        
+
         if input("Enter 'Y' to confirm cleaning of BOTH tables: ") in ("Y", "y",):
             for table in tables_to_be_cleaned:
-                cur.execute("DELETE FROM %s",(table,))  
+                cur.execute("DELETE FROM %s", (table,))
             db.commit()
             logging.debug("Tables cleaned successfully")
         else:
@@ -230,7 +259,7 @@ def clear_table(table_name):
 
         if input("Enter 'Y' to confirm: ") in ("Y", "y"):
             logging.debug("Table cleaned successfully")
-            cur.execute("DELETE FROM %s",(table_name,))
+            cur.execute("DELETE FROM %s", (table_name,))
             db.commit()
         else:
             logging.debug("Table cleaning skipped.")
@@ -240,11 +269,11 @@ def clear_table(table_name):
 
 @logger_config.logger
 def describe_table(cur, table_name):
-    cur.execute("DESC %s",(table_name,))
+    cur.execute("DESC %s", (table_name,))
     res = cur.fetchall()
     column_names = [col[0] for col in res]
-    
-    cur.execute("SELECT COUNT(*) FROM %s",(table_name,))
+
+    cur.execute("SELECT COUNT(*) FROM %s", (table_name,))
     res = cur.fetchall()
     records_no = res[0][0]
 
@@ -252,6 +281,5 @@ def describe_table(cur, table_name):
     logging.debug("Columns:", column_names)
     logging.debug("Number of existing records:", records_no)
     logging.debug()
-    
+
     return records_no
- 
