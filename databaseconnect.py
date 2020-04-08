@@ -47,7 +47,6 @@ def connection_to_database():
 def setup_database():
     db = connection_to_database()
     cur = db.cursor()
-
     cur.execute(
       "CREATE TABLE IF NOT EXISTS chat_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))"  # noqa: E501
     ) 
@@ -62,7 +61,6 @@ def setup_database():
     ) 
     return db
     
-
 
 @logger_config.logger
 # add classified sentences to database
@@ -97,7 +95,6 @@ def add_to_database(classification, subject, root, verb, H):
             if r[-1] == H:
                 exist = 1
                 break
-
         if exist == 0:    # do not add if question already exists
             cur.execute(
               "INSERT INTO statement_table(subject,root_word,verb,sentence) VALUES (%s,%s,%s,%s)", (str(subject), str(root), str(verb), H,)
@@ -128,7 +125,7 @@ def get_chat_response():
 def get_question_response(subject, root, verb):
     db = connection_to_database()
     cur = db.cursor(prepared=True)
-    if str(subject) == '[]':
+    if str(subject) == "[]":
         cur.execute("SELECT verb FROM statement_table")
         res = cur.fetchall()
         found = 0
@@ -161,7 +158,7 @@ def get_question_response(subject, root, verb):
             res = cur.fetchone()
             checkVerb = res[0]   
             # checkVerb is a string while verb is a list. checkVerb ['verb']
-            if checkVerb == '[]':
+            if checkVerb == "[]":
                 cur.execute(
                     "SELECT sentence FROM statement_table WHERE subject= %s", (str(subject[0]),)
                 )
@@ -179,7 +176,6 @@ def get_question_response(subject, root, verb):
                 else:
                     B = "Sorry I don't know the response to this. Please train me."
                     return B, chatbot.LearnResponse.TRAIN_ME.name
-
         else:
             B = "Sorry I don't know the response to this. Please train me."
             return B, chatbot.LearnResponse.TRAIN_ME.name
@@ -222,7 +218,7 @@ def clear_table(table_name):
         
         if input("Enter 'Y' to confirm cleaning of BOTH tables: ") in ("Y", "y",):
             for table in tables_to_be_cleaned:
-                cur.execute("DELETE FROM %s",(table,))
+                cur.execute("DELETE FROM %s",(table,))  
             db.commit()
             logging.debug("Tables cleaned successfully")
         else:
@@ -242,7 +238,6 @@ def clear_table(table_name):
     return db
 
 
-
 @logger_config.logger
 def describe_table(cur, table_name):
     cur.execute("DESC %s",(table_name,))
@@ -259,4 +254,4 @@ def describe_table(cur, table_name):
     logging.debug()
     
     return records_no
-  
+ 
