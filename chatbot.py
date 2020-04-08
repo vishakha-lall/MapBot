@@ -22,7 +22,7 @@ class LearnResponse(Enum):
 def setup():
     utilities.setup_nltk()
     logging.debug("NLTK setup completed")
-    clf = utilities.classify_model()
+    clf = utilities.classify_model_adv(model="rf")
     logging.debug("Classification model ready")
     databaseconnect.setup_database()
     logging.debug("Database setup completed, database connected")
