@@ -2,9 +2,7 @@ import os
 from slack import RTMClient
 import ssl, certifi
 import requests
-import dotenv
-
-dotenv.load_dotenv('ENV/.env')
+from config import slack_bot_token
 
 # API ENDPOINT
 URL = 'http://localhost:5000/chatbot/'
@@ -42,9 +40,8 @@ def mapbot(**payload):
         channel=channel_id,
         text=response
       )
-
 try:
-  rtm_client = RTMClient(token=os.getenv("SLACK_BOT_TOKEN"), ssl=ssl_context)
+  rtm_client = RTMClient(token=slack_bot_token, ssl=ssl_context)
   print("Mapbot is up and running!")
   rtm_client.start()
 except Exception as err:

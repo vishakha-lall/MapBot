@@ -122,13 +122,13 @@ Check out all related information [here](GSSoC.md)
 - Run `git update-index --assume-unchanged ENV/.env`
 - Fill the existing template in `ENV/.env` with the corresponding values following the `KEY=VALUE` format
 - Next create a **classic** slack app from [here](https://api.slack.com/apps?new_classic_app=1).
-- After creating a classic slack app and filling out some basic details, go to **Basic Information** section from the sidebar.
-- In the Basic Information page, copy the **Client ID** and **Client Secret** and paste these in the `ENV/.env` file as: `slack_client_id=Your Client ID` and `slack_client_secret=Your Client Secret`.
-  - Also add slack bot scope in the `ENV/.env` file as `slack_oauth_scope=channels:write, bot`
+- After creating a classic slack app and filling out some basic details, navigate to **Basic Information** section on the sidebar.
+- In the Basic Information page, copy the **Client ID** and **Client Secret** and paste these in the `ENV/.env` file as: `SLACK_CLIENT_ID=Your Client ID` and `SLACK_CLIENT_SECRET=Your Client Secret`.
+- Add slack bot scope in the `ENV/.env` file as `SLACK_OAUTH_SCOPE=channels:write, bot`
 - Install dependencies from `requirements.txt` file. Run `pip install -r requirements.txt`
-- Run `python3 app.py`. The server will start at your localhost. Go to `http://localhost:5000/begin_auth`. Click `Add to Slack` button. Next, select the workspace from the top right in which you want to install mapbot and hit Allow. After doing this step you will notice that `SLACK_BOT_TOKEN` gets automatically added to the `ENV/.env` file.
+- Run `python3 app.py`. The server will start at your localhost. Go to `http://localhost:5000/begin_auth`. Click `Add to Slack` button. Next, select the workspace from the top right in which you want to install your bot and hit `Allow`. After doing this step you will notice that `SLACK_BOT_TOKEN` gets automatically added to the `ENV/.env` file.
 - Run `python3 slackbot.py` in another terminal.
-- Now you can go to your workspace and can interact with the mapbot after inviting the mapbot to the channel.
+- Now you can go to your workspace and can interact with the Mapbot after inviting the bot(the username of the bot you had given while creating the app) to the channel. For inviting the bot simply type `@YOUR_BOT_USERNAME` in the slack and hit enter. The bot will then be automatically added to the channel.
 
 
 #### How do I work?
