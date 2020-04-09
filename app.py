@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, request
 from chatbot import message_to_bot, setup
 from config import slack_client_id, slack_client_secret
-from config import slack_oauth_scope
 import certifi
 import ssl
 import slack
