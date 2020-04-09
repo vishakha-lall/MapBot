@@ -8,7 +8,7 @@ import slack
 
 CLIENT_ID = slack_client_id
 CLIENT_SECRET = slack_client_secret
-OAUTH_SCOPE = slack_oauth_scope
+
 
 app = Flask(__name__)
 ssl_context = ssl.create_default_context(cafile=certifi.where())
@@ -28,7 +28,7 @@ def chat(user_input):
 @app.route("/begin_auth", methods=["GET"])
 def pre_install():
     return f"""<a href="https://slack.com/oauth/authorize?
-            scope={OAUTH_SCOPE}&client_id={CLIENT_ID}">
+            scope=channels:write, bot&client_id={CLIENT_ID}">
             <img alt=""Add to Slack"" height="40" width="139"
             src="https://platform.slack-edge.com/img/add_to_slack.png"
             srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x,
