@@ -4,6 +4,9 @@ import googleMapsApiModule
 from enum import Enum, auto
 import logging
 import logger_config
+from joblib import dump, load
+import time
+from pathlib import Path
 
 location_dict = {"origin": "null", "destination": "null"}
 
@@ -22,8 +25,28 @@ class LearnResponse(Enum):
 def setup():
     utilities.setup_nltk()
     logging.debug("NLTK setup completed")
-    clf = utilities.classify_model_adv(model="rf")
+
+    model_file = "model.joblib"
+    retrain = False
+    RETRAIN_AFTER_DAYS = 7
+    if Path(model_file).exists():
+        last_modified_time = Path(model_file).stat().st_mtime
+        time_now = time.time()
+        diff_in_days = (time_now - last_modified_time) // (86400)
+        if diff_in_days < RETRAIN_AFTER_DAYS:
+            logging.debug("Loading pre-trained model")
+            clf = load(model_file)
+        else:
+            retrain = True
+    else:
+        retrain = True
+    if retrain:
+        logging.debug("Training model")
+        # clf = utilities.classify_model()
+        clf = utilities.classify_model_adv(model="rf")
+        dump(clf, model_file)
     logging.debug("Classification model ready")
+
     databaseconnect.setup_database()
     logging.debug("Database setup completed, database connected")
     learn_response = LearnResponse.MESSAGE.name
