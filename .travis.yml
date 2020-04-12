@@ -2,11 +2,15 @@ language: python
 python:
   - "3.6"
 cache: pip
+services:
+  - mysql
+before_install:
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS pytest_testdb;'
 install:
   - pip install -r requirements.txt
 before_script:
-  - black --check . || true
+  - black --check .
 script:
   - flake8 . --count --select=E101,E722,E9,F4,F63,F7,F82,W191 --show-source --statistics
   - flake8 . --count --exit-zero --max-line-length=127 --statistics
-  - pytest
+  - pytest -v
