@@ -1,8 +1,19 @@
 <p align="center">
   <img src="https://forthebadge.com/images/badges/made-with-python.svg">
 </p>
+<p align="center">
+  <a href="https://travis-ci.com/vishakha-lall/MapBot">
+    <img alt="Travis CI Build Status" src="https://travis-ci.com/vishakha-lall/MapBot.svg?branch=gssoc-master">
+  </a>
+  <a href="https://github.com/vishakha-lall/MapBot/">
+    <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/vishakha-lall/MapBot?color=darkblue&label=%20&logo=github">
+  </a>
+  <a href="https://hub.docker.com/r/chttrje/chatbot">
+    <img alt="Docker Image Size (latest by date)" src="https://img.shields.io/docker/image-size/chttrje/chatbot?label=%20&logo=docker&logoColor=white&sort=date">
+  </a>
+</p>
 
-# MapBot  [![Build Status](https://travis-ci.com/vishakha-lall/MapBot.svg?branch=gssoc-master)](https://travis-ci.com/vishakha-lall/MapBot)
+# MapBot
 
 #### Hey! I'm your friendly navigator bot! Try me out, not to brag but I'm FUN!
 
