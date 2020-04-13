@@ -1,11 +1,11 @@
 SENTENCE,CLASS
-"Sorry, I don't know about the weather.",S
+"Sorry I don't know about the weather.",S
 That is a tricky question to answer.,C
 What does OCM stand for,Q
 MAX is a Mobile Application Accelerator,S
 Can a dog see in colour?,Q
 how are you,C
-"If you deploy a MySQL database in the Oracle cloud, how do you access it?",Q
+"If you deploy a MySQL database in the Oracle cloud how do you access it?",Q
 who is dominic Fakename,Q
 what's the weather like today?,C
 Can the OCM host non Oracle software stacks?,Q
@@ -20,11 +20,11 @@ MAX is a codeless tool for business analysts,S
 What is JSON?,Q
 What is the OCM?,Q
 ABCS is Application Builder Cloud Service,S
-"The OCM is the Oracle Cloud Machine, an on-premisis cloud device",Q
+"The OCM is the Oracle Cloud Machine an on-premisis cloud device",Q
 What is OCCS,Q
 OCCS is the Oracle Container Cloud Service based off Docker,S
 What's an OCM?,Q
-"OCM is Oracle Cloud Machine, an on-premise cloud device",S
+"OCM is Oracle Cloud Machine an on-premise cloud device",S
 Who is Dom Fakename,Q
 Where can I find more information about the OCM?,Q
 What is an OCM?,Q
@@ -63,7 +63,7 @@ who am i?,Q
 That is not what I asked,C
 I am fine thank you,C
 what's ABCS?,Q
-"Application Builder Cloud Service, designed for citizen developers",S
+"Application Builder Cloud Service designed for citizen developers",S
 no idea,C
 are you a chatbot?,Q
 what is a chatbot?,Q
@@ -94,7 +94,7 @@ What is MCS?,Q
 Where is the cow,Q
 When will Oracle 12 be released,Q
 How's it going?,C
-"Hey!, How's it going?",C
+"Hey! How's it going?",C
 Oracle 12c database will be released in March 2017,S
 When will Arsenal ever win a match?,Q
 Arsenal are a football team in North London,S
