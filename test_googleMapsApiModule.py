@@ -24,8 +24,11 @@ class TestClass:
 
     @pytest.mark.skipif(googleMapsApiModule.gmaps is None, reason="No API key provided")
     def test_geocoding_with_valid_input(self):
-        result = googleMapsApiModule.geocoding("denver")
-        assert result == "https://www.google.com/maps/search/?api=1&query=denver"
+        result = googleMapsApiModule.geocoding("Nairobi")
+        assert (
+            result
+            == "https://maps.google.com/?q=Nairobi,+Kenya&ftid=0x182f1172d84d49a7:0xf7cf0254b297924c"
+        )
 
     @pytest.mark.skipif(googleMapsApiModule.gmaps is None, reason="No API key provided")
     def test_geocoding_with_invalid_input(self):
@@ -38,9 +41,8 @@ class TestClass:
         result = googleMapsApiModule.mapsstatic("sydney")
         assert (
             result
-            == "https://maps.googleapis.com/maps/api/staticmap?center=sydney&zoom=13&scale=1&size=600x350&maptype=roadmap&key="
+            == "https://maps.googleapis.com/maps/api/staticmap?center=sydney&zoom=13&size=600x350&key="
             + config.key
-            + "&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:L%7Csydney"
         )
 
     @pytest.mark.skipif(googleMapsApiModule.gmaps is None, reason="No API key provided")
@@ -71,11 +73,11 @@ class TestClass:
 
     @pytest.mark.skipif(googleMapsApiModule.gmaps is None, reason="No API key provided")
     def test_timezone_with_valid_input(self):
-        result = googleMapsApiModule.timezone("ohio", "2000 11 21 11 41")
+        result = googleMapsApiModule.timezone("ohio")
         assert result == "America/New_York"
 
     @pytest.mark.skipif(googleMapsApiModule.gmaps is None, reason="No API key provided")
     def test_timezone_with_invalid_input(self):
-        with pytest.raises(ValueError):
-            result = googleMapsApiModule.timezone("wijd..", "2000 18 21 11 41")
+        with pytest.raises(IndexError):
+            result = googleMapsApiModule.timezone("feggergw")
             assert result == "America/New_York"
