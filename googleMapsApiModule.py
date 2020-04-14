@@ -1,6 +1,5 @@
 import googlemaps
 import urllib
-import webbrowser
 import config
 from constants import BASE_URL
 import logging
@@ -28,7 +27,6 @@ def direction(origin, destination):
         )
     )
     logging.debug(result_url)
-    webbrowser.open_new(result_url)
     return result_url
 
 
@@ -57,7 +55,6 @@ def geocoding(search_location):
     place_id = result[0]["place_id"]
     place = gmaps.place(place_id)
     result_url = place["result"]["url"]
-    webbrowser.open_new(result_url)
     return result_url
 
 
@@ -76,7 +73,6 @@ def mapsstatic(address):
         )
     )
     logging.debug(result_url)
-    webbrowser.open_new(result_url)
     return result_url
 
 
@@ -117,5 +113,4 @@ def places(search_location):
         )
     )
     logging.debug(first_photo_url)
-    webbrowser.open_new(first_photo_url)
     return first_place_id
