@@ -3,6 +3,8 @@ import json
 import time
 import logging
 import logger_config
+import urllib
+
 
 log = logging.getLogger(__name__)
 log.info("Entered module: %s" % __name__)
@@ -22,7 +24,12 @@ class TelegramBot(object):
     @logger_config.logger
     def send_message(self, text: str, chat_id: int) -> None:
         """Combine :text: and :chat_id:, create message and perform requests to Telegram Bot API."""
-        url = self.URL + f"sendMessage?text={text}&chat_id={chat_id}"
+        url = (
+            self.URL
+            + "sendMessage"
+            + "?"
+            + urllib.parse.urlencode({"text": text, "chat_id": chat_id})
+        )
         self.get_url(url)
 
     @logger_config.logger

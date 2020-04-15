@@ -66,8 +66,7 @@ def message_to_bot(H, clf, learn_response):
             location_dict["origin"],
             location_dict["destination"],
         )
-        googleMapsApiModule.direction(origin, destination)
-        B = "I will certainly help you with that."
+        B = googleMapsApiModule.direction(origin, destination)
         learn_response = LearnResponse.MESSAGE.name
         return B, learn_response
     if "bye" in H.lower().split(" "):  # check in words within H
@@ -154,14 +153,13 @@ def message_to_bot(H, clf, learn_response):
                     location_dict["origin"],
                     location_dict["destination"],
                 )
-                googleMapsApiModule.direction(origin, destination)
+                B = googleMapsApiModule.direction(origin, destination)
             else:
                 B = "I didn't get that. Can you please give me the origin location?"
                 learn_response = LearnResponse.ORIGIN.name
         if len(proper_nouns) == 1:
             location = proper_nouns.pop()
             if subj[0] == "geocoding" or subj[0] == location:
-                googleMapsApiModule.geocoding(location)
+                B = googleMapsApiModule.geocoding(location)
                 learn_response = LearnResponse.MESSAGE.name
-                B = "I will certainly help you with that."
     return B, learn_response
