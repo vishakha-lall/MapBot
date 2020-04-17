@@ -120,6 +120,29 @@ Check out all related information [here](GSSoC.md)
     1. [Python](https://realpython.com/python-virtual-environments-a-primer/#why-the-need-for-virtual-environments)
     2. [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
 ------
+
+#### How to set me up on Slack?
+
+- Clone the repository
+- Create the **mapbot** database in mySQL
+  -  `mysql -uroot -p -hlocalhost`
+  - Enter root password when prompted
+  - `create database mapbot;`
+  - Verify creation of the database `show databases;`
+- Unzip the StanfordCoreNLP package in the repository and keep the file paths `stanford-corenlp-x.x.x.jar` and `stanford-corenlp-x.x.x-models.jar` handy.
+- Run `git update-index --assume-unchanged ENV/.env`
+- Fill the existing template in `ENV/.env` with the corresponding values following the `KEY=VALUE` format
+- Next create a **classic** slack app from [here](https://api.slack.com/apps?new_classic_app=1) and fill out some basic information.
+- Navigate to **Basic Information** section of the slack app. Under the **Add features and functionality** subheading click on **Bots**.
+- Click on **Add Legacy Bot User** and enter the **display name** and **default username** of your bot.
+- Navigate to **Basic Information** section of the slack app on the sidebar and copy the **Client ID** and **Client Secret** and then paste these to the `ENV/.env` file as: `SLACK_CLIENT_ID=Your Client ID` and `SLACK_CLIENT_SECRET=Your Client Secret`.
+- Navigate to the **OAuth & Permissions** section. Under the **Redirect URLs** subheading add `http://localhost:5000/post_auth`.
+- Install dependencies from `requirements.txt` file. Run `pip install -r requirements.txt`
+- Run `python3 app.py`. The server will start at your localhost. Go to `http://localhost:5000/begin_auth`. Click `Add to Slack` button. Next, select the workspace from the top right in which you want to install your bot and hit `Allow`. After doing this step you will notice that `SLACK_BOT_TOKEN` gets automatically added to the `ENV/.env` file.
+- Run `python3 slackbot.py` in another terminal.
+- Now you can go to your workspace and can interact with the Mapbot after inviting the bot(the username of the bot you had given while creating the app) to the channel. Invite the bot by sending `@YOUR_BOT_DEFAULT_USERNAME` message in the slack channel. The slack will ask if you want to invite this bot to the channel. Click on **Invite to Channel**. 
+
+
 #### How do I work?
 
 The `/analysis` folder contains data files for the project. The `sentences.csv` contains the base training dataset which is used to classify the user's input into three classes - *Statement*, *Question*, and *Chat*. Going through some examples would clarify the difference between statement and chat. The `featuresDump.csv` is the result of text pre-processing done using the code in `features.py` and `featuresDump.py`.
