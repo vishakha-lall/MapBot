@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script>
+        $(function() {
+            $("form").on('submit', function(event) {
+                var usrText = $('#usrInput').val();
+                var rownode = document.createElement('div');
+                rownode.setAttribute('class', 'row justify-content-md-center');
+                var usernode = document.createElement("div");
+                usernode.setAttribute('class', 'col shadow-sm p-3 mb-1 text-left text-break');
+                usernode.innerText = usrText;
+                rownode.appendChild(usernode);
+                $.ajax({
+                        data: {
+                            usrInput: $('#usrInput').val(),
+                        },
+                        type: 'POST',
+                        url: '/process',
+                        beforeSend: function() {
+                            $("#loading-spinner").show();
+                        },
+                        success: function(data) {
+                            $("#loading-spinner").hide();
+                        }
+                    })
+                    .done(function(data) {
+
+                        if (data.error) {
+                            $('#errorAlert').text(data.error).show();
+                            $('#successAlert').hide();
+                        } else {
+                            $('#successAlert').text(data.botText).show();
+                            $('#errorAlert').hide();
+                            var botnode = document.createElement("div");
+                            botnode.setAttribute('class', 'col shadow-sm p-3 mb-1 text-right text-break');
+                            botnode.innerText = data.botText;
+                            rownode.appendChild(botnode);
+                            document.getElementById("chats").appendChild(rownode);
+                            $("#usrInput").val("");
+                        }
+                    });
+                document
+                    .getElementById("usrInput")
+                    .scrollIntoView({
+                        block: "start",
+                        behavior: "smooth"
+                    });
+                event.preventDefault();
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-default sticky-top">
+        <div class="container sticky-top">
+            <nav class="navbar navbar-light">
+                <span class="shadow p-3 bg-white rounded h2">You</span>
+            </nav>
+            <nav class="navbar navbar-light navbar-right">
+                <span class="shadow p-3 bg-white rounded h2">Bot</span>
+            </nav>
+        </div>
+    </nav>
+    <br>
+    <div class="container" id="chats"></div>
+    <br>
+    <div class="container" style="display:none" id="loading-spinner">
+        <div class="d-flex align-items-center">
+            <strong>Processing...</strong>
+            <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+    </div>
+    <div class="container">
+        <form class="form-inline">
+            <div class="form-group">
+                <label class="sr-only" for="usrInput">Question</label>
+                <input type="text" class="form-control" id="usrInput" placeholder="Ask Me Something">
+                <button type="submit" class="btn btn-default">Submit</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
