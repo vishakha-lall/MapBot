@@ -103,9 +103,7 @@ Check out all related information [here](GSSoC.md)
 - Find your bot on Telegram using `@bot_username` that you chose, and send the first text to your new bot. Nothing is supposed to happen for now. No worries.
 - Install dependencies from `requirements.txt` file. Run `pip install -r requirements.txt`
 - You're all set up, run the `telegram.py` file. `python telegram.py` and converse with your bot in real time.
-- It is recommended that you set this project up in a virtual environment to keep the dependencies separated and for easier debugging. Here's how you can do that -
-    1. [Python](https://realpython.com/python-virtual-environments-a-primer/#why-the-need-for-virtual-environments)
-    2. [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
+
 ------
 
 #### How to set me up on Slack?
