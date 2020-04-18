@@ -35,21 +35,23 @@ def chat(user_input):
 
 @app.route("/", methods=["GET", "POST"])
 def receive_message():
-    if request.method == 'GET':
+    if request.method == "GET":
         token_sent = request.args.get("hub.verify_token")
         return verify_fb_token(token_sent)
 
     # POST request
     else:
         output = request.get_json()
-        for event in output['entry']:
-            messaging = event['messaging']
+        for event in output["entry"]:
+            messaging = event["messaging"]
             for message in messaging:
-                if message.get('message'):
-                    recipient_id = message['sender']['id']
-                    text = message['message'].get('text')
+                if message.get("message"):
+                    recipient_id = message["sender"]["id"]
+                    text = message["message"].get("text")
                     if text:
-                        chatbot_response = requests.get(f"http://localhost:5000/chatbot/{text}").json()
+                        chatbot_response = requests.get(
+                            f"http://localhost:5000/chatbot/{text}"
+                        ).json()
                         response = chatbot_response[0]["message"][0]
                         fb_bot.send_text_message(recipient_id, response)
 
@@ -59,7 +61,7 @@ def receive_message():
 def verify_fb_token(token_sent):
     if token_sent == VERIFY_TOKEN:
         return request.args.get("hub.challenge")
-    return 'Invalid verification token'
+    return "Invalid verification token"
 
 
 @app.route("/begin_auth", methods=["GET"])
