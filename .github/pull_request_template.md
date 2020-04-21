@@ -12,6 +12,7 @@ Fixes #    <!-- Add the issue number that is fixed by this PR -->
 <!-- Use '[x]' to indicate checked box in the list below -->
 ## Checklist:
 
+- [ ] Read the contributing guidelines
 - [ ] All coding conventions are followed
 - [ ] Style guidelines for this project have been followed
 - [ ] 4 space indentation is used
