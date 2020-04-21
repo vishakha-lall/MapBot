@@ -143,7 +143,7 @@ def message_to_bot(H, clf, learn_response):
         B, learn_response = databaseconnect.learn_question_response(H)
     if (
         len(proper_nouns) >= 2
-        or (len(proper_nouns) >= 1 and H.split(" ", 1)[0] == "Where")
+        or (len(proper_nouns) >= 1 and H.split(" ", 1)[0] in ["Where", "What"])
     ) and len(subj) != 0:
         if subj[0] == "distance":
             if len(proper_nouns) == 2:
@@ -161,5 +161,8 @@ def message_to_bot(H, clf, learn_response):
             location = proper_nouns.pop()
             if subj[0] == "geocoding" or subj[0] == location:
                 B = googleMapsApiModule.geocoding(location)
+                learn_response = LearnResponse.MESSAGE.name
+            elif subj[0] in ["elevation", "height", "depth"]:
+                B = googleMapsApiModule.elevation(location)
                 learn_response = LearnResponse.MESSAGE.name
     return B, learn_response
