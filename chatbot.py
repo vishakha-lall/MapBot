@@ -188,11 +188,20 @@ def message_to_bot(H, clf, learn_response):
                 )
             B = googleMapsApiModule.elevation(location)
             learn_response = LearnResponse.MESSAGE.name
-        if any(sub in ["time", "timezone"] for sub in subj) or ("timezone" in adj):
+        if any(sub in ["timezone"] for sub in subj) or ("timezone" in adj):
             if compound_NNP:
                 location = " ".join(
                     word for word in nltk.word_tokenize(H) if word in compound_NNP
                 )
-            B = googleMapsApiModule.timezone(location)
+            timezone_name, time_in_tz = googleMapsApiModule.timezone(location)
+            B = timezone_name
+            learn_response = LearnResponse.MESSAGE.name
+        if any(sub in ["time"] for sub in subj):
+            if compound_NNP:
+                location = " ".join(
+                    word for word in nltk.word_tokenize(H) if word in compound_NNP
+                )
+            timezone_name, time_in_tz = googleMapsApiModule.timezone(location)
+            B = time_in_tz
             learn_response = LearnResponse.MESSAGE.name
     return B, learn_response

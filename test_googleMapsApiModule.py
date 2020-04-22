@@ -74,10 +74,10 @@ class TestClass:
     @pytest.mark.skipif(googleMapsApiModule.gmaps is None, reason="No API key provided")
     def test_timezone_with_valid_input(self):
         result = googleMapsApiModule.timezone("ohio")
-        assert result == "America/New_York"
+        assert result[0] == "America/New_York"
 
     @pytest.mark.skipif(googleMapsApiModule.gmaps is None, reason="No API key provided")
     def test_timezone_with_invalid_input(self):
         with pytest.raises(IndexError):
             result = googleMapsApiModule.timezone("feggergw")
-            assert result == "America/New_York"
+            assert result[0] == "America/New_York"
