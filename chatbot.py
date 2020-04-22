@@ -81,6 +81,7 @@ def message_to_bot(H, clf, learn_response):
     obj = set()
     verb = set()
     adj = set()
+    proper_nouns = set()
     compound_NNP = set()
     triples, root = utilities.parse_sentence(H)
     triples = list(triples)
@@ -89,6 +90,12 @@ def message_to_bot(H, clf, learn_response):
             verb.add(t[0][0])
         if t[0][1][:2] == "JJ":
             adj.add(t[0][0])
+        if t[2][1][:2] == "JJ":
+            adj.add(t[0][0])
+        if t[0][1] == "NNP":
+            proper_nouns.add(t[0][0])
+        if t[2][1] == "NNP":
+            proper_nouns.add(t[2][0])
         relation = t[1]
         if relation[-4:] == "subj":
             subj.add(t[2][0])
@@ -123,13 +130,8 @@ def message_to_bot(H, clf, learn_response):
     obj = list(obj)
     verb = list(verb)
     adj = list(adj)
-    proper_nouns = set()
-    for t in triples:
-        if t[0][1] == "NNP":
-            proper_nouns.add(t[0][0])
-        if t[2][1] == "NNP":
-            proper_nouns.add(t[2][0])
     proper_nouns == list(proper_nouns)
+    compound_NNP = list(compound_NNP)
     logging.debug("\t" + "Proper Nouns: " + str(proper_nouns))
     logging.debug("\t" + "Compound Proper Nouns: " + str(compound_NNP))
     # classification
@@ -156,11 +158,11 @@ def message_to_bot(H, clf, learn_response):
             B = "Oops! I'm not trained for this yet."
     else:
         B, learn_response = databaseconnect.learn_question_response(H)
-    if (
-        len(proper_nouns) >= 2
-        or (len(proper_nouns) >= 1 and H.split(" ", 1)[0] in ["Where", "What", "How"])
-    ) and len(subj) != 0:
-        if subj[0] == "distance":
+    if len(proper_nouns) >= 2 or (
+        len(proper_nouns) >= 1
+        and H.split(" ", 1)[0] in ["Where", "What", "How", "Which"]
+    ):
+        if len(subj) != 0 and subj[0] == "distance":
             if len(proper_nouns) == 2:
                 location_dict["origin"] = proper_nouns.pop()
                 location_dict["destination"] = proper_nouns.pop()
@@ -174,16 +176,23 @@ def message_to_bot(H, clf, learn_response):
                 learn_response = LearnResponse.ORIGIN.name
         if len(proper_nouns) == 1:
             location = proper_nouns.pop()
-            if subj[0] == "geocoding" or subj[0] == location:
+            if len(subj) != 0 and (subj[0] == "geocoding" or subj[0] == location):
                 B = googleMapsApiModule.geocoding(location)
                 learn_response = LearnResponse.MESSAGE.name
-        if (len(subj) != 0 and subj[0] in ["elevation", "height", "depth"]) or (
-            len(adj) != 0 and adj[0] in ["high"]
+        if any(sub in ["elevation", "height", "depth"] for sub in subj) or (
+            "high" in adj
         ):
             if compound_NNP:
                 location = " ".join(
                     word for word in nltk.word_tokenize(H) if word in compound_NNP
                 )
             B = googleMapsApiModule.elevation(location)
+            learn_response = LearnResponse.MESSAGE.name
+        if any(sub in ["time", "timezone"] for sub in subj) or ("timezone" in adj):
+            if compound_NNP:
+                location = " ".join(
+                    word for word in nltk.word_tokenize(H) if word in compound_NNP
+                )
+            B = googleMapsApiModule.timezone(location)
             learn_response = LearnResponse.MESSAGE.name
     return B, learn_response
