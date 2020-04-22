@@ -48,7 +48,7 @@ class TestClass:
     @pytest.mark.skipif(googleMapsApiModule.gmaps is None, reason="No API key provided")
     def test_elevation_with_valid_input(self):
         result = googleMapsApiModule.elevation("moscow")
-        assert type(result) is float
+        assert result.endswith("metres")
 
     @pytest.mark.skipif(googleMapsApiModule.gmaps is None, reason="No API key provided")
     def test_elevation_with_invalid_input(self):

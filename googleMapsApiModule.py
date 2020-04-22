@@ -89,7 +89,7 @@ def elevation(search_location):
     logging.debug(
         f"{search_location} is {round(result_value,2)} metres {position} sea level"
     )
-    return result_value
+    return str(result_value) + " metres"
 
 
 @logger_config.logger
