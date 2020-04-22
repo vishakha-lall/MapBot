@@ -19,6 +19,8 @@ slack_client_id = os.getenv("SLACK_CLIENT_ID")
 slack_client_secret = os.getenv("SLACK_CLIENT_SECRET")
 slack_oauth_scope = os.getenv("SLACK_OAUTH_SCOPE")
 slack_bot_token = os.getenv("SLACK_BOT_TOKEN")
+fb_access_token = os.getenv("ACCESS_TOKEN")
+fb_verify_token = os.getenv("VERIFY_TOKEN")
 
 # your_path_to_stanford-corenlp-x.x.x.jar
 stanford_path_to_jar = os.getenv("STANFORD_PATH_TO_JAR")

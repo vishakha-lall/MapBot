@@ -171,6 +171,35 @@ Check out all related information [here](GSSoC.md)
 
 ------
 
+<details>
+<summary><strong>How to set me up on Facebook Messenger?</strong></summary>
+<br>
+
+- Clone the repository
+- Create the **mapbot** database in mySQL
+  -  `mysql -uroot -p -hlocalhost`
+  - Enter root password when prompted
+  - `create database mapbot;`
+  - Verify creation of the database `show databases;`
+- Unzip the StanfordCoreNLP package in the repository and keep the file paths `stanford-corenlp-x.x.x.jar` and `stanford-corenlp-x.x.x-models.jar` handy.
+- Run `git update-index --assume-unchanged ENV/.env`
+- Fill the existing template in `ENV/.env` with the corresponding values following the `KEY=VALUE` format
+- Create Facebook app from [here](https://developers.facebook.com/). Fill out basic information.
+- Set Up **Messenger** option under Add a Product.
+- Generate the **Access Token** by creating a facebook page for your bot by clicking on **Create New Page** button.
+- Click on **Add or Remove Pages** and add your facebook page just created.
+- Click on **Generate Token** and copy the token to the `ENV/.env` file as `ACCESS_TOKEN=<YOUR_ACCESS_TOKEN>`.
+- Install [ngrok](https://gist.github.com/jwebcat/ecaac7bc7ee26e01cd4a).
+- Open a terminal window, type `ngrok http 5000`. Once you do this, a screen will appear with a link after the  “Forwarding” section — make sure to copy the link that begins with “https”.
+- Click on **Add Callback URL** under **Webhooks** section. Paste the above link in the **Callback URL**. Add **Verify Token** of your choice. Copy Verify Token you added in the `ENV/.env` file as `VERIFY_TOKEN=YOUR_VERIFY_TOKEN`. Hit **Verify and Save**
+- Click on **Add Subscriptions**. Check **messages, messaging_postbacks, message_deliveries, messaging_pre_checkouts** boxes.
+- Run `python app.py`
+- You can interact with bot on Facebook Messenger.
+
+</details>
+
+------
+
 ### How do I work?
 
 The `/analysis` folder contains data files for the project. The `sentences.csv` contains the base training dataset which is used to classify the user's input into three classes - *Statement*, *Question*, and *Chat*. Going through some examples would clarify the difference between statement and chat. The `featuresDump.csv` is the result of text pre-processing done using the code in `features.py` and `featuresDump.py`.

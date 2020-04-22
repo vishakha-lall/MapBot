@@ -11,3 +11,5 @@ black==19.10b0
 slackclient==2.5.0
 xgboost==1.0.0
 Flask==1.1.2
+pymessenger==0.0.7.0
+
