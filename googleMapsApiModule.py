@@ -40,7 +40,15 @@ def timezone(search_location):
     )
     logging.debug(f"Latitude: {latlng[0]} Longitude: {latlng[1]}")
     timezone = gmaps.timezone(latlng)
-    return timezone["timeZoneId"]
+    timeZoneId = timezone["timeZoneId"]
+    import pytz
+
+    tz_obj = pytz.timezone(timeZoneId)
+    current_time = pytz.datetime.datetime.now(tz=tz_obj)
+    time_in_timezone = pytz.datetime.datetime.strftime(
+        current_time, "%a, %d %b %Y %H:%M:%S %Z"
+    )
+    return timeZoneId, time_in_timezone
 
 
 @logger_config.logger
