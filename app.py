@@ -1,13 +1,22 @@
 from flask import Flask, jsonify, request
 from chatbot import message_to_bot, setup
 from config import slack_client_id, slack_client_secret
+from config import fb_access_token, fb_verify_token
+from pymessenger.bot import Bot
 import certifi
 import ssl
 import slack
+import requests
 
+# SLACK BOT
 CLIENT_ID = slack_client_id
 CLIENT_SECRET = slack_client_secret
 
+# FB MESSENGER BOT
+ACCESS_TOKEN = fb_access_token
+VERIFY_TOKEN = fb_verify_token
+
+fb_bot = Bot(ACCESS_TOKEN)
 
 app = Flask(__name__)
 ssl_context = ssl.create_default_context(cafile=certifi.where())
@@ -22,6 +31,37 @@ def chat(user_input):
         return jsonify({"message": ("Unable to get response", learn_response)}, 500)
 
     return jsonify({"message": response}, 200)
+
+
+@app.route("/", methods=["GET", "POST"])
+def receive_message():
+    if request.method == "GET":
+        token_sent = request.args.get("hub.verify_token")
+        return verify_fb_token(token_sent)
+
+    # POST request
+    else:
+        output = request.get_json()
+        for event in output["entry"]:
+            messaging = event["messaging"]
+            for message in messaging:
+                if message.get("message"):
+                    recipient_id = message["sender"]["id"]
+                    text = message["message"].get("text")
+                    if text:
+                        chatbot_response = requests.get(
+                            f"http://localhost:5000/chatbot/{text}"
+                        ).json()
+                        response = chatbot_response[0]["message"][0]
+                        fb_bot.send_text_message(recipient_id, response)
+
+    return "Message Processed"
+
+
+def verify_fb_token(token_sent):
+    if token_sent == VERIFY_TOKEN:
+        return request.args.get("hub.challenge")
+    return "Invalid verification token"
 
 
 @app.route("/begin_auth", methods=["GET"])

@@ -7,6 +7,7 @@ import logger_config
 from joblib import dump, load
 import time
 from pathlib import Path
+import nltk
 
 location_dict = {"origin": "null", "destination": "null"}
 
@@ -79,14 +80,29 @@ def message_to_bot(H, clf, learn_response):
     subj = set()
     obj = set()
     verb = set()
+    adj = set()
+    proper_nouns = set()
+    compound_NNP = set()
     triples, root = utilities.parse_sentence(H)
     triples = list(triples)
     for t in triples:
         if t[0][1][:2] == "VB":
             verb.add(t[0][0])
+        if t[0][1][:2] == "JJ":
+            adj.add(t[0][0])
+        if t[2][1][:2] == "JJ":
+            adj.add(t[0][0])
+        if t[0][1] == "NNP":
+            proper_nouns.add(t[0][0])
+        if t[2][1] == "NNP":
+            proper_nouns.add(t[2][0])
         relation = t[1]
         if relation[-4:] == "subj":
             subj.add(t[2][0])
+        if relation[-8:] == "compound":
+            if t[2][1] == "NNP" and t[0][1] == "NNP":
+                compound_NNP.add(t[0][0])
+                compound_NNP.add(t[2][0])
         if relation[-3:] == "obj":
             obj.add(t[2][0])
     logging.debug(
@@ -104,19 +120,20 @@ def message_to_bot(H, clf, learn_response):
         + "\n"
         + "\t"
         + "Verb: "
-        + str(verb)
+        + str(adj)
+        + "\n"
+        + "\t"
+        + "Adjective: "
+        + str(adj)
     )
     subj = list(subj)
     obj = list(obj)
     verb = list(verb)
-    proper_nouns = set()
-    for t in triples:
-        if t[0][1] == "NNP":
-            proper_nouns.add(t[0][0])
-        if t[2][1] == "NNP":
-            proper_nouns.add(t[2][0])
+    adj = list(adj)
     proper_nouns == list(proper_nouns)
+    compound_NNP = list(compound_NNP)
     logging.debug("\t" + "Proper Nouns: " + str(proper_nouns))
+    logging.debug("\t" + "Compound Proper Nouns: " + str(compound_NNP))
     # classification
     classification = utilities.classify_sentence(clf, H)
     # logging.debug(classification)
@@ -141,11 +158,11 @@ def message_to_bot(H, clf, learn_response):
             B = "Oops! I'm not trained for this yet."
     else:
         B, learn_response = databaseconnect.learn_question_response(H)
-    if (
-        len(proper_nouns) >= 2
-        or (len(proper_nouns) >= 1 and H.split(" ", 1)[0] == "Where")
-    ) and len(subj) != 0:
-        if subj[0] == "distance":
+    if len(proper_nouns) >= 2 or (
+        len(proper_nouns) >= 1
+        and H.split(" ", 1)[0] in ["Where", "What", "How", "Which"]
+    ):
+        if len(subj) != 0 and subj[0] == "distance":
             if len(proper_nouns) == 2:
                 location_dict["origin"] = proper_nouns.pop()
                 location_dict["destination"] = proper_nouns.pop()
@@ -159,7 +176,32 @@ def message_to_bot(H, clf, learn_response):
                 learn_response = LearnResponse.ORIGIN.name
         if len(proper_nouns) == 1:
             location = proper_nouns.pop()
-            if subj[0] == "geocoding" or subj[0] == location:
+            if len(subj) != 0 and (subj[0] == "geocoding" or subj[0] == location):
                 B = googleMapsApiModule.geocoding(location)
                 learn_response = LearnResponse.MESSAGE.name
+        if any(sub in ["elevation", "height", "depth"] for sub in subj) or (
+            "high" in adj
+        ):
+            if compound_NNP:
+                location = " ".join(
+                    word for word in nltk.word_tokenize(H) if word in compound_NNP
+                )
+            B = googleMapsApiModule.elevation(location)
+            learn_response = LearnResponse.MESSAGE.name
+        if any(sub in ["timezone"] for sub in subj) or ("timezone" in adj):
+            if compound_NNP:
+                location = " ".join(
+                    word for word in nltk.word_tokenize(H) if word in compound_NNP
+                )
+            timezone_name, time_in_tz = googleMapsApiModule.timezone(location)
+            B = timezone_name
+            learn_response = LearnResponse.MESSAGE.name
+        if any(sub in ["time"] for sub in subj):
+            if compound_NNP:
+                location = " ".join(
+                    word for word in nltk.word_tokenize(H) if word in compound_NNP
+                )
+            timezone_name, time_in_tz = googleMapsApiModule.timezone(location)
+            B = time_in_tz
+            learn_response = LearnResponse.MESSAGE.name
     return B, learn_response

@@ -1,38 +1,46 @@
-#----------linux 16.04------------ 
-  language: python
-  os: linux
-  dist: xenial
-  python:
-    - 3.6
-  cache: pip
-  services:
-    - mysql
-  before_install:
-    - mysql -e 'CREATE DATABASE IF NOT EXISTS pytest_testdb;'
-    
-  jobs:
-    include:
-   #---------osx---------------
-      - name: "Python 3.6.5 on macOS 10.14"
-        os: osx
-        osx_image: xcode11.3
-        addons:
-          homebrew:
-            packages:
-              - mysql
-            update: true
-        language: shell #python language gives an error on TravisCI MacOS
-        cache: pip3
-        before_install:
-          - mysql.server start
-          #- mysql -uroot
-          - mysql -uroot -e 'create database pytest_testdb;'
-          #- mysql -e 'CREATE DATABASE IF NOT EXISTS pytest_testdb;'
-        install: 
-          - pip3 install -r requirements.txt
-        before_script:
-          - black --check .
-        script:
-          - flake8 . --count --select=E101,E722,E9,F4,F63,F7,F82,W191 --show-source --statistics
-          - flake8 . --count --exit-zero --max-line-length=127 --statistics
-          - pytest -v
+jobs:
+  include:
+    #---------linux---------
+    - name: "Python 3.6.5 on Linux"
+      language: python
+      os: linux
+      dist: xenial
+      python:
+        - 3.6
+      cache: pip
+      services:
+        - mysql
+      before_install:
+        - mysql -e 'CREATE DATABASE IF NOT EXISTS pytest_testdb;'
+      install: 
+        - pip3 install -r requirements.txt
+      before_script:
+        - black --check .
+      script:
+        - flake8 . --count --select=E101,E722,E9,F4,F63,F7,F82,W191 --show-source --statistics
+        - flake8 . --count --exit-zero --max-line-length=127 --statistics
+        - pytest -v
+ #---------osx---------------
+    - name: "Python 3.6.5 on macOS 10.14"
+      os: osx
+      osx_image: xcode11.3
+      addons:
+        homebrew:
+          packages:
+            - mysql
+          update: true
+      language: shell #python language gives an error on TravisCI MacOS
+      cache: pip3
+      before_install:
+        - mysql.server start
+        #- mysql -uroot
+        - mysql -uroot -e 'create database pytest_testdb;'
+        #- mysql -e 'CREATE DATABASE IF NOT EXISTS pytest_testdb;'
+      install: 
+        - pip3 install -r requirements.txt
+      before_script:
+        - black --check .
+      script:
+        - flake8 . --count --select=E101,E722,E9,F4,F63,F7,F82,W191 --show-source --statistics
+        - flake8 . --count --exit-zero --max-line-length=127 --statistics
+        - pytest -v
