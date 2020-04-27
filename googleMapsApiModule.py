@@ -103,22 +103,18 @@ def elevation(search_location):
 @logger_config.logger
 def places(search_location):
     locations = gmaps.places(search_location)
-    logging.debug("Address:" + locations["results"][0]["formatted_address"])
-    first_place_id = locations["results"][0]["place_id"]
-    details = gmaps.place(first_place_id)
-    logging.debug("Rating:" + str(details["result"]["rating"]))
-    logging.debug("Phone:" + details["result"]["formatted_phone_number"])
-    first_photo_url = (
-        BASE_URL["places"]
-        + "/photo"
-        + "?"
-        + urllib.parse.urlencode(
-            {
-                "maxwidth": 400,
-                "photoreference": details["result"]["photos"][0]["photo_reference"],
-                "key": config.key,
-            }
-        )
-    )
-    logging.debug(first_photo_url)
-    return first_place_id
+    N = 3
+    place_details = {}
+    try:
+        filtered_locations = sorted(
+            locations["results"],
+            key=lambda loc: (loc["user_ratings_total"], loc["rating"]),
+            reverse=True,
+        )[:N]
+    except Exception:
+        filtered_locations = locations["results"]
+    logging.debug(filtered_locations)
+    first_N_places = {res["name"]: res["place_id"] for res in filtered_locations}
+    for name, place_id in first_N_places.items():
+        place_details[name] = gmaps.place(place_id)["result"]["url"]
+    return place_details
