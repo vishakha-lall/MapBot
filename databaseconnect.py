@@ -139,7 +139,10 @@ def get_chat_response():
     chat_id = random.randint(1, total_chat_records)
     cur.execute("SELECT sentence FROM chat_table WHERE id = %s", (str(chat_id),))
     res = cur.fetchone()
-    B = res[0]
+    try:
+        B = res[0]
+    except Exception:
+        B = "Hello, I'm MapBot! \U0001F44B"
     return B
 
 

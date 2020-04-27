@@ -130,7 +130,7 @@ def message_to_bot(H, clf, learn_response):
     obj = list(obj)
     verb = list(verb)
     adj = list(adj)
-    proper_nouns == list(proper_nouns)
+    proper_nouns = list(proper_nouns)
     compound_NNP = list(compound_NNP)
     logging.debug("\t" + "Proper Nouns: " + str(proper_nouns))
     logging.debug("\t" + "Compound Proper Nouns: " + str(compound_NNP))
@@ -158,49 +158,40 @@ def message_to_bot(H, clf, learn_response):
             B = "Oops! I'm not trained for this yet."
     else:
         B, learn_response = databaseconnect.learn_question_response(H)
-    if len(proper_nouns) >= 2 or (
-        len(proper_nouns) >= 1
-        and H.split(" ", 1)[0] in ["Where", "What", "How", "Which"]
-    ):
-        if len(subj) != 0 and subj[0] == "distance":
-            if len(proper_nouns) == 2:
-                location_dict["origin"] = proper_nouns.pop()
-                location_dict["destination"] = proper_nouns.pop()
-                origin, destination = (
-                    location_dict["origin"],
-                    location_dict["destination"],
-                )
-                B = googleMapsApiModule.direction(origin, destination)
-            else:
-                B = "I didn't get that. Can you please give me the origin location?"
-                learn_response = LearnResponse.ORIGIN.name
+
+    if any(sub in ["distance"] for sub in subj):
+        if len(proper_nouns) == 2:
+            location_dict["origin"] = proper_nouns.pop(0)
+            location_dict["destination"] = proper_nouns.pop(0)
+            origin, destination = (
+                location_dict["origin"],
+                location_dict["destination"],
+            )
+            B = googleMapsApiModule.direction(origin, destination)
+        else:
+            B = "I didn't get that. Can you please give me the origin location?"
+            learn_response = LearnResponse.ORIGIN.name
+    else:
         if len(proper_nouns) == 1:
-            location = proper_nouns.pop()
-            if len(subj) != 0 and (subj[0] == "geocoding" or subj[0] == location):
-                B = googleMapsApiModule.geocoding(location)
-                learn_response = LearnResponse.MESSAGE.name
+            location = proper_nouns.pop(0)
+        elif compound_NNP:
+            location = " ".join(
+                word for word in nltk.word_tokenize(H) if word in compound_NNP
+            )
+
+        if any(sub in ["geocoding", *location.split()] for sub in subj) or root == "is":
+            B = googleMapsApiModule.geocoding(location)
+            learn_response = LearnResponse.MESSAGE.name
         if any(sub in ["elevation", "height", "depth"] for sub in subj) or (
             "high" in adj
         ):
-            if compound_NNP:
-                location = " ".join(
-                    word for word in nltk.word_tokenize(H) if word in compound_NNP
-                )
             B = googleMapsApiModule.elevation(location)
             learn_response = LearnResponse.MESSAGE.name
         if any(sub in ["timezone"] for sub in subj) or ("timezone" in adj):
-            if compound_NNP:
-                location = " ".join(
-                    word for word in nltk.word_tokenize(H) if word in compound_NNP
-                )
             timezone_name, time_in_tz = googleMapsApiModule.timezone(location)
             B = timezone_name
             learn_response = LearnResponse.MESSAGE.name
         if any(sub in ["time"] for sub in subj):
-            if compound_NNP:
-                location = " ".join(
-                    word for word in nltk.word_tokenize(H) if word in compound_NNP
-                )
             timezone_name, time_in_tz = googleMapsApiModule.timezone(location)
             B = time_in_tz
             learn_response = LearnResponse.MESSAGE.name
