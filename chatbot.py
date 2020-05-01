@@ -81,32 +81,38 @@ def message_to_bot(H, clf, learn_response):
     obj = set()
     verb = set()
     adj = set()
+    noun = set()
     proper_nouns = set()
     compound_NNP = set()
     triples, root = utilities.parse_sentence(H)
     triples = list(triples)
     for t in triples:
-        if t[0][1][:2] == "VB":
+        if "VB" in t[0][1]:
             verb.add(t[0][0])
-        if t[0][1][:2] == "JJ":
+        if "JJ" in t[0][1]:
             adj.add(t[0][0])
-        if t[2][1][:2] == "JJ":
+        if "JJ" in t[2][1]:
             adj.add(t[0][0])
+        if "NN" in t[0][1]:
+            noun.add(t[0][0])
+        if "NN" in t[2][1]:
+            noun.add(t[0][0])
         if t[0][1] == "NNP":
             proper_nouns.add(t[0][0])
         if t[2][1] == "NNP":
             proper_nouns.add(t[2][0])
         relation = t[1]
-        if relation[-4:] == "subj":
+        if "subj" in relation:
             subj.add(t[2][0])
-        if relation[-8:] == "compound":
+        if "compound" in relation:
             if t[2][1] == "NNP" and t[0][1] == "NNP":
                 compound_NNP.add(t[0][0])
                 compound_NNP.add(t[2][0])
-        if relation[-3:] == "obj":
+        if "obj" in relation:
             obj.add(t[2][0])
     logging.debug(
-        "\t"
+        "\n"
+        + "\t"
         + "Subject: "
         + str(subj)
         + "\n"
@@ -120,20 +126,32 @@ def message_to_bot(H, clf, learn_response):
         + "\n"
         + "\t"
         + "Verb: "
-        + str(adj)
+        + str(verb)
         + "\n"
         + "\t"
         + "Adjective: "
         + str(adj)
+        + "\n"
+        + "\t"
+        + "Noun: "
+        + str(noun)
+        + "\n"
+        + "\t"
+        + "Proper Noun: "
+        + str(proper_nouns)
+        + "\n"
+        + "\t"
+        + "Compound Proper Noun: "
+        + str(compound_NNP)
     )
     subj = list(subj)
     obj = list(obj)
     verb = list(verb)
     adj = list(adj)
+    noun = list(noun)
     proper_nouns = list(proper_nouns)
     compound_NNP = list(compound_NNP)
-    logging.debug("\t" + "Proper Nouns: " + str(proper_nouns))
-    logging.debug("\t" + "Compound Proper Nouns: " + str(compound_NNP))
+
     # classification
     classification = utilities.classify_sentence(clf, H)
     # logging.debug(classification)
@@ -180,8 +198,12 @@ def message_to_bot(H, clf, learn_response):
             )
 
         if any(sub in ["geocoding", *location.split()] for sub in subj) or root == "is":
-            B = googleMapsApiModule.geocoding(location)
-            learn_response = LearnResponse.MESSAGE.name
+            if "map" in noun:
+                B = googleMapsApiModule.mapsstatic(location)
+                learn_response = LearnResponse.MESSAGE.name
+            else:
+                B = googleMapsApiModule.geocoding(location)
+                learn_response = LearnResponse.MESSAGE.name
         if any(sub in ["elevation", "height", "depth"] for sub in subj) or (
             "high" in adj
         ):
@@ -194,5 +216,8 @@ def message_to_bot(H, clf, learn_response):
         if any(sub in ["time"] for sub in subj):
             timezone_name, time_in_tz = googleMapsApiModule.timezone(location)
             B = time_in_tz
+            learn_response = LearnResponse.MESSAGE.name
+        if any(nn in ["map"] for nn in noun):
+            B = googleMapsApiModule.mapsstatic(location)
             learn_response = LearnResponse.MESSAGE.name
     return B, learn_response
