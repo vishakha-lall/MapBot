@@ -54,22 +54,19 @@ class TestClass:
     def test_elevation_with_invalid_input(self):
         with pytest.raises(IndexError):
             result = googleMapsApiModule.elevation("hihih")
-            assert type(result) is float
+            assert type(result) is str
 
     @pytest.mark.skipif(googleMapsApiModule.gmaps is None, reason="No API key provided")
     def test_places_with_valid_input(self):
         result = googleMapsApiModule.places("princeton university")
-        assert result == "ChIJ6baYzdjmw4kRTwKQ-tZ-ugI"
+        assert result == {
+            "Princeton University": "https://maps.google.com/?cid=196608995535880783"
+        }
 
     @pytest.mark.skipif(googleMapsApiModule.gmaps is None, reason="No API key provided")
     def test_places_with_invalid_input(self):
-        with pytest.raises(IndexError):
-            result = googleMapsApiModule.places("esffsf")
-            assert (
-                result
-                == "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=CmRaAAAA8o1VGVvds8zkqh745Pa6t2KcBbMA&key="  # noqa: E501
-                + config.key
-            )
+        result = googleMapsApiModule.places("esffsf")
+        assert result == {}
 
     @pytest.mark.skipif(googleMapsApiModule.gmaps is None, reason="No API key provided")
     def test_timezone_with_valid_input(self):
