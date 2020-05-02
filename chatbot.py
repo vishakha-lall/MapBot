@@ -177,6 +177,7 @@ def message_to_bot(H, clf, learn_response):
     else:
         B, learn_response = databaseconnect.learn_question_response(H)
 
+    classf_B, classf_learn_response = B, learn_response
     if any(sub in ["distance"] for sub in subj):
         if len(proper_nouns) == 2:
             location_dict["origin"] = proper_nouns.pop(0)
@@ -196,28 +197,47 @@ def message_to_bot(H, clf, learn_response):
             location = " ".join(
                 word for word in nltk.word_tokenize(H) if word in compound_NNP
             )
+        elif len(proper_nouns) == 0:
+            location = ""
 
+        API_RESPONSE = False
         if any(sub in ["geocoding", *location.split()] for sub in subj) or root == "is":
             if "map" in noun:
                 B = googleMapsApiModule.mapsstatic(location)
                 learn_response = LearnResponse.MESSAGE.name
+                API_RESPONSE = True
             else:
                 B = googleMapsApiModule.geocoding(location)
                 learn_response = LearnResponse.MESSAGE.name
+                API_RESPONSE = True
         if any(sub in ["elevation", "height", "depth"] for sub in subj) or (
             "high" in adj
         ):
             B = googleMapsApiModule.elevation(location)
             learn_response = LearnResponse.MESSAGE.name
+            API_RESPONSE = True
         if any(sub in ["timezone"] for sub in subj) or ("timezone" in adj):
             timezone_name, time_in_tz = googleMapsApiModule.timezone(location)
             B = timezone_name
             learn_response = LearnResponse.MESSAGE.name
+            API_RESPONSE = True
         if any(sub in ["time"] for sub in subj):
             timezone_name, time_in_tz = googleMapsApiModule.timezone(location)
             B = time_in_tz
             learn_response = LearnResponse.MESSAGE.name
+            API_RESPONSE = True
         if any(nn in ["map"] for nn in noun):
             B = googleMapsApiModule.mapsstatic(location)
             learn_response = LearnResponse.MESSAGE.name
+            API_RESPONSE = True
+        if not API_RESPONSE:
+            try:
+                N_places = googleMapsApiModule.places(H)
+                B = "\n".join(f"{name}: {link}" for name, link in N_places.items())
+                if B == "":
+                    B, learn_response = classf_B, classf_learn_response
+            except Exception:
+                B, learn_response = classf_B, classf_learn_response
+            else:
+                learn_response = LearnResponse.MESSAGE.name
     return B, learn_response
