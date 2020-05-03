@@ -50,7 +50,9 @@
   - Change any files according to errors:
     - For `psf/black` formatting errors, running `black <file_name>` on the file you are working on will automatically remove formatting errors. Refer [this site](https://black.readthedocs.io/en/stable/editor_integration.html) for editor integration of `psf/black`, to avoid performing this step each time manually.
     - For `flake8` errors, look up the error code and try to solve it. If error persists, contact the mentors / project admin.
-- Once tested locally, raise a pull request with the title `<issue_title>\_resolved` over [gssoc-master](https://github.com/vishakha-lall/MapBot/tree/gssoc-master) as the base branch. Do not raise the PR over the master branch, if the contribution is meant for `GSSoC20`.
+  - If changes are made in `chatbot.py`, it's mandatory to run `pytest test_chatbot.py -v` and post the screenshot of the results with the raised PR.
+- Testing your code locally for **logical errors** before raising a PR must be done by using `pytest -v --ignore test_chatbot.py`
+- Once tested locally with zero failed tests, raise a pull request with the title `<issue_title>\_resolved` over [gssoc-master](https://github.com/vishakha-lall/MapBot/tree/gssoc-master) as the base branch. Do not raise the PR over the master branch, if the contribution is meant for `GSSoC20`.
   - Refer to the [dummy pull request](https://github.com/vishakha-lall/MapBot/pull/12) that describes the correct procedure to raise a PR. Stick to the directions to make merging and reviewing easier and faster. Follow the PR template.
   - Refer to the issue (`Fixes #<issue_number>`)
   - Write a clear description of changes made to resolve the issue.
