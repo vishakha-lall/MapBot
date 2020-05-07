@@ -15,6 +15,13 @@ except ValueError as e:
     gmaps = None
 
 
+def _get_location(location_text):
+    """Used to preprocess the input location_text for URL encoding.
+    Doesn't do much right now. But provides a place to add such steps in future.
+    """
+    return location_text.strip().lower()
+
+
 @logger_config.logger
 def direction(origin, destination):
     result = gmaps.directions(origin, destination)
@@ -23,7 +30,7 @@ def direction(origin, destination):
         BASE_URL["direction"]
         + "&"
         + urllib.parse.urlencode(
-            {"origin": origin.lower(), "destination": destination.lower()}
+            {"origin": _get_location(origin), "destination": _get_location(destination)}
         )
     )
     logging.debug(result_url)
@@ -67,15 +74,15 @@ def geocoding(search_location):
 
 
 @logger_config.logger
-def mapsstatic(address):
+def mapsstatic(address, zoom=13, size="600x350"):
     result_url = (
         BASE_URL["mapsstatic"]
         + "?"
         + urllib.parse.urlencode(
             {
-                "center": address.lower(),
-                "zoom": 13,
-                "size": "600x350",
+                "center": _get_location(address),
+                "zoom": zoom,
+                "size": size,
                 "key": config.key,
             }
         )
