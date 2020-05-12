@@ -11,7 +11,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!-- JS Scripts -->
     <script type="text/javascript" src="static/js/user_input.js"></script>
+    <script type="text/javascript" src="static/js/sugg_button.js"></script>
 </head>
 
 <body>
@@ -38,10 +40,71 @@
         <form class="form-inline" id="form_usrInput">
             <div class="form-group">
                 <label class="sr-only" for="usrInput">Question</label>
-                <input type="text" class="form-control" id="usrInput" placeholder="Ask Me Something">
+                <input type="text" class="form-control" id="usrInput" placeholder="Ask Me Something" required>
                 <button type="submit" class="btn btn-default" id="submit_usrInput">Submit</button>
             </div>
         </form>
+    </div>
+    <br>
+    <div class="container">
+        <button type="button" class="btn btn-secondary" onclick="toggle_sugg('directions')">Directions</button>
+        <div class="container" style="display:none" id="directions" aria-hidden="true">
+            <form class="form-inline" id="form_directions">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="dir_origin" placeholder="Origin" required>
+                    <input type="text" class="form-control" id="dir_destination" placeholder="Destination" required>
+                    <button type="submit" class="btn btn-default" id="submit_directions">Submit</button>
+                </div>
+            </form>
+        </div>
+        <br>
+        <br>
+        <button type="button" class="btn btn-secondary" onclick="toggle_sugg('geocoding')">Find Place</button>
+        <div class="container" style="display:none" id="geocoding" aria-hidden="true">
+            <form class="form-inline" id="form_geocoding">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="geocoding_text" placeholder="Location Name" required>
+                    <button type="submit" class="btn btn-default" id="submit_geocoding">Submit</button>
+                </div>
+            </form>
+        </div>
+        <br>
+        <br>
+        <button type="button" class="btn btn-secondary" onclick="toggle_sugg('timezone')">Time/Timezone</button>
+        <div class="container" style="display:none" id="timezone" aria-hidden="true">
+            <form class="form-inline" id="form_timezone">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="tz_location_text" placeholder="Location Name" required>
+                    <input type="text" class="form-control" id="tz_option" placeholder="T/TZ Option (Default: T)">
+                    <button type="submit" class="btn btn-default" id="submit_timezone">Submit</button>
+                </div>
+            </form>
+        </div>
+        <br>
+        <br>
+        <button type="button" class="btn btn-secondary" onclick="toggle_sugg('elevation')">Elevation</button>
+        <div class="container" style="display:none" id="elevation" aria-hidden="true">
+            <form class="form-inline" id="form_elevation">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="elev_location_text_1" placeholder="Location 1" required>
+                    <input type="text" class="form-control" id="elev_location_text_2" placeholder="Location 2 (Default: blank)">
+                    <button type="submit" class="btn btn-default" id="submit_elevation">Submit</button>
+                </div>
+            </form>
+        </div>
+        <br>
+        <br>
+        <button type="button" class="btn btn-secondary" onclick="toggle_sugg('map')">Map</button>
+        <div class="container" style="display:none" id="map" aria-hidden="true">
+            <form class="form-inline" id="form_map">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="map_location_text" placeholder="Location Name" required>
+                    <input type="text" class="form-control" id="map_zoom" placeholder="Zoom (Default: 13)">
+                    <input type="text" class="form-control" id="map_size" placeholder="Size (Default: 600x350)">
+                    <button type="submit" class="btn btn-default" id="submit_map">Submit</button>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 
