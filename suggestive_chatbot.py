@@ -56,7 +56,7 @@ def elevation_suggestion(location_text, location_comp_text=None):
         return None
     if location_comp_text:
         try:
-            location_comp_elev = googleMapsApiModule.elevation(location_text)
+            location_comp_elev = googleMapsApiModule.elevation(location_comp_text)
         except Exception as e:
             logging.debug(e)
             return None
