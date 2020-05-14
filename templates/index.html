@@ -47,7 +47,14 @@
     </div>
     <br>
     <div class="container">
-        <button type="button" class="btn btn-secondary" onclick="toggle_sugg('directions')">Directions</button>
+        <div class="container">
+            <button type="button" class="btn btn-secondary" onclick="toggle_sugg('directions')">Directions</button>
+            <button type="button" class="btn btn-secondary" onclick="toggle_sugg('geocoding')">Find Place</button>
+            <button type="button" class="btn btn-secondary" onclick="toggle_sugg('timezone')">Time/Timezone</button>
+            <button type="button" class="btn btn-secondary" onclick="toggle_sugg('elevation')">Elevation</button>
+            <button type="button" class="btn btn-secondary" onclick="toggle_sugg('map')">Map</button>
+        </div>
+        <br>
         <div class="container" style="display:none" id="directions" aria-hidden="true">
             <form class="form-inline" id="form_directions">
                 <div class="form-group">
@@ -57,7 +64,6 @@
                 </div>
             </form>
         </div>
-        <button type="button" class="btn btn-secondary" onclick="toggle_sugg('geocoding')">Find Place</button>
         <div class="container" style="display:none" id="geocoding" aria-hidden="true">
             <form class="form-inline" id="form_geocoding">
                 <div class="form-group">
@@ -66,7 +72,6 @@
                 </div>
             </form>
         </div>
-        <button type="button" class="btn btn-secondary" onclick="toggle_sugg('timezone')">Time/Timezone</button>
         <div class="container" style="display:none" id="timezone" aria-hidden="true">
             <form class="form-inline" id="form_timezone">
                 <div class="form-group">
@@ -76,7 +81,6 @@
                 </div>
             </form>
         </div>
-        <button type="button" class="btn btn-secondary" onclick="toggle_sugg('elevation')">Elevation</button>
         <div class="container" style="display:none" id="elevation" aria-hidden="true">
             <form class="form-inline" id="form_elevation">
                 <div class="form-group">
@@ -86,7 +90,6 @@
                 </div>
             </form>
         </div>
-        <button type="button" class="btn btn-secondary" onclick="toggle_sugg('map')">Map</button>
         <div class="container" style="display:none" id="map" aria-hidden="true">
             <form class="form-inline" id="form_map">
                 <div class="form-group">
