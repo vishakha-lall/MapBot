@@ -1,6 +1,9 @@
 function toggle_sugg(ele_id) {
     var ele = document.getElementById(ele_id);
     if (ele.style.display === "none") {
+        $("[id^=form]:not(#form_usrInput)").parent().each(function() {
+            this.style.display = "none";
+        });
         ele.style.display = "block";
     } else {
         ele.style.display = "none";
@@ -87,6 +90,7 @@ $(function() {
                 success: function(data) {
                     $("#loading-spinner").hide();
                     that.reset();
+                    toggle_sugg($(that).parent().attr('id'));
                 }
             })
             .done(function(data) {
