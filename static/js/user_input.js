@@ -1,32 +1,32 @@
-function add_user_data(innerText) {
-    var rownode = document.createElement('div');
-    rownode.setAttribute('class', 'row justify-content-md-center');
+function addUserData(innerText) {
+    var rownode = document.createElement("div");
+    rownode.setAttribute("class", "row justify-content-md-center");
     var usernode = document.createElement("div");
-    usernode.setAttribute('class', 'col shadow-sm p-3 mb-1 text-left text-break');
+    usernode.setAttribute("class", "col shadow-sm p-3 mb-1 text-left text-break");
     usernode.innerText = innerText;
     rownode.appendChild(usernode);
     return rownode;
 }
 
-function add_bot_data(botText, rownode) {
+function addBotData(botText, rownode) {
     var botnode = document.createElement("div");
-    botnode.setAttribute('class', 'col shadow-sm p-3 mb-1 text-right text-break');
+    botnode.setAttribute("class", "col shadow-sm p-3 mb-1 text-right text-break");
     botnode.innerText = botText;
     rownode.appendChild(botnode);
     document.getElementById("chats").appendChild(rownode);
 }
 
 $(function() {
-    $("#form_usrInput").on('submit', function(event) {
+    $("#form_usrInput").on("submit", function(event) {
         var that = this;
-        var usrText = $('#usrInput').val();
-        var rownode = add_user_data(usrText);
+        var usrText = $("#usrInput").val();
+        var rownode = addUserData(usrText);
         $.ajax({
                 data: {
                     usrInput: usrText,
                 },
-                type: 'POST',
-                url: '/process',
+                type: "POST",
+                url: "/process",
                 beforeSend: function() {
                     $("#loading-spinner").show();
                 },
@@ -36,7 +36,7 @@ $(function() {
                 }
             })
             .done(function(data) {
-                add_bot_data(data.botText, rownode);
+                addBotData(data.botText, rownode);
             });
         document
             .getElementById("form_usrInput")
