@@ -3,6 +3,7 @@ from chatbot import message_to_bot, setup
 import suggestive_chatbot
 
 app = Flask(__name__)
+clf, learn_response = setup()
 
 
 @app.route("/")
@@ -66,5 +67,4 @@ def suggestions():
 
 
 if __name__ == "__main__":
-    clf, learn_response = setup()
     app.run(debug=True)
