@@ -1,6 +1,6 @@
-set -ex
+#!/bin/sh
 
-git pull
+set -ex
 
 if [ ! -d ./stanford-corenlp-full-2018-10-05 ]; then
     wget http://nlp.stanford.edu/software/stanford-corenlp-full-2018-10-05.zip -nc -c
@@ -11,4 +11,5 @@ if [ -f stanford-corenlp-full-2018-10-05.zip ]; then
     rm stanford-corenlp-full-2018-10-05.zip
 fi
 
-python init.py
+export FLASK_APP=webapp.py
+flask run --host=0.0.0.0
