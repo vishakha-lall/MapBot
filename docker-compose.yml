@@ -17,19 +17,20 @@ services:
             - java_storage:/usr/local/openjdk-11/
 
     bot:
-        image: chttrje/chatbot
+        build:
+            context: .
+            dockerfile: Dockerfile
         container_name: mapbot_bot
         environment:
             - DOCKER=Y
-            - GCLOUD_API_KEY
+        ports:
+            - "5000:5000"
         depends_on:
             - db
             - java
         volumes:
             - java_storage:/usr/local/openjdk-11/:ro
             - .:/usr/var/MapBot
-        stdin_open: true
-        tty: true
 
 volumes:
     java_storage:
