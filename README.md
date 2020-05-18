@@ -8,12 +8,9 @@
   <a href="https://github.com/vishakha-lall/MapBot/">
     <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/vishakha-lall/MapBot?color=darkblue&label=%20&logo=github">
   </a>
-  <a href="https://hub.docker.com/r/chttrje/chatbot">
-    <img alt="Docker Image Size (latest by date)" src="https://img.shields.io/docker/image-size/chttrje/chatbot?label=%20&logo=docker&logoColor=white&sort=date">
-  </a>
 </p>
 
-# MapBot :earth_africa: 
+# MapBot :earth_africa:
 
 #### Hey! I'm your friendly navigator bot! Try me out, not to brag but I'm FUN!
 
@@ -107,7 +104,7 @@ Check out all related information [here](GSSoC.md)
 ------
 
 <details>
-<summary><strong>How to set me up on Docker?</strong></summary>
+<summary><strong>How to deploy on Docker?</strong></summary>
 <br>
 
 #### What are some pre-requisites? (with Docker)
@@ -117,10 +114,10 @@ Check out all related information [here](GSSoC.md)
   - Verify the installations by `docker --version` and `docker-compose --version`
 
 #### How to set me up Docker style?
-- Download the `start.sh` and modify it appropriately:
-    - `git clone <GITHUB_LINK_OF_REPO_TO_CLONE> -b <BRANCH_NAME_TO_CHECKOUT>`
-    - `export GCLOUD_API_KEY=<YOUR_API_KEY_HERE>`
-- You're all set up, kick off with `start.sh` file by running `bash start.sh`.
+- Clone the repository
+- Fill up the `GCLOUD_API_KEY` in `ENV/docker.env`
+- Run `docker-compose up`
+- Visit `localhost:5000` to interact with the deployment
 
 </details>
 
@@ -165,7 +162,7 @@ Check out all related information [here](GSSoC.md)
 - Install dependencies from `requirements.txt` file. Run `pip install -r requirements.txt`
 - Run `python app.py`. The server will start at your localhost. Navigate to `http://localhost:5000/begin_auth`. Click `Add to Slack` button. Select the workspace from the top right and hit `Allow`. Successfully completing this step would automate the creation of  `SLACK_BOT_TOKEN` in the `ENV/.env` file.
 - In another terminal, run `python slackbot.py`.
-- Open the workspace in Slack and invite the bot to the channel: `@YOUR_BOT_DEFAULT_USERNAME` message in the channel. Click on **Invite to Channel**. 
+- Open the workspace in Slack and invite the bot to the channel: `@YOUR_BOT_DEFAULT_USERNAME` message in the channel. Click on **Invite to Channel**.
 
 </details>
 

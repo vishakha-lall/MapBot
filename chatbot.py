@@ -43,8 +43,8 @@ def setup():
         retrain = True
     if retrain:
         logging.debug("Training model")
-        # clf = utilities.classify_model()
-        clf = utilities.classify_model_adv(model="rf")
+        clf = utilities.classify_model()
+        # clf = utilities.classify_model_adv(model="rf")
         dump(clf, model_file)
     logging.debug("Classification model ready")
 
