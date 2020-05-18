@@ -250,7 +250,7 @@ def clear_table(table_name):
 
         if input("Enter 'Y' to confirm cleaning of BOTH tables: ") in ("Y", "y",):
             for table in tables_to_be_cleaned:
-                cur.execute("""DELETE FROM %s""" % table)
+                cur.execute("DELETE FROM %s" % table)
             db.commit()
             logging.debug("Tables cleaned successfully")
         else:
@@ -261,7 +261,7 @@ def clear_table(table_name):
         describe_table(cur, table_name)
 
         if input("Enter 'Y' to confirm: ") in ("Y", "y"):
-            cur.execute("""DELETE FROM %s""" % table_name)
+            cur.execute("DELETE FROM %s" % table_name)
             db.commit()
             logging.debug("Table cleaned successfully")
         else:
@@ -272,11 +272,11 @@ def clear_table(table_name):
 
 @logger_config.logger
 def describe_table(cur, table_name):
-    cur.execute("""DESC %s""" % table_name)
+    cur.execute("DESC %s" % table_name)
     res = cur.fetchall()
     column_names = [col[0] for col in res]
 
-    cur.execute("""SELECT COUNT(*) FROM %s""" % table_name)
+    cur.execute("SELECT COUNT(*) FROM %s" % table_name)
     res = cur.fetchall()
     records_no = res[0][0]
 
