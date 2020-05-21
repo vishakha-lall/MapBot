@@ -76,81 +76,23 @@ def message_to_bot(H, clf, learn_response):
     if not H:
         B = "Please say something!"
         return B, learn_response  # empty input
+
     # grammar parsing
-    subj = set()
-    obj = set()
-    verb = set()
-    adj = set()
-    noun = set()
-    proper_nouns = set()
-    compound_NNP = set()
-    triples, root = utilities.parse_sentence(H)
-    triples = list(triples)
-    for t in triples:
-        if "VB" in t[0][1]:
-            verb.add(t[0][0])
-        if "JJ" in t[0][1]:
-            adj.add(t[0][0])
-        if "JJ" in t[2][1]:
-            adj.add(t[0][0])
-        if "NN" in t[0][1]:
-            noun.add(t[0][0])
-        if "NN" in t[2][1]:
-            noun.add(t[0][0])
-        if t[0][1] == "NNP":
-            proper_nouns.add(t[0][0])
-        if t[2][1] == "NNP":
-            proper_nouns.add(t[2][0])
-        relation = t[1]
-        if "subj" in relation:
-            subj.add(t[2][0])
-        if "compound" in relation:
-            if t[2][1] == "NNP" and t[0][1] == "NNP":
-                compound_NNP.add(t[0][0])
-                compound_NNP.add(t[2][0])
-        if "obj" in relation:
-            obj.add(t[2][0])
-    logging.debug(
-        "\n"
-        + "\t"
-        + "Subject: "
-        + str(subj)
-        + "\n"
-        + "\t"
-        + "Object: "
-        + str(obj)
-        + "\n"
-        + "\t"
-        + "Topic: "
-        + str(root)
-        + "\n"
-        + "\t"
-        + "Verb: "
-        + str(verb)
-        + "\n"
-        + "\t"
-        + "Adjective: "
-        + str(adj)
-        + "\n"
-        + "\t"
-        + "Noun: "
-        + str(noun)
-        + "\n"
-        + "\t"
-        + "Proper Noun: "
-        + str(proper_nouns)
-        + "\n"
-        + "\t"
-        + "Compound Proper Noun: "
-        + str(compound_NNP)
-    )
-    subj = list(subj)
-    obj = list(obj)
-    verb = list(verb)
-    adj = list(adj)
-    noun = list(noun)
-    proper_nouns = list(proper_nouns)
-    compound_NNP = list(compound_NNP)
+    parts_of_speech = {}
+    dependencies = {}
+    parsed = utilities.parse_sentence_spacy(H)
+
+    for (text, pos, dep) in parsed:
+        parts_of_speech[pos] = text
+        dependencies[dep] = text
+
+    root = dependencies["ROOT"]
+    subj = [val for key, val in dependencies.items() if "subj" in key]
+    obj = [val for key, val in dependencies.items() if "obj" in key]
+
+    verb = [val for key, val in parts_of_speech.items() if "VB" in key]
+    adj = [val for key, val in parts_of_speech.items() if "JJ" in key]
+    noun = [val for key, val in parts_of_speech.items() if "NN" in key]
 
     # classification
     classification = utilities.classify_sentence(clf, H)

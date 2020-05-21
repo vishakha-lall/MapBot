@@ -17,23 +17,29 @@ def setup_nltk():
     return all((punkt, averaged_perceptron_tagger, stopwords))
 
 
-@logger_config.logger
-# grammar parsing
-def parse_sentence(user_input):
-    # returns root word, triples of StanfordDependencyParser
-    import os
-    from nltk.parse.stanford import StanfordDependencyParser
-    import config
+import spacy
 
-    path_to_jar = config.stanford_path_to_jar
-    path_to_models_jar = config.stanford_path_to_models_jar
-    dependency_parser = StanfordDependencyParser(
-        path_to_jar=path_to_jar, path_to_models_jar=path_to_models_jar
-    )
-    os.environ["JAVAHOME"] = config.javahome
-    result = dependency_parser.raw_parse(user_input)
-    dep = next(result)  # get next item from the iterator result
-    return dep.triples(), dep.root["word"]
+spacy.cli.download("en_core_web_sm", False, *["--quiet"])
+nlp = spacy.load("en_core_web_sm")
+
+
+@logger_config.logger
+# grammar parsing spacy
+def parse_sentence_spacy(user_input):
+    doc = nlp(user_input)
+    parsed = []
+    for token in doc:
+        parsed.append((token.text, token.tag_, token.dep_,))
+    return parsed
+    # print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_, token.shape_, token.is_alpha, token.is_stop)
+    # Text: The original word text.
+    # Lemma: The base form of the word.
+    # POS: The simple UPOS part-of-speech tag.
+    # Tag: The detailed part-of-speech tag.
+    # Dep: Syntactic dependency, i.e. the relation between tokens.
+    # Shape: The word shape – capitalization, punctuation, digits.
+    # is alpha: Is the token an alpha character?
+    # is stop: Is the token part of a stop list, i.e. the most common words of the language?
 
 
 @logger_config.logger
