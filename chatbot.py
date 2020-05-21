@@ -80,19 +80,57 @@ def message_to_bot(H, clf, learn_response):
     # grammar parsing
     parts_of_speech = {}
     dependencies = {}
-    parsed = utilities.parse_sentence_spacy(H)
+    parsed, entities = utilities.parse_sentence_spacy(H)
 
-    for (text, pos, dep) in parsed:
-        parts_of_speech[pos] = text
-        dependencies[dep] = text
+    for (text, pos, dep, i) in parsed:
+        parts_of_speech[(pos, i)] = text
+        dependencies[(dep, i)] = text
 
-    root = dependencies["ROOT"]
-    subj = [val for key, val in dependencies.items() if "subj" in key]
-    obj = [val for key, val in dependencies.items() if "obj" in key]
+    root = [val for key, val in dependencies.items() if "ROOT" in key[0]][0]
+    subj = [val for key, val in dependencies.items() if "subj" in key[0]]
+    obj = [val for key, val in dependencies.items() if "obj" in key[0]]
 
-    verb = [val for key, val in parts_of_speech.items() if "VB" in key]
-    adj = [val for key, val in parts_of_speech.items() if "JJ" in key]
-    noun = [val for key, val in parts_of_speech.items() if "NN" in key]
+    verb = [val for key, val in parts_of_speech.items() if "VB" in key[0]]
+    adj = [val for key, val in parts_of_speech.items() if "JJ" in key[0]]
+    noun = [val for key, val in parts_of_speech.items() if "NN" in key[0]]
+    proper_noun = [val for key, val in parts_of_speech.items() if "NP" in key[0]]
+
+    logging.debug(
+        "\n\t".join(
+            [
+                "Subject: " + str(subj),
+                "Object: " + str(obj),
+                "Topic: " + str(root),
+                "Verb: " + str(verb),
+                "Adjective: " + str(adj),
+                "Noun: " + str(noun),
+                "Proper Noun: " + str(proper_noun),
+            ]
+        )
+    )
+    location = []
+    for (ent_name, es, ee, e_label) in entities:
+        if e_label in ("GPE", "LOC", "FAC", "ORG"):
+            location.append(ent_name)
+
+    if len(location) == 0:
+        for (text, pos, dep, i) in parsed:
+            if (
+                text in proper_noun
+                and dep == "compound"
+                and parsed[i - 1][2] != "compound"
+            ):
+                next_i = i
+                loc = []
+                while parsed[next_i][1] in proper_noun:
+                    loc.append(parsed[next_i][0])
+                    next_i += 1
+                loc = " ".join(loc)
+                location.append(loc)
+            elif text in proper_noun and parsed[i - 1][2] != "compound":
+                location.append(text)
+
+    logging.debug(location)
 
     # classification
     classification = utilities.classify_sentence(clf, H)
@@ -104,13 +142,13 @@ def message_to_bot(H, clf, learn_response):
         elif classification == "Q":
             B, learn_response = databaseconnect.get_question_response(subj, root, verb)
             if learn_response == LearnResponse.TRAIN_ME.name and (
-                len(proper_nouns) == 0
-                or (len(proper_nouns) == 1 and H.split(" ", 1)[0] != "Where")
+                len(location) == 0
+                or (len(location) == 1 and H.split(" ", 1)[0] != "Where")
             ):
                 databaseconnect.add_learnt_statement_to_database(subj, root, verb)
             if learn_response == LearnResponse.TRAIN_ME.name and (
-                len(proper_nouns) >= 2
-                or (len(proper_nouns) == 1 and H.split(" ", 1)[0] == "Where")
+                len(location) >= 2
+                or (len(location) == 1 and H.split(" ", 1)[0] == "Where")
             ):
                 learn_response = LearnResponse.MESSAGE.name
                 B = "I will certainly help you with that."
@@ -121,9 +159,9 @@ def message_to_bot(H, clf, learn_response):
 
     classf_B, classf_learn_response = B, learn_response
     if any(sub in ["distance"] for sub in subj):
-        if len(proper_nouns) == 2:
-            location_dict["origin"] = proper_nouns.pop(0)
-            location_dict["destination"] = proper_nouns.pop(0)
+        if len(location) == 2:
+            location_dict["origin"] = location.pop(0)
+            location_dict["destination"] = location.pop(0)
             origin, destination = (
                 location_dict["origin"],
                 location_dict["destination"],
@@ -133,13 +171,10 @@ def message_to_bot(H, clf, learn_response):
             B = "I didn't get that. Can you please give me the origin location?"
             learn_response = LearnResponse.ORIGIN.name
     else:
-        if len(proper_nouns) == 1:
-            location = proper_nouns.pop(0)
-        elif compound_NNP:
-            location = " ".join(
-                word for word in nltk.word_tokenize(H) if word in compound_NNP
-            )
-        elif len(proper_nouns) == 0:
+        if len(location) >= 1:
+            # select the first string as location
+            location = location.pop(0)
+        else:
             location = ""
 
         API_RESPONSE = False
