@@ -1,6 +1,9 @@
 from pathlib import Path
 import logging
 import logger_config
+import spacy
+
+spacy.cli.download("en_core_web_sm", False, *["--quiet"])
 
 log = logging.getLogger(__name__)
 log.info("Entered module: %s" % __name__)
@@ -17,15 +20,10 @@ def setup_nltk():
     return all((punkt, averaged_perceptron_tagger, stopwords))
 
 
-import spacy
-
-spacy.cli.download("en_core_web_sm", False, *["--quiet"])
-nlp = spacy.load("en_core_web_sm")
-
-
 @logger_config.logger
 # grammar parsing spacy
 def parse_sentence_spacy(user_input):
+    nlp = spacy.load("en_core_web_sm")
     doc = nlp(user_input)
     parsed = []
     entities = []

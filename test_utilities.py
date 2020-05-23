@@ -1,5 +1,4 @@
 import utilities
-import pytest
 
 
 class TestClass:
@@ -10,13 +9,18 @@ class TestClass:
         result = utilities.setup_nltk()
         assert result
 
-    @pytest.mark.skip(reason="No way of currently testing this")
-    def test_parse_sentence(self):
-        triples, root = utilities.parse_sentence(self.test_input)
-        triples = list(triples)
-        assert (("jumps", "VBZ"), "nsubj", ("fox", "NN")) in triples
-        assert (("jumps", "VBZ"), "nmod", ("dog", "NN")) in triples
-        assert root == "jumps"
+    def test_parse_sentence_spacy(self):
+        parsed, entities = utilities.parse_sentence_spacy(self.test_input)
+        eles = {
+            ("quick", "JJ", "amod", 1),
+            ("brown", "JJ", "amod", 2),
+            ("fox", "NN", "compound", 3),
+            ("jumps", "NNS", "ROOT", 4),
+            ("lazy", "JJ", "amod", 7),
+            ("dog", "NN", "pobj", 8),
+        }
+        assert eles.issubset(set(parsed))
+        assert entities == []
 
     def test_classify_model(self):
         from features import features_dict
