@@ -7,7 +7,6 @@ import logger_config
 from joblib import dump, load
 import time
 from pathlib import Path
-import nltk
 
 location_dict = {"origin": "null", "destination": "null"}
 
