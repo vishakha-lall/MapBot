@@ -10,12 +10,6 @@ services:
             - ./db-init/:/docker-entrypoint-initdb.d
             - persistent_db:/var/lib/mysql
 
-    java:
-        image: openjdk:11
-        container_name: mapbot_java
-        volumes:
-            - java_storage:/usr/local/openjdk-11/
-
     bot:
         build:
             context: .
@@ -27,11 +21,8 @@ services:
             - "5000:5000"
         depends_on:
             - db
-            - java
         volumes:
-            - java_storage:/usr/local/openjdk-11/:ro
             - .:/usr/var/MapBot
 
 volumes:
-    java_storage:
     persistent_db:
