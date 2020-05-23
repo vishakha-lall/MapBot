@@ -28,9 +28,12 @@ nlp = spacy.load("en_core_web_sm")
 def parse_sentence_spacy(user_input):
     doc = nlp(user_input)
     parsed = []
+    entities = []
     for token in doc:
-        parsed.append((token.text, token.tag_, token.dep_,))
-    return parsed
+        parsed.append((token.text, token.tag_, token.dep_, token.i))
+    for ent in doc.ents:
+        entities.append((ent.text, ent.start_char, ent.end_char, ent.label_))
+    return parsed, entities
     # print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_, token.shape_, token.is_alpha, token.is_stop)
     # Text: The original word text.
     # Lemma: The base form of the word.
