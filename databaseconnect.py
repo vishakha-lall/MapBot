@@ -9,7 +9,7 @@ log.info("Entered module: %s" % __name__)
 @logger_config.logger
 def connection_to_database():
     import config
-    import mysql.connector
+    import psycopg2
     from time import sleep
     import sys
 
@@ -22,34 +22,33 @@ def connection_to_database():
     while tries <= max_tries:
         try:
             if called_from.endswith("pytest"):
-                conn = mysql.connector.connect(
-                    user="root",
+                conn = psycopg2.connect(
+                    user="postgres",
                     password="",
                     host=config.host,
                     port=config.port,
-                    database="pytest_testdb",
+                    dbname="pytest_testdb",
                 )
             else:
-                conn = mysql.connector.connect(
+                conn = psycopg2.connect(
                     user=config.user,
                     password=config.password,
                     host=config.host,
                     port=config.port,
-                    database=config.database,
+                    dbname=config.database,
                 )
-            if conn.is_connected():
-                # logging.debug("Connected")
-                logging.debug("MySQL connected")
+            if conn.status == 1:
+                logging.debug("PostgreSQL connected")
                 break
 
-        except mysql.connector.Error as e:
+        except psycopg2.Error as e:
             tries += 1
-            logging.debug(e, "...Retrying")
+            logging.debug(e)
+            logging.debug("...Retrying")
             sleep(20)
     try:
-        if conn.is_connected():
-            # logging.debug("Connected")
-            logging.debug("MySQL connected")
+        if conn.status == 1:
+            logging.debug("PostgreSQL connected")
             return conn
     except Exception:
         raise Exception("DATABASE NOT CONNECTED")
@@ -61,19 +60,22 @@ def setup_database():
     db = connection_to_database()
     cur = db.cursor()
     cur.execute(
-        "CREATE TABLE IF NOT EXISTS chat_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))"  # noqa: E501
+        "CREATE TABLE IF NOT EXISTS chat_table (id SERIAL PRIMARY KEY, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))"  # noqa: E501
     )
     cur.execute(
-        "CREATE TABLE IF NOT EXISTS statement_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))"  # noqa: E501
+        "CREATE TABLE IF NOT EXISTS statement_table (id SERIAL PRIMARY KEY, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))"  # noqa: E501
     )
     cur.execute(
-        "CREATE TABLE IF NOT EXISTS question_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))"  # noqa: E501
+        "CREATE TABLE IF NOT EXISTS question_table (id SERIAL PRIMARY KEY, root_word VARCHAR(40), subject VARCHAR(40), verb VARCHAR(40), sentence VARCHAR(200))"  # noqa: E501
     )
     cur.execute(
-        "CREATE TABLE IF NOT EXISTS directions_table(id INTEGER PRIMARY KEY AUTO_INCREMENT, origin_location VARCHAR(100), destination_location VARCHAR(100))"  # noqa: E501
+        "CREATE TABLE IF NOT EXISTS directions_table (id SERIAL PRIMARY KEY, origin_location VARCHAR(100), destination_location VARCHAR(100))"  # noqa: E501
     )
-    cur.execute("SHOW TABLES")
+    cur.execute(
+        "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"
+    )
     TABLES = cur.fetchall()
+    db.commit()
     return TABLES
 
 
@@ -82,7 +84,6 @@ def setup_database():
 def add_to_database(classification, subject, root, verb, H):
     db = connection_to_database()
     cur = db.cursor()
-    cur = db.cursor(prepared=True)
     try:
         if classification == "C":
             cur.execute(
@@ -130,7 +131,6 @@ def add_to_database(classification, subject, root, verb, H):
 def get_chat_response():
     db = connection_to_database()
     cur = db.cursor()
-    cur = db.cursor(prepared=True)
     cur.execute("SELECT COUNT(*) FROM chat_table")
     res = cur.fetchone()
     total_chat_records = res[0]
@@ -149,7 +149,7 @@ def get_chat_response():
 @logger_config.logger
 def get_question_response(subject, root, verb):
     db = connection_to_database()
-    cur = db.cursor(prepared=True)
+    cur = db.cursor()
     if str(subject) == "[]":
         cur.execute("SELECT verb FROM statement_table")
         res = cur.fetchall()
@@ -225,7 +225,7 @@ def add_learnt_statement_to_database(subject, root, verb):
 @logger_config.logger
 def learn_question_response(H):
     db = connection_to_database()
-    cur = db.cursor(buffered=True)
+    cur = db.cursor()
     cur.execute("SELECT id FROM statement_table ORDER BY id DESC")
     res = cur.fetchone()
     last_id = res[0]
