@@ -43,11 +43,17 @@ Check out all related information [here](GSSoC.md)
 
 ### What are some pre-requisites?
 
-- MySQL
-  - Install the community version of mySQL from the [official mySQL documentation page](https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en/).
-  - Create root user credentials during installation.
-  - Verify the installation, running the command  `mysql -uroot -p -hlocalhost` should open the mySQL monitor. (Enter the root password when prompted)
-
+- PostgreSQL
+  - Install the Core Distribution of PostgreSQL from the [official PostgreSQL downloads page](https://www.postgresql.org/download/)
+  - Reference videos for installation:
+    - For Linux: [YouTube](https://www.youtube.com/watch?v=-LwI4HMR_Eg)
+    - For Windows: [YouTube](https://www.youtube.com/watch?v=e1MwsT5FJRQ)
+    - For macOS: [YouTube](https://www.youtube.com/watch?v=5AOkxqFaYEE)
+  - Create a password for user `postgres`
+  - Create a database named `mapbot`:
+    - `psql -U postgres -h localhost`
+    - Enter the password when prompted.
+    - Execute SQL: `CREATE DATABASE mapbot;`
 -----
 
 ### Setting Up
@@ -57,11 +63,7 @@ Check out all related information [here](GSSoC.md)
 <br>
 
 - Clone the repository
-- Create the **mapbot** database in mySQL
-  -  `mysql -uroot -p -hlocalhost`
-  - Enter root password when prompted
-  - `create database mapbot;`
-  - Verify creation of the database `show databases;`
+- Verify existence of the **mapbot** database in PostgreSQL
 - Run `git update-index --assume-unchanged ENV/.env`
 - Fill the existing template in `ENV/.env` with the corresponding values following the `KEY=VALUE` format
 - Install dependencies from `requirements.txt` file. Run `pip install -r requirements.txt`
@@ -79,11 +81,7 @@ Check out all related information [here](GSSoC.md)
 <br>
 
 - Clone the repository
-- Create the **mapbot** database in mySQL
-  -  `mysql -uroot -p -hlocalhost`
-  - Enter root password when prompted
-  - `create database mapbot;`
-  - Verify creation of the database `show databases;`
+- Verify existence of the **mapbot** database in PostgreSQL
 - Run `git update-index --assume-unchanged ENV/.env`
 - Fill the existing template in `ENV/.env` with the corresponding values following the `KEY=VALUE` format
 - Install dependencies from `requirements.txt` file. Run `pip install -r requirements.txt`
@@ -122,11 +120,7 @@ Check out all related information [here](GSSoC.md)
 <br>
 
 - Clone the repository
-- Create the **mapbot** database in mySQL
-  -  `mysql -uroot -p -hlocalhost`
-  - Enter root password when prompted
-  - `create database mapbot;`
-  - Verify creation of the database `show databases;`
+- Verify existence of the **mapbot** database in PostgreSQL
 - Run `git update-index --assume-unchanged ENV/.env`
 - Fill the existing template in `ENV/.env` with the corresponding values following the `KEY=VALUE` format
 - For `TELEGRAM_BOT_TOKEN=<YOUR_API_KEY_HERE>`, open your Telegram app and follow [this](https://core.telegram.org/bots#creating-a-new-bot) tutorial on how to create a new bot on Telegram and get your own bot token. Once your token is generated, update the `.env` file in `/ENV` with it.
@@ -143,11 +137,7 @@ Check out all related information [here](GSSoC.md)
 <br>
 
 - Clone the repository
-- Create the **mapbot** database in mySQL
-  -  `mysql -uroot -p -hlocalhost`
-  - Enter root password when prompted
-  - `create database mapbot;`
-  - Verify creation of the database `show databases;`
+- Verify existence of the **mapbot** database in PostgreSQL
 - Run `git update-index --assume-unchanged ENV/.env`
 - Fill the existing template in `ENV/.env` with the corresponding values following the `KEY=VALUE` format
 - Follow the steps prompted [here](https://api.slack.com/apps?new_classic_app=1) to create a **classic** slack app. Navigate to **Basic Information** section of the slack app. Under the **Add features and functionality** subheading click on **Bots**. Click on **Add Legacy Bot User** and enter the **display name** and **default username** of your bot. Navigate to **Basic Information** section of the slack app on the sidebar and copy the **Client ID** and **Client Secret** and then paste these to the `ENV/.env` file as: `SLACK_CLIENT_ID=<Your Client ID>` and `SLACK_CLIENT_SECRET=<Your Client Secret>`. Navigate to the **OAuth & Permissions** section. Under the **Redirect URLs** subheading add `http://localhost:5000/post_auth`.
@@ -165,11 +155,7 @@ Check out all related information [here](GSSoC.md)
 <br>
 
 - Clone the repository
-- Create the **mapbot** database in mySQL
-  -  `mysql -uroot -p -hlocalhost`
-  - Enter root password when prompted
-  - `create database mapbot;`
-  - Verify creation of the database `show databases;`
+- Verify existence of the **mapbot** database in PostgreSQL
 - Run `git update-index --assume-unchanged ENV/.env`
 - Fill the existing template in `ENV/.env` with the corresponding values following the `KEY=VALUE` format
 - Create Facebook app from [here](https://developers.facebook.com/). Fill out basic information.
