@@ -23,7 +23,7 @@ def connection_to_database():
         try:
             if called_from.endswith("pytest"):
                 conn = psycopg2.connect(
-                    user="postgres",
+                    user="test_mapbot",
                     password="",
                     host=config.host,
                     port=config.port,
