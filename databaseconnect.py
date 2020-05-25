@@ -29,6 +29,8 @@ def connection_to_database():
                     port=config.port,
                     dbname="pytest_testdb",
                 )
+            elif config.HEROKU_DATABASE_URL:
+                conn = psycopg2.connect(config.HEROKU_DATABASE_URL, sslmode="require")
             else:
                 conn = psycopg2.connect(
                     user=config.user,
