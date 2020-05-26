@@ -9,6 +9,14 @@
     <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/vishakha-lall/MapBot?color=darkblue&label=%20&logo=github">
   </a>
 </p>
+<p align="center">
+  <a href="http://t.me/ChristopherMapbot">
+    <img alt="Telegram Bot" src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" width="15%"">
+  </a>
+  <a href="https://christopher-mapbot.herokuapp.com/">
+    <img alt="Heroku App" src="https://user-images.githubusercontent.com/39518771/82949337-0cc59000-9fc1-11ea-94b6-f7e31d18e805.jpg" width="35%" >
+  </a>
+</p>
 
 # MapBot :earth_africa:
 
@@ -77,19 +85,13 @@ Check out all related information [here](GSSoC.md)
 ------
 
 <details>
-<summary><strong>How to set me up with an UI?</strong></summary>
+<summary><strong>How to use me with an UI?</strong></summary>
 <br>
 
-- Clone the repository
-- Verify existence of the **mapbot** database in PostgreSQL
-- Run `git update-index --assume-unchanged ENV/.env`
-- Fill the existing template in `ENV/.env` with the corresponding values following the `KEY=VALUE` format
-- Install dependencies from `requirements.txt` file. Run `pip install -r requirements.txt`
-- You're all set up. Execute `python webapp.py` to start up the server.
-- Visit `http://127.0.0.1:5000/` to interact with your MapBot.
-- It is recommended that you set this project up in a virtual environment to keep the dependencies separated and for easier debugging. Here's how you can do that -
-    1. [Python](https://realpython.com/python-virtual-environments-a-primer/#why-the-need-for-virtual-environments)
-    2. [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
+- Want to set up the UI locally? Head to the [other branch](https://github.com/vishakha-lall/MapBot/tree/gssoc-master).
+- Want the cloud hosted UI?
+  - Wake me up at [Heroku UI](https://christopher-mapbot.herokuapp.com/)
+  - Once I'm awake, happy interacting.
 
 </details>
 
@@ -116,17 +118,14 @@ Check out all related information [here](GSSoC.md)
 ------
 
 <details>
-<summary><strong>How to set me up on Telegram?</strong></summary>
+<summary><strong>How to use me on Telegram?</strong></summary>
 <br>
 
-- Clone the repository
-- Verify existence of the **mapbot** database in PostgreSQL
-- Run `git update-index --assume-unchanged ENV/.env`
-- Fill the existing template in `ENV/.env` with the corresponding values following the `KEY=VALUE` format
-- For `TELEGRAM_BOT_TOKEN=<YOUR_API_KEY_HERE>`, open your Telegram app and follow [this](https://core.telegram.org/bots#creating-a-new-bot) tutorial on how to create a new bot on Telegram and get your own bot token. Once your token is generated, update the `.env` file in `/ENV` with it.
-- Find your bot on Telegram using `@bot_username` that you chose, and send the first text to your new bot. Nothing is supposed to happen for now. No worries.
-- Install dependencies from `requirements.txt` file. Run `pip install -r requirements.txt`
-- You're all set up, run the `telegram.py` file. `python telegram.py` and converse with your bot in real time.
+- Want to create your own Telegram Bot? Head to the [other branch](https://github.com/vishakha-lall/MapBot/tree/gssoc-master).
+- Want to use a cloud hosted version of me?
+  - Wake me up at [Heroku UI](https://christopher-mapbot.herokuapp.com/)
+  - Once awoken from my sleep, use may my telegram bot username [@ChristopherMapbot](http://t.me/ChristopherMapbot) to initiate a chat.
+  - Just type "Bye" in the chat to let me you're done and I'll get back to sleep.
 
 </details>
 
