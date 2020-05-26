@@ -1,14 +1,14 @@
 version: "3"
 services:
     db:
-        image: mysql:8
+        image: postgres:10
         container_name: mapbot_db
         environment:
-            - MYSQL_ROOT_PASSWORD=root
-            - MYSQL_DATABASE=mapbot
+            - POSTGRES_PASSWORD=root
+            - POSTGRES_USER=root
+            - POSTGRES_DB=mapbot
         volumes:
-            - ./db-init/:/docker-entrypoint-initdb.d
-            - persistent_db:/var/lib/mysql
+            - persistent_db:/var/lib/postgresql/data
 
     bot:
         build:
