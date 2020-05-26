@@ -62,8 +62,59 @@ class TelegramBot(object):
         except Exception:
             logging.debug("Message not text")
             text = None
-        chat_id = updates["result"][-1]["message"]["chat"]["id"]
+        try:
+            chat_id = updates["result"][-1]["message"]["chat"]["id"]
+        except Exception:
+            logging.debug("No chat found")
+            chat_id = None
         return (text, chat_id)
+
+    @logger_config.logger
+    def start(self):
+        from chatbot import setup
+        from chatbot import message_to_bot
+
+        clf, learn_response = setup()
+        EXIT_CONVERSATION = "Bye! I'll miss you!"
+        CONFUSED_CONVERSATION = "Sorry, I didn't get you. Could you try again?"
+        logging.debug("MapBot ready")
+
+        last_textchat = (None, None)
+        # initialized to continously check for new messages
+        while True:
+            try:
+                received_message, chat_id = self.get_last_chat_id_and_text()
+                logging.debug(received_message)
+                logging.debug(chat_id)
+
+                if (received_message, chat_id) != last_textchat:
+                    # checking if any new messages have arrived since the last message
+
+                    if received_message is None:
+                        # if latest message to bot is not of text format
+                        if chat_id is None:
+                            # if there is no message and hence no chat_id (at bot start up)
+                            continue
+                        else:
+                            print(chat_id)
+                            self.send_message(CONFUSED_CONVERSATION, chat_id)
+                    else:
+                        logging.debug(
+                            f"Message: '{received_message}' from chat_id: '{chat_id}'"
+                        )
+                        reply_message, learn_response = message_to_bot(
+                            received_message, clf, learn_response
+                        )
+                        self.send_message(reply_message, chat_id)
+                        if reply_message == EXIT_CONVERSATION:
+                            logging.debug(f"Ended chat with {chat_id}")
+
+                    last_textchat = (received_message, chat_id)
+            except Exception as e:
+                logging.debug(f"CRITICAL ERROR: {e}")
+                logging.debug("Retrying")
+            # Wait for 0.5 secs before rechecking for new messages. (good for server)
+            time.sleep(0.5)
 
 
 if __name__ == "__main__":
@@ -72,43 +123,8 @@ if __name__ == "__main__":
     TOKEN = config.tbot_token
     # Creates a TelegramBot object with tbot_token present in `config.py`
     tbot = TelegramBot(TOKEN)
-
-    from chatbot import setup
-    from chatbot import message_to_bot
-
-    clf, learn_response = setup()
-    EXIT_CONVERSATION = "Bye! I'll miss you!"
-    CONFUSED_CONVERSATION = "Sorry, I didn't get you. Could you try again?"
-    logging.debug("MapBot ready")
-
-    last_textchat = (None, None)
-    # initialized to continously check for new messages
     try:
-        while True:
-            received_message, chat_id = tbot.get_last_chat_id_and_text()
-            logging.debug(received_message)
-            logging.debug(chat_id)
-
-            if (received_message, chat_id) != last_textchat:
-                # checking if any new messages have arrived since the last message
-
-                if received_message is None:
-                    # if latest message to bot is not of text format
-                    print(chat_id)
-                    tbot.send_message(CONFUSED_CONVERSATION, chat_id)
-                else:
-                    logging.debug("Received: " + received_message)
-                    reply_message, learn_response = message_to_bot(
-                        received_message, clf, learn_response
-                    )
-                    tbot.send_message(reply_message, chat_id)
-                    if reply_message == EXIT_CONVERSATION:
-                        break
-
-                last_textchat = (received_message, chat_id)
-            # Wait for 0.5 secs before rechecking for new messages. (good for server)
-            time.sleep(0.5)
-
+        tbot.start()
     except Exception as e:
         logging.debug("EXCEPTION OCCURRED")
         logging.debug(e)
