@@ -62,7 +62,11 @@ class TelegramBot(object):
         except Exception:
             logging.debug("Message not text")
             text = None
-        chat_id = updates["result"][-1]["message"]["chat"]["id"]
+        try:
+            chat_id = updates["result"][-1]["message"]["chat"]["id"]
+        except Exception:
+            logging.debug("No chat found")
+            chat_id = None
         return (text, chat_id)
 
     @logger_config.logger
@@ -88,20 +92,26 @@ class TelegramBot(object):
 
                     if received_message is None:
                         # if latest message to bot is not of text format
-                        print(chat_id)
-                        self.send_message(CONFUSED_CONVERSATION, chat_id)
+                        if chat_id is None:
+                            # if there is no message and hence no chat_id (at bot start up)
+                            continue
+                        else:
+                            print(chat_id)
+                            self.send_message(CONFUSED_CONVERSATION, chat_id)
                     else:
-                        logging.debug("Received: " + received_message)
+                        logging.debug(
+                            f"Message: '{received_message}' from chat_id: '{chat_id}'"
+                        )
                         reply_message, learn_response = message_to_bot(
                             received_message, clf, learn_response
                         )
                         self.send_message(reply_message, chat_id)
                         if reply_message == EXIT_CONVERSATION:
-                            break
+                            logging.debug(f"Ended chat with {chat_id}")
 
                     last_textchat = (received_message, chat_id)
             except Exception as e:
-                logging.debug(e)
+                logging.debug(f"CRITICAL ERROR: {e}")
                 logging.debug("Retrying")
             # Wait for 0.5 secs before rechecking for new messages. (good for server)
             time.sleep(0.5)
