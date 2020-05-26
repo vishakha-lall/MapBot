@@ -13,6 +13,16 @@ log.info("Entered module: %s" % __name__)
 class TelegramBot(object):
     """Class for TelegramBot housing functions required to interact with Telegram."""
 
+    WEBAPP_URL = "https://christopher-mapbot.herokuapp.com/"
+    GITHUB_REPO_URL = "https://github.com/vishakha-lall/MapBot/"
+    GITHUB_ISSUES_URL = "https://github.com/vishakha-lall/MapBot/issues"
+    slash_commands = {
+        "/start": "Hey, did someone say my name? Here I am!\n\nValid commands are: start, about, help, report",
+        "/about": f"Hi, I'm MapBot! Visit {WEBAPP_URL} to interact with my UI",
+        "/help": f"I may know a lot about maps.\nWhere is Nairobi? What's the time at New York? How high is Mount Everest?\nI know them all. Want to know more about me? Head on to {GITHUB_REPO_URL}",  # noqa: E501
+        "/report": f"Faced an issue with using me or do not like how I work? Head over to {GITHUB_ISSUES_URL} and let us know",
+    }
+
     @logger_config.logger
     def __init__(self, TOKEN: str) -> None:
         """Initiates a TelegramBot object with unique Telegram BOT_TOKEN and creates the base URL."""
@@ -98,6 +108,12 @@ class TelegramBot(object):
                         else:
                             print(chat_id)
                             self.send_message(CONFUSED_CONVERSATION, chat_id)
+                    elif received_message.startswith("/"):
+                        # handling some slash-commands out of Telegram
+                        reply_message = self.slash_commands.get(received_message)
+                        if reply_message is None:
+                            reply_message = CONFUSED_CONVERSATION
+                        self.send_message(reply_message, chat_id)
                     else:
                         logging.debug(
                             f"Message: '{received_message}' from chat_id: '{chat_id}'"
