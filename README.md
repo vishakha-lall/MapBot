@@ -123,9 +123,9 @@ Check out all related information [here](GSSoC.md)
 
 - Want to create your own Telegram Bot? Head to the [other branch](https://github.com/vishakha-lall/MapBot/tree/gssoc-master).
 - Want to use a cloud hosted version of me?
-  - Wake me up at [Heroku UI](https://christopher-mapbot.herokuapp.com/)
-  - Once awoken from my sleep, use may my telegram bot username [@ChristopherMapbot](http://t.me/ChristopherMapbot) to initiate a chat.
-  - Just type "Bye" in the chat to let me you're done and I'll get back to sleep.
+  - Hit me up at my telegram bot username [@ChristopherMapbot](http://t.me/ChristopherMapbot) to initiate a chat.
+  - P.S.: I generally sleep when unused. So, may need some time to answer the first text
+  - Just type "Bye" in the chat to let me know you're done and I'll get back to sleep.
 
 </details>
 

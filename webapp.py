@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from chatbot import message_to_bot, setup
 import suggestive_chatbot
+import config
 
 app = Flask(__name__)
 clf, learn_response = setup()
@@ -64,6 +65,24 @@ def suggestions():
         return jsonify({"botText": bot_text})
 
     return jsonify({"error": "Missing data!"})
+
+
+TOKEN = config.tbot_token
+# Creates a TelegramBot object with tbot_token present in `config.py`
+
+# webhook of Telegram Bot already set to this endpoint (prerequisite)
+@app.route(f"/telegram/{TOKEN}", methods=["POST"])
+def telegram_webhook():
+    from telegram import TelegramBot
+
+    tbot = TelegramBot(TOKEN, clf, learn_response)
+    webhook_update = request.get_json()
+    print(webhook_update)
+    done = tbot.start(webhook_update)
+    if done:
+        return jsonify({"Success": 200})
+    else:
+        return jsonify({"Failure": 500})
 
 
 if __name__ == "__main__":
