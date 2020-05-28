@@ -9,6 +9,7 @@
     <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/vishakha-lall/MapBot?color=darkblue&label=%20&logo=github">
   </a>
 </p>
+<hr>
 <p align="center">
   <a href="http://t.me/ChristopherMapbot">
     <img alt="Telegram Bot" src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" width="15%"">
@@ -16,7 +17,11 @@
   <a href="https://christopher-mapbot.herokuapp.com/">
     <img alt="Heroku App" src="https://user-images.githubusercontent.com/39518771/82949337-0cc59000-9fc1-11ea-94b6-f7e31d18e805.jpg" width="35%" >
   </a>
+  <a href="http://m.me/christophermapbot">
+    <img alt="Messenger Bot" src="https://user-images.githubusercontent.com/39518771/83188624-a15cf900-a14d-11ea-8359-72dac011eb6f.png" width="15%" >
+  </a>
 </p>
+<hr>
 
 # MapBot :earth_africa:
 
@@ -150,24 +155,14 @@ Check out all related information [here](GSSoC.md)
 ------
 
 <details>
-<summary><strong>How to set me up on Facebook Messenger?</strong></summary>
+<summary><strong>How to use me on Messenger?</strong></summary>
 <br>
 
-- Clone the repository
-- Verify existence of the **mapbot** database in PostgreSQL
-- Run `git update-index --assume-unchanged ENV/.env`
-- Fill the existing template in `ENV/.env` with the corresponding values following the `KEY=VALUE` format
-- Create Facebook app from [here](https://developers.facebook.com/). Fill out basic information.
-- Set Up **Messenger** option under Add a Product.
-- Generate the **Access Token** by creating a facebook page for your bot by clicking on **Create New Page** button.
-- Click on **Add or Remove Pages** and add your facebook page just created.
-- Click on **Generate Token** and copy the token to the `ENV/.env` file as `ACCESS_TOKEN=<YOUR_ACCESS_TOKEN>`.
-- Install [ngrok](https://gist.github.com/jwebcat/ecaac7bc7ee26e01cd4a).
-- Open a terminal window, type `ngrok http 5000`. Once you do this, a screen will appear with a link after the  “Forwarding” section — make sure to copy the link that begins with “https”.
-- Click on **Add Callback URL** under **Webhooks** section. Paste the above link in the **Callback URL**. Add **Verify Token** of your choice. Copy Verify Token you added in the `ENV/.env` file as `VERIFY_TOKEN=YOUR_VERIFY_TOKEN`. Hit **Verify and Save**
-- Click on **Add Subscriptions**. Check **messages, messaging_postbacks, message_deliveries, messaging_pre_checkouts** boxes.
-- Run `python app.py`
-- You can interact with bot on Facebook Messenger.
+- Want to create your own Messenger Bot? Head to the [other branch](https://github.com/vishakha-lall/MapBot/tree/gssoc-master).
+- Want to use a cloud hosted version of me?
+  - Hit me up on [Messenger](http://m.me/christophermapbot) to initiate a chat.
+  - P.S.: I generally sleep when unused. So, may need some time to answer the first text.
+  - Just type "Bye" in the chat to let me know you're done and I'll get back to sleep.
 
 </details>
 
