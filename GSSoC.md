@@ -16,7 +16,7 @@ During the GSSoC term, the primary scopes for MapBot would be around:
     - [x] Persist data in db and automate schema initialisation and data seeding
 
 - Broad-ranging API integration
-    - [ ] Places API
+    - [x] Places API
     - [ ] Distance Matrix API
     - [x] Elevation API
     - [x] Geocoding API
@@ -25,7 +25,7 @@ During the GSSoC term, the primary scopes for MapBot would be around:
     - [x] Time Zone API
 
 - Broad-ranging UI integration
-    - [ ] Facebook Messenger
+    - [x] Facebook Messenger
     - [ ] Whatsapp
     - [x] Telegram
     - [ ] Slack
