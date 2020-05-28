@@ -4,7 +4,6 @@ from config import slack_client_id, slack_client_secret
 import certifi
 import ssl
 import slack
-import requests
 
 # SLACK BOT
 CLIENT_ID = slack_client_id
