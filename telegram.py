@@ -24,11 +24,11 @@ class TelegramBot(object):
     CONFUSED_CONVERSATION = "Sorry, I didn't get you. Could you try again?"
 
     @logger_config.logger
-    def __init__(self, TOKEN: str, clf, learn_response) -> None:
-        """Initiates a TelegramBot object with unique Telegram BOT_TOKEN and creates the base URL."""
+    def __init__(self, TELEGRAM_BOT_TOKEN: str, clf, learn_response) -> None:
+        """Initiates a TelegramBot object with unique TELEGRAM_BOT_TOKEN and creates the base URL."""
         super(TelegramBot, self).__init__()
-        self.TOKEN = TOKEN
-        self.URL = f"https://api.telegram.org/bot{TOKEN}/"
+        self.TELEGRAM_BOT_TOKEN = TELEGRAM_BOT_TOKEN
+        self.TELEGRAM_API_URL = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/"
         self.clf, self.learn_response = clf, learn_response
         logging.debug("MapBot ready")
         logging.debug("Telegram Bot ready")
@@ -37,7 +37,7 @@ class TelegramBot(object):
     def send_message(self, text: str, chat_id: int) -> None:
         """Combine :text: and :chat_id:, create message and perform requests to Telegram Bot API."""
         url = (
-            self.URL
+            self.TELEGRAM_API_URL
             + "sendMessage"
             + "?"
             + urllib.parse.urlencode({"text": text, "chat_id": chat_id})
@@ -98,7 +98,6 @@ class TelegramBot(object):
                     logging.debug(f"Ended chat with {chat_id}")
         except Exception as e:
             logging.debug(f"CRITICAL ERROR: {e}")
-            logging.debug("Retrying")
             return False
         else:
             return True
