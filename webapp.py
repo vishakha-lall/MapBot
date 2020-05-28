@@ -70,12 +70,12 @@ def suggestions():
 TOKEN = config.tbot_token
 # Creates a TelegramBot object with tbot_token present in `config.py`
 
-# webhook to cloud app already set to this endpoint
+# webhook of Telegram Bot already set to this endpoint (prerequisite)
 @app.route(f"/telegram/{TOKEN}", methods=["POST"])
 def telegram_webhook():
     from telegram import TelegramBot
 
-    tbot = TelegramBot(TOKEN)
+    tbot = TelegramBot(TOKEN, clf, learn_response)
     webhook_update = request.get_json()
     print(webhook_update)
     done = tbot.start(webhook_update)

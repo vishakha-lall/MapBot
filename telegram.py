@@ -2,7 +2,6 @@ import requests
 import logging
 import logger_config
 import urllib
-from chatbot import setup
 from chatbot import message_to_bot
 
 log = logging.getLogger(__name__)
@@ -25,12 +24,12 @@ class TelegramBot(object):
     CONFUSED_CONVERSATION = "Sorry, I didn't get you. Could you try again?"
 
     @logger_config.logger
-    def __init__(self, TOKEN: str) -> None:
+    def __init__(self, TOKEN: str, clf, learn_response) -> None:
         """Initiates a TelegramBot object with unique Telegram BOT_TOKEN and creates the base URL."""
         super(TelegramBot, self).__init__()
         self.TOKEN = TOKEN
         self.URL = f"https://api.telegram.org/bot{TOKEN}/"
-        self.clf, self.learn_response = setup()
+        self.clf, self.learn_response = clf, learn_response
         logging.debug("MapBot ready")
         logging.debug("Telegram Bot ready")
 
@@ -53,22 +52,22 @@ class TelegramBot(object):
         return content
 
     @logger_config.logger
-    def get_data_from_webhook(self, webhook_data) -> list:
-        """Gets :webhook_data: and returns last update's :text: and :chat_id:."""
+    def get_data_from_webhook(self, webhook_update: dict) -> list:
+        """Gets :webhook_update: and returns last update's :text: and :chat_id:."""
         try:
-            text = webhook_data["message"]["text"]
+            text = webhook_update["message"]["text"]
         except Exception:
             logging.debug("Message not text")
             text = None
         try:
-            chat_id = webhook_data["message"]["chat"]["id"]
+            chat_id = webhook_update["message"]["chat"]["id"]
         except Exception:
             logging.debug("No chat found")
             chat_id = None
         return (text, chat_id)
 
     @logger_config.logger
-    def start(self, webhook_update):
+    def start(self, webhook_update: dict) -> bool:
         try:
             received_message, chat_id = self.get_data_from_webhook(webhook_update)
             logging.debug(received_message)
@@ -103,16 +102,3 @@ class TelegramBot(object):
             return False
         else:
             return True
-
-
-if __name__ == "__main__":
-    import config
-
-    TOKEN = config.tbot_token
-    # Creates a TelegramBot object with tbot_token present in `config.py`
-    tbot = TelegramBot(TOKEN)
-    try:
-        tbot.start()
-    except Exception as e:
-        logging.debug("EXCEPTION OCCURRED")
-        logging.debug(e)
