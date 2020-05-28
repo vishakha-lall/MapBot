@@ -1,10 +1,9 @@
 import requests
-import json
-import time
 import logging
 import logger_config
 import urllib
-
+from chatbot import setup
+from chatbot import message_to_bot
 
 log = logging.getLogger(__name__)
 log.info("Entered module: %s" % __name__)
@@ -22,6 +21,8 @@ class TelegramBot(object):
         "/help": f"I may know a lot about maps.\nWhere is Nairobi? What's the time at New York? How high is Mount Everest?\nI know them all. Want to know more about me? Head on to {GITHUB_REPO_URL}",  # noqa: E501
         "/report": f"Faced an issue with using me or do not like how I work? Head over to {GITHUB_ISSUES_URL} and let us know",
     }
+    EXIT_CONVERSATION = "Bye! I'll miss you!"
+    CONFUSED_CONVERSATION = "Sorry, I didn't get you. Could you try again?"
 
     @logger_config.logger
     def __init__(self, TOKEN: str) -> None:
@@ -29,6 +30,8 @@ class TelegramBot(object):
         super(TelegramBot, self).__init__()
         self.TOKEN = TOKEN
         self.URL = f"https://api.telegram.org/bot{TOKEN}/"
+        self.clf, self.learn_response = setup()
+        logging.debug("MapBot ready")
         logging.debug("Telegram Bot ready")
 
     @logger_config.logger
@@ -50,87 +53,56 @@ class TelegramBot(object):
         return content
 
     @logger_config.logger
-    def get_json_from_url(self, url: str) -> dict:
-        """Takes :url: and returns json-like object of response."""
-        content = self.get_url(url)
-        js = json.loads(content)
-        return js
-
-    @logger_config.logger
-    def get_updates(self) -> dict:
-        """Gets json-like object of message Updates to bot."""
-        url = self.URL + "getUpdates"
-        js = self.get_json_from_url(url)
-        return js
-
-    @logger_config.logger
-    def get_last_chat_id_and_text(self) -> (str, int):
-        """Fetches :updates: and returns last update's :text: and :chat_id:."""
-        updates = self.get_updates()
+    def get_data_from_webhook(self, webhook_data) -> list:
+        """Gets :webhook_data: and returns last update's :text: and :chat_id:."""
         try:
-            text = updates["result"][-1]["message"]["text"]
+            text = webhook_data["message"]["text"]
         except Exception:
             logging.debug("Message not text")
             text = None
         try:
-            chat_id = updates["result"][-1]["message"]["chat"]["id"]
+            chat_id = webhook_data["message"]["chat"]["id"]
         except Exception:
             logging.debug("No chat found")
             chat_id = None
         return (text, chat_id)
 
     @logger_config.logger
-    def start(self):
-        from chatbot import setup
-        from chatbot import message_to_bot
+    def start(self, webhook_update):
+        try:
+            received_message, chat_id = self.get_data_from_webhook(webhook_update)
+            logging.debug(received_message)
+            logging.debug(chat_id)
 
-        clf, learn_response = setup()
-        EXIT_CONVERSATION = "Bye! I'll miss you!"
-        CONFUSED_CONVERSATION = "Sorry, I didn't get you. Could you try again?"
-        logging.debug("MapBot ready")
-
-        last_textchat = (None, None)
-        # initialized to continously check for new messages
-        while True:
-            try:
-                received_message, chat_id = self.get_last_chat_id_and_text()
-                logging.debug(received_message)
-                logging.debug(chat_id)
-
-                if (received_message, chat_id) != last_textchat:
-                    # checking if any new messages have arrived since the last message
-
-                    if received_message is None:
-                        # if latest message to bot is not of text format
-                        if chat_id is None:
-                            # if there is no message and hence no chat_id (at bot start up)
-                            continue
-                        else:
-                            print(chat_id)
-                            self.send_message(CONFUSED_CONVERSATION, chat_id)
-                    elif received_message.startswith("/"):
-                        # handling some slash-commands out of Telegram
-                        reply_message = self.slash_commands.get(received_message)
-                        if reply_message is None:
-                            reply_message = CONFUSED_CONVERSATION
-                        self.send_message(reply_message, chat_id)
-                    else:
-                        logging.debug(
-                            f"Message: '{received_message}' from chat_id: '{chat_id}'"
-                        )
-                        reply_message, learn_response = message_to_bot(
-                            received_message, clf, learn_response
-                        )
-                        self.send_message(reply_message, chat_id)
-                        if reply_message == EXIT_CONVERSATION:
-                            logging.debug(f"Ended chat with {chat_id}")
-
-                    last_textchat = (received_message, chat_id)
-            except Exception as e:
-                logging.debug(f"CRITICAL ERROR: {e}")
-                logging.debug("Retrying")
-            # Wait for 0.5 secs before rechecking for new messages. (good for server)
-            time.sleep(0.5)
+            if received_message is None:
+                # if latest message to bot is not of text format
+                if chat_id is None:
+                    # if there is no message and hence no chat_id (at bot start up)
+                    pass  # do nothing
+                else:
+                    self.send_message(self.CONFUSED_CONVERSATION, chat_id)
+            elif received_message.startswith("/"):
+                # handling some slash-commands out of Telegram
+                reply_message = self.slash_commands.get(received_message)
+                if reply_message is None:
+                    reply_message = self.CONFUSED_CONVERSATION
+                self.send_message(reply_message, chat_id)
+            else:
+                logging.debug(
+                    f"Message: '{received_message}' from chat_id: '{chat_id}'"
+                )
+                reply_message, self.learn_response = message_to_bot(
+                    received_message, self.clf, self.learn_response
+                )
+                self.send_message(reply_message, chat_id)
+                if reply_message == self.EXIT_CONVERSATION:
+                    logging.debug(f"Ended chat with {chat_id}")
+        except Exception as e:
+            logging.debug(f"CRITICAL ERROR: {e}")
+            logging.debug("Retrying")
+            return False
+        else:
+            return True
 
 
 if __name__ == "__main__":
