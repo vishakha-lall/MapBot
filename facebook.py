@@ -46,7 +46,7 @@ class FacebookBot(object):
         reply_message, learn_response = message_to_bot(
             received_message, self.clf, self.learn_response
         )
-        self.send_message(received_message, sender_id)
+        self.send_message(reply_message, sender_id)
 
     @logger_config.logger
     def send_message(self, text: str, recipient_id: int):
