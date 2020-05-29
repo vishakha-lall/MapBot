@@ -67,15 +67,14 @@ def suggestions():
     return jsonify({"error": "Missing data!"})
 
 
-TOKEN = config.tbot_token
-# Creates a TelegramBot object with tbot_token present in `config.py`
+TELEGRAM_BOT_TOKEN = config.tbot_token
 
 # webhook of Telegram Bot already set to this endpoint (prerequisite)
-@app.route(f"/telegram/{TOKEN}", methods=["POST"])
+@app.route(f"/telegram/{TELEGRAM_BOT_TOKEN}", methods=["POST"])
 def telegram_webhook():
     from telegram import TelegramBot
 
-    tbot = TelegramBot(TOKEN, clf, learn_response)
+    tbot = TelegramBot(TELEGRAM_BOT_TOKEN, clf, learn_response)
     webhook_update = request.get_json()
     print(webhook_update)
     done = tbot.start(webhook_update)
@@ -83,6 +82,31 @@ def telegram_webhook():
         return jsonify({"Success": 200})
     else:
         return jsonify({"Failure": 500})
+
+
+FB_VERIFY_TOKEN = config.fb_verify_token
+FB_ACCESS_TOKEN = config.fb_access_token
+
+# webhook of Facebook Bot already set to this endpoint with FB_VERIFY_TOKEN(prerequisite)
+@app.route("/facebook", methods=["GET", "POST"])
+def facebook_webhook():
+    if request.method == "GET":
+        token_sent = request.args.get("hub.verify_token")
+        if token_sent == FB_VERIFY_TOKEN:
+            return request.args.get("hub.challenge")
+        return jsonify({"FB Verification Error": 401})
+
+    elif request.method == "POST":
+        from facebook import FacebookBot
+
+        fb_bot = FacebookBot(FB_ACCESS_TOKEN, clf, learn_response)
+        webhook_update = request.get_json()
+        print(webhook_update)
+        done = fb_bot.start(webhook_update)
+        if done:
+            return jsonify({"Success": 200})
+        else:
+            return jsonify({"Failure": 500})
 
 
 if __name__ == "__main__":
