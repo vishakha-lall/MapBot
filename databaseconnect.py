@@ -248,42 +248,44 @@ def clear_table(table_name):
         tables_to_be_cleaned = ("question_table", "statement_table")
         logging.debug("The following tables will be cleaned:\n")
         for table in tables_to_be_cleaned:
-            describe_table(cur, table)
+            _describe_table(cur, table)
 
         if input("Enter 'Y' to confirm cleaning of BOTH tables: ") in ("Y", "y",):
             for table in tables_to_be_cleaned:
-                cur.execute("DELETE FROM %s" % table)
+                cur.execute(f"DELETE FROM {table}")
             db.commit()
             logging.debug("Tables cleaned successfully")
         else:
             logging.debug("Table cleaning skipped.")
 
-    else:
+    elif table_name in ("chat_table", "directions_table"):
         logging.debug("The following table will be cleaned:\n")
-        describe_table(cur, table_name)
+        _describe_table(cur, table_name)
 
         if input("Enter 'Y' to confirm: ") in ("Y", "y"):
-            cur.execute("DELETE FROM %s" % table_name)
+            cur.execute(f"DELETE FROM {table_name}")
             db.commit()
             logging.debug("Table cleaned successfully")
         else:
             logging.debug("Table cleaning skipped.")
+    else:
+        raise Exception("WRONG TABLE NAME")
 
-    return db
 
-
-@logger_config.logger
-def describe_table(cur, table_name):
-    cur.execute("DESC %s" % table_name)
+def _describe_table(cur, table_name):
+    cur.execute(
+        f"SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{table_name}';"
+    )  # using f-strings with the assumption that `table_name` will be correct
     res = cur.fetchall()
     column_names = [col[0] for col in res]
 
-    cur.execute("SELECT COUNT(*) FROM %s" % table_name)
+    cur.execute(f"SELECT COUNT(*) FROM {table_name}")
+    # using f-strings with the assumption that `table_name` will be correct
     res = cur.fetchall()
     records_no = res[0][0]
 
-    logging.debug("Table Name: %s" % table_name)
-    logging.debug("Columns: %s" % column_names)
-    logging.debug("Number of existing records: %s" % records_no)
+    logging.debug(f"Table Name: {table_name}")
+    logging.debug(f"Columns: {column_names}")
+    logging.debug(f"Number of existing records: {records_no}")
 
     return records_no
