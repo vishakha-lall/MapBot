@@ -1,7 +1,7 @@
 language: python
 python:
-  - "3.6"      # current default Python on Travis CI
-  - "3.7"
+  - "3.6.10"
+  - "3.7.7"
 services:
   - postgresql
 install:
